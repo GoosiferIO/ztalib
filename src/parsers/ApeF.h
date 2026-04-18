@@ -58,7 +58,7 @@ class ApeF
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
         // binary input
-        std::ifstream input;
+        std::ifstream file;
         // output buffers
         ApeFrameBuffer** frameBuffers;
         // data

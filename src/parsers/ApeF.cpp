@@ -5,24 +5,22 @@
 ApeF::ApeF()
 {
     // init ApeData
-    apef = std::make_unique<ApeData>();
+    apef = std::make_unique<ApeData>(new ApeData());
 
     // init other members
-    apef.pixelBlocks = std::vector<std::vector<ApePixelBlock>>();
-    input = std::ifstream();
-    input.exceptions(static_cast<std::ios_base::iostate>(
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
-    palLocation = "";
 
     frameBuffers = new ApeFrameBuffer*[1];
 }
 
 ApeF::~ApeF()
 { 
-    if (input.is_open()) 
+    if (file.is_open()) 
     {
-        input.close();
+        file.close();
     }
 
     // free frame buffers
@@ -34,16 +32,16 @@ ApeF::~ApeF()
     }
 
     // free frames
-    frames.clear();
+    apef->frames.clear();
 
     // free pixel blocks
-    for (std::vector<ApePixelBlock> &blocks : pixelBlocks) 
+    for (std::vector<ApePixelBlock> &blocks : apef->pixelBlocks) 
     {
         blocks.clear();
     }
 
     // free header
-    info.palName.clear();    
+    apef->info.palName.clear();    
 }
 
 ApeFrameBuffer** ApeF::getFrameBuffers()
@@ -53,7 +51,7 @@ ApeFrameBuffer** ApeF::getFrameBuffers()
 
 int ApeF::getFrameCount() 
 {
-    return info.frameCount;
+    return apef->info.frameCount;
 }
 
 std::string ApeF::getPalLocation() 
@@ -62,32 +60,32 @@ std::string ApeF::getPalLocation()
 }
 
 
-int ApeF::hasMagic(std::ifstream &input)
+int ApeF::hasMagic(std::ifstream &file)
 {
     char magic[5] = {0};
-    input.read(magic, 4);
+    file.read(magic, 4);
 
     // std::cout << "\tMagic Bytes: " << magic << std::endl;
     
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
-    if (input.gcount() < 4) 
+    if (file.gcount() < 4) 
     {
-        input.clear();  
-        input.seekg(0, std::ios::beg);
+        file.clear();  
+        file.seekg(0, std::ios::beg);
         return 0;
     }
 
     // test for FATZ
     if (strcmp(magic, MAGIC) != 0) {
-        input.clear();
-        input.seekg(0, std::ios::beg);
+        file.clear();
+        file.seekg(0, std::ios::beg);
         return 0;
     }
 
     // FATZ found
-    input.clear();
-    input.seekg(0, std::ios::beg);
+    file.clear();
+    file.seekg(0, std::ios::beg);
     return 1;
 }
 
@@ -201,8 +199,8 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
-    input.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
-    if (!input.is_open()) {
+    file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
+    if (!file.is_open()) {
         return -1;
     }
 
@@ -211,22 +209,22 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "Header" << std::endl;
 
     // check if fatz
-    if (hasMagic(input)) {
+    if (hasMagic(file)) {
         // skip 8 bytes
-        input.seekg(8, std::ios::cur);
+        file.seekg(8, std::ios::cur);
         // read 9th byte
-        input.read((char*)&hasBackground, 1);
+        file.read((char*)&hasBackground, 1);
         std::cout << "\tType: is fatz" << std::endl;
         std::cout << "\thasBackground: " << hasBackground << std::endl;
     } else {
         std::cout << "\tType: not fatz" << std::endl;
     }
 
-    input.read((char*)&header.speed, 4); // animation speed in ms
-    input.read((char*)&header.palNameSize, 4); // size of palette name
+    file.read((char*)&header.speed, 4); // animation speed in ms
+    file.read((char*)&header.palNameSize, 4); // size of palette name
     header.palName.resize(header.palNameSize); // resize to size
-    input.read(header.palName.data(), header.palNameSize); // read palette name
-    input.read((char*)&header.frameCount, 4); // number of frames
+    file.read(header.palName.data(), header.palNameSize); // read palette name
+    file.read((char*)&header.frameCount, 4); // number of frames
     frames.resize(header.frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
@@ -252,25 +250,25 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     // ------------------------------- read frames
     for (int i = 0; i < header.frameCount; i++) {
         ApeFrame frame;
-        input.read((char*)&frame.frameSize, 4);
-        input.read((char*)&frame.height, 2);
-        input.read((char*)&frame.width, 2);
-        input.read((char*)&frame.y, 2);
-        input.read((char*)&frame.x, 2);
-        input.read((char*)&frame.unk1, 1); // always 0?
-        input.read((char*)&frame.unk2, 1); // always 0?
+        file.read((char*)&frame.frameSize, 4);
+        file.read((char*)&frame.height, 2);
+        file.read((char*)&frame.width, 2);
+        file.read((char*)&frame.y, 2);
+        file.read((char*)&frame.x, 2);
+        file.read((char*)&frame.unk1, 1); // always 0?
+        file.read((char*)&frame.unk2, 1); // always 0?
 
         // read pixel sets
         for (int j = 0; j < frame.height; j++) {
             ApePixelSet ApePixelSet;
-            input.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
+            file.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
             ApePixelSet.blocks.resize(ApePixelSet.blockCount); // resize to block count
             for (int k = 0; k < ApePixelSet.blockCount; k++) { // read each block
                 ApePixelBlock block;
-                input.read((char*)&block.offset, 1); // offset
-                input.read((char*)&block.colorCount, 1); // color count
+                file.read((char*)&block.offset, 1); // offset
+                file.read((char*)&block.colorCount, 1); // color count
                 block.colors.resize(block.colorCount); // resize to color count
-                input.read((char*)block.colors.data(), block.colorCount); // colors
+                file.read((char*)block.colors.data(), block.colorCount); // colors
                 ApePixelSet.blocks[k] = block; // store block
             }
 
@@ -311,7 +309,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         }
     }
 
-    input.close();
+    file.close();
 
     // write output buffer
     if (ApeF::writeBuffer() > 0) {

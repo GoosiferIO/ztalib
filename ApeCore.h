@@ -53,7 +53,6 @@ class ApeF
         int getFrameCount();
         ApeFrameBuffer** getFrameBuffers();
         std::string getPalLocation();
-        std::vector<ApeColor>& getColors() { return colors; }
         static int validateGraphicFile(std::string fileName);
         static int validatePaletteFile(std::string fileName);
         int hasBackgroundFrame();

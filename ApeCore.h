@@ -33,28 +33,6 @@
 // The ninth byte is a boolean value that specifies if there is an 
 // a background frame 
 
-// -------------------------------- APE Graphic Structures
-
-struct Header
-{
-    uint32_t speed; // animation speed in ms
-    uint32_t palNameSize;
-    std::vector<char> palName;
-    uint32_t frameCount;
-};
-
-struct Frame
-{
-    uint32_t frameSize; // in bytes
-    uint16_t height;
-    uint16_t width;
-    int16_t y; // y offset
-    int16_t x; // x offset
-    uint8_t unk1; // unknown bytes
-    uint8_t unk2; // unknown bytes
-    std::vector<ApePixelSet> ApePixelSets; // The pixel sets  
-};
-
 // -------------------------------- PAL Colors
 
 struct Color 

@@ -51,7 +51,7 @@ class ApeCore
         int save(std::string fileName);
         int exportToPNG(std::string fileName, ApeFrameBuffer output);
         int getFrameCount();
-        ApeFrameBuffer** apeBuffer();
+        ApeFrameBuffer** getFrameBuffers();
         std::string getPalLocation();
         std::vector<ApeFrame>& getFrames();
         std::vector<ApeColor>& getColors() { return colors; }
@@ -134,7 +134,7 @@ ApeCore::~ApeCore()
     header.palName.clear();    
 }
 
-ApeFrameBuffer** ApeCore::apeBuffer()
+ApeFrameBuffer** ApeCore::getFrameBuffers()
 {
     return frameBuffers;
 }

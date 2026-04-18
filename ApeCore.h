@@ -41,11 +41,11 @@
 
 // -------------------------------- Standard Pixel Output
 
-class ApeCore
+class ApeF
 {
     public: 
-        ApeCore();
-        virtual ~ApeCore();
+        ApeF();
+        virtual ~ApeF();
 
         int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
         int save(std::string fileName);
@@ -85,7 +85,7 @@ class ApeCore
         std::string palLocation;
     };
 
-ApeCore::ApeCore()
+ApeF::ApeF()
 {
     hasBackground = false;
     header.speed = 0;
@@ -104,7 +104,7 @@ ApeCore::ApeCore()
     frameBuffers = new ApeFrameBuffer*[1];
 }
 
-ApeCore::~ApeCore()
+ApeF::~ApeF()
 { 
     if (input.is_open()) 
     {
@@ -140,23 +140,23 @@ ApeCore::~ApeCore()
     header.palName.clear();    
 }
 
-ApeFrameBuffer** ApeCore::getFrameBuffers()
+ApeFrameBuffer** ApeF::getFrameBuffers()
 {
     return frameBuffers;
 }
 
-int ApeCore::getFrameCount() 
+int ApeF::getFrameCount() 
 {
     return header.frameCount;
 }
 
-std::string ApeCore::getPalLocation() 
+std::string ApeF::getPalLocation() 
 {
     return palLocation;
 }
 
 
-int ApeCore::hasMagic(std::ifstream &input)
+int ApeF::hasMagic(std::ifstream &input)
 {
     char magic[5] = {0};
     input.read(magic, 4);
@@ -185,7 +185,7 @@ int ApeCore::hasMagic(std::ifstream &input)
     return 1;
 }
 
-int ApeCore::readPal(std::string fileName) 
+int ApeF::readPal(std::string fileName) 
 {
     std::cout << "Reading palette: " << fileName << std::endl;
     
@@ -252,7 +252,7 @@ int ApeCore::readPal(std::string fileName)
 }
 
 
-int ApeCore::writeBuffer() 
+int ApeF::writeBuffer() 
 {
     if (frames.empty()) {
         return 0;
@@ -358,7 +358,7 @@ int ApeCore::writeBuffer()
     return 1;
 }// ApeColor model 0 = RGBA
 // ApeColor model 1 = BGRA
-int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
+int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
@@ -408,7 +408,7 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "\tframes: " << frames.size() << std::endl;
 
     // ------------------------------- read palette
-    ApeCore::readPal(palLocation);
+    ApeF::readPal(palLocation);
 
     // ------------------------------- read frames
     for (int i = 0; i < header.frameCount; i++) {
@@ -475,9 +475,9 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
     input.close();
 
     // write output buffer
-    if (ApeCore::writeBuffer() > 0) {
+    if (ApeF::writeBuffer() > 0) {
         std::cout << "Wrote output buffer" << std::endl;
-    } else if (ApeCore::writeBuffer() == 0) {
+    } else if (ApeF::writeBuffer() == 0) {
         std::cout << "No frames to write" << std::endl;
     } else {
         std::cout << "Failed to write output buffer" << std::endl;
@@ -486,7 +486,7 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
     return 1;
 }
 
-int ApeCore::save(std::string fileName)
+int ApeF::save(std::string fileName)
 {
     std::ofstream output(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
     if (!output.is_open()) {
@@ -530,7 +530,7 @@ int ApeCore::save(std::string fileName)
     output.close();
 
     // write palette
-    // ApeCore::writePal(palLocation);
+    // ApeF::writePal(palLocation);
 
     return 1;
 }
@@ -540,7 +540,7 @@ int ApeCore::save(std::string fileName)
 // 2. Checks if first 4 bytes are FATZ = Valid
 // 3. Checks if palette name is empty = Not valid
 // 4. Checks if palette name has '.pal' extension = Valid
-int ApeCore::validateGraphicFile(std::string fileName) 
+int ApeF::validateGraphicFile(std::string fileName) 
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
@@ -592,7 +592,7 @@ int ApeCore::validateGraphicFile(std::string fileName)
 // Does a simple validation to see if file is valid APE palette
 // Not a comprehensive check, just a quick validation of the first few bytes
 // Loading in the palette later can return early if the rest is not valid
-int ApeCore::validatePaletteFile(std::string fileName) 
+int ApeF::validatePaletteFile(std::string fileName) 
 {
     std::ifstream palette(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     bool isValid = false;
@@ -636,12 +636,12 @@ int ApeCore::validatePaletteFile(std::string fileName)
     return isValid;
 }
 
-int ApeCore::hasBackgroundFrame() 
+int ApeF::hasBackgroundFrame() 
 {
     return hasBackground;
 }
 
-int ApeCore::exportToPNG(std::string fileName, ApeFrameBuffer output)
+int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)
 {
     if (!output.pixels) {
         std::cerr << "No pixels to write" << std::endl;
@@ -658,7 +658,7 @@ int ApeCore::exportToPNG(std::string fileName, ApeFrameBuffer output)
     return 1;
 }
 
-ApeHeader ApeCore::getHeader(std::string fileName) 
+ApeHeader ApeF::getHeader(std::string fileName) 
 {
     std::ifstream graphic(fileName, std::ios::binary);
     ApeHeader hdr;

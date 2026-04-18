@@ -60,22 +60,17 @@ class ApeF
         static ApeHeader getHeader(std::string fileName);
 
     private:
-        int readPal(std::string fileName);
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
-
         // binary input
         std::ifstream input;
-
         // output buffers
         ApeFrameBuffer** frameBuffers;
-
         // data
         ApeHeader header;
         std::vector<ApeFrame> frames;
         std::vector<std::vector<ApePixelBlock>> pixelBlocks;
         PalF palFile;
-
         // other
         bool hasBackground = false;
         int colorModel;

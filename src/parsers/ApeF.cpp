@@ -213,9 +213,9 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         // skip 8 bytes
         file.seekg(8, std::ios::cur);
         // read 9th byte
-        file.read((char*)&hasBackground, 1);
+        file.read((char*)&apef->hasBackground, 1);
         std::cout << "\tType: is fatz" << std::endl;
-        std::cout << "\thasBackground: " << hasBackground << std::endl;
+        std::cout << "\thasBackground: " << apef->hasBackground << std::endl;
     } else {
         std::cout << "\tType: not fatz" << std::endl;
     }
@@ -232,7 +232,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     else
         apef->palette->location = ioPal;
 
-    if (hasBackground) {
+    if (apef->hasBackground) {
         header.frameCount += 1;
         frames.resize(header.frameCount);
     }
@@ -330,7 +330,7 @@ int ApeF::save(std::string fileName)
         return -1;
     }
 
-    if (hasBackground) 
+    if (apef->hasBackground) 
     {
         // WRITE: FATZ
         output.write(MAGIC, 4);
@@ -428,7 +428,7 @@ int ApeF::validateGraphicFile(std::string fileName)
 
 int ApeF::hasBackgroundFrame() 
 {
-    return hasBackground;
+    return apef->hasBackground;
 }
 
 int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)

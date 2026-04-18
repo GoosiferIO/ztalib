@@ -4,12 +4,11 @@
 
 ApeF::ApeF()
 {
-    hasBackground = false;
-    info.speed = 0;
-    info.frameCount = 0;
-    frames = std::vector<ApeFrame>();
-    pixelBlocks = std::vector<std::vector<ApePixelBlock>>();
-    palFile = PalF();
+    // init ApeData
+    apef = ApeData();
+
+    // init other members
+    apef.pixelBlocks = std::vector<std::vector<ApePixelBlock>>();
     input = std::ifstream();
     input.exceptions(static_cast<std::ios_base::iostate>(
         std::ifstream::failbit | std::ifstream::badbit));

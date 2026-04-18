@@ -1,7 +1,7 @@
-#ifndef APECORE_H
-#define APECORE_H
+#ifndef APEF_H
+#define APEF_H
 
-// APE.CORE - ZT1 Graphics Parser
+// ape-graphics-parser - ZT1 Graphics Parser
 // by Eric Galvan (Goosifer.IO)
 // https://github.com/openztcc/APE.Core
 // Licensed under MIT (see LICENSE)
@@ -66,4 +66,4 @@ class ApeF
         int colorModel;
     };
 
-#endif // APECORE_H
+#endif // APEF_H

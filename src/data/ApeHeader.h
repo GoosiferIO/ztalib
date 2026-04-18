@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-struct Header
+struct ApeHeader
 {
     uint32_t speed; // animation speed in ms
     uint32_t palNameSize;

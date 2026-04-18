@@ -2,7 +2,7 @@
 #include <vector>
 #include "ApePixelSet.h"
 
-struct Frame
+struct ApeFrame
 {
     uint32_t frameSize; // in bytes
     uint16_t height;

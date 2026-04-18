@@ -27,6 +27,7 @@
 #include "src/data/ApePixelSet.h"
 #include "src/data/ApeFrame.h"
 #include "src/data/ApeHeader.h"
+#include "src/data/ApeColor.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -61,7 +62,7 @@ class ApeCore
         OutputBuffer** apeBuffer();
         std::string getPalLocation();
         std::vector<ApeFrame>& getFrames();
-        std::vector<Color>& getColors() { return colors; }
+        std::vector<ApeColor>& getColors() { return colors; }
         static int validateGraphicFile(std::string fileName);
         static int validatePaletteFile(std::string fileName);
         static int hasBackgroundFrame(std::string fileName);
@@ -80,7 +81,7 @@ class ApeCore
         ApeHeader header;
         std::vector<ApeFrame> frames;
         std::vector<std::vector<ApePixelBlock>> ApePixelBlocks;
-        std::vector<Color> colors;
+        std::vector<ApeColor> colors;
         bool hasBackground;
         int colorModel;
         std::string palLocation;
@@ -95,7 +96,7 @@ ApeCore::ApeCore()
     header.palName = std::vector<char>();
     frames = std::vector<ApeFrame>();
     ApePixelBlocks = std::vector<std::vector<ApePixelBlock>>();
-    colors = std::vector<Color>();
+    colors = std::vector<ApeColor>();
     input = std::ifstream();
     input.exceptions(static_cast<std::ios_base::iostate>(
         std::ifstream::failbit | std::ifstream::badbit));
@@ -227,7 +228,7 @@ int ApeCore::readPal(std::string fileName)
         // uint32_t abgr;
         // pal.read(reinterpret_cast<char*>(&abgr), 4);
 
-        Color color;
+        ApeColor color;
         pal.read(reinterpret_cast<char*>(&color), 4);
 
         // Convert RGBA to BGRA if necessary
@@ -337,7 +338,7 @@ int ApeCore::writeBuffer()
                     }
 
                     // Get color from palette
-                    Color &color = colors[colorIndex];
+                    ApeColor &color = colors[colorIndex];
 
                     // Write pixel data according to color model
                     if (colorModel == 1) {  // BGRA mode
@@ -362,8 +363,8 @@ int ApeCore::writeBuffer()
     }
 
     return 1;
-}// Color model 0 = RGBA
-// Color model 1 = BGRA
+}// ApeColor model 0 = RGBA
+// ApeColor model 1 = BGRA
 int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;

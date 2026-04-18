@@ -35,15 +35,6 @@
 // The ninth byte is a boolean value that specifies if there is an 
 // a background frame 
 
-// -------------------------------- PAL Colors
-
-struct Color 
-{
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
-};
 
 // -------------------------------- Standard Pixel Output
 

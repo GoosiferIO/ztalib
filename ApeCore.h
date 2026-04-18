@@ -23,6 +23,8 @@
 #include <cstdint>
 #include <cstring>
 #include "./include/stb_image_write.h"
+#include "src/data/ApePixelBlock.h"
+#include "src/data/ApePixelSet.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -50,7 +52,7 @@ struct Frame
     int16_t x; // x offset
     uint8_t unk1; // unknown bytes
     uint8_t unk2; // unknown bytes
-    std::vector<PixelSet> pixelSets; // The pixel sets  
+    std::vector<ApePixelSet> ApePixelSets; // The pixel sets  
 };
 
 // -------------------------------- PAL Colors
@@ -106,7 +108,7 @@ class ApeCore
         OutputBuffer** frameBuffers;
         Header header;
         std::vector<Frame> frames;
-        std::vector<std::vector<PixelBlock>> pixelBlocks;
+        std::vector<std::vector<ApePixelBlock>> ApePixelBlocks;
         std::vector<Color> colors;
         bool hasBackground;
         int colorModel;
@@ -121,7 +123,7 @@ ApeCore::ApeCore()
     header.frameCount = 0;
     header.palName = std::vector<char>();
     frames = std::vector<Frame>();
-    pixelBlocks = std::vector<std::vector<PixelBlock>>();
+    ApePixelBlocks = std::vector<std::vector<ApePixelBlock>>();
     colors = std::vector<Color>();
     input = std::ifstream();
     input.exceptions(static_cast<std::ios_base::iostate>(
@@ -159,7 +161,7 @@ ApeCore::~ApeCore()
     frames.clear();
 
     // free pixel blocks
-    for (std::vector<PixelBlock> &blocks : pixelBlocks) 
+    for (std::vector<ApePixelBlock> &blocks : ApePixelBlocks) 
     {
         blocks.clear();
     }
@@ -319,27 +321,27 @@ int ApeCore::writeBuffer()
         // Process each row
         for (int row = 0; row < frame.height; row++) 
         {
-            if (row >= frame.pixelSets.size()) {
-                std::cerr << "ERROR: Row " << row << " exceeds pixelSet count!" << std::endl;
+            if (row >= frame.ApePixelSets.size()) {
+                std::cerr << "ERROR: Row " << row << " exceeds ApePixelSet count!" << std::endl;
                 continue;
             }
 
-            PixelSet &pixelSet = frame.pixelSets[row];
+            ApePixelSet &ApePixelSet = frame.ApePixelSets[row];
             int xPos = 0;  // Reset horizontal position for each new row
 
             // Process each block in the row
-            for (PixelBlock &pixelBlock : pixelSet.blocks) 
+            for (ApePixelBlock &ApePixelBlock : ApePixelSet.blocks) 
             {
                 // Apply offset from current position
-                xPos += pixelBlock.offset;
+                xPos += ApePixelBlock.offset;
 
                 // Skip if this is an end-of-line block or empty block
-                if (pixelBlock.colorCount == 0) {
+                if (ApePixelBlock.colorCount == 0) {
                     continue;
                 }
 
                 // Process each color in the block
-                for (uint8_t colorIndex : pixelBlock.colors) 
+                for (uint8_t colorIndex : ApePixelBlock.colors) 
                 {
                     // Bounds checking
                     if (xPos >= output.width) {
@@ -456,24 +458,24 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
 
         // read pixel sets
         for (int j = 0; j < frame.height; j++) {
-            PixelSet pixelSet;
-            input.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
-            pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
-            for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
-                PixelBlock block;
+            ApePixelSet ApePixelSet;
+            input.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
+            ApePixelSet.blocks.resize(ApePixelSet.blockCount); // resize to block count
+            for (int k = 0; k < ApePixelSet.blockCount; k++) { // read each block
+                ApePixelBlock block;
                 input.read((char*)&block.offset, 1); // offset
                 input.read((char*)&block.colorCount, 1); // color count
                 block.colors.resize(block.colorCount); // resize to color count
                 input.read((char*)block.colors.data(), block.colorCount); // colors
-                pixelSet.blocks[k] = block; // store block
+                ApePixelSet.blocks[k] = block; // store block
             }
 
             // // TODO: test issues that might arise from this
             // // Possible issue: skips some pixels and leaves them blank
-            // if (pixelSet.blockCount == 0) {
-            //     pixelSet.blocks.push_back(PixelBlock{0, 0, std::vector<uint8_t>()});
+            // if (ApePixelSet.blockCount == 0) {
+            //     ApePixelSet.blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
             // }
-            frame.pixelSets.push_back(pixelSet); // store pixel set
+            frame.ApePixelSets.push_back(ApePixelSet); // store pixel set
         }
 
         // store frame
@@ -488,17 +490,17 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
         std::cout << "\tx: " << (int)frame.x << std::endl;
         std::cout << "\tunk1: " << (int)frame.unk1 << std::endl;
         std::cout << "\tunk2: " << (int)frame.unk2 << std::endl;
-        std::cout << "\tpixelSets: " << frame.pixelSets.size() << std::endl;
-        for (int j = 0; j < frame.pixelSets.size(); j++) {
-            std::cout << "\t\tpixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)frame.pixelSets[j].blockCount << std::endl;
-            for (int k = 0; k < frame.pixelSets[j].blocks.size(); k++) {
+        std::cout << "\tApePixelSets: " << frame.ApePixelSets.size() << std::endl;
+        for (int j = 0; j < frame.ApePixelSets.size(); j++) {
+            std::cout << "\t\tApePixelSet " << j << std::endl;
+            std::cout << "\t\t\tblockCount: " << (int)frame.ApePixelSets[j].blockCount << std::endl;
+            for (int k = 0; k < frame.ApePixelSets[j].blocks.size(); k++) {
                 std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)frame.pixelSets[j].blocks[k].offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)frame.pixelSets[j].blocks[k].colorCount << std::endl;
+                std::cout << "\t\t\t\toffset: " << (int)frame.ApePixelSets[j].blocks[k].offset << std::endl;
+                std::cout << "\t\t\t\tcolorCount: " << (int)frame.ApePixelSets[j].blocks[k].colorCount << std::endl;
                 std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < frame.pixelSets[j].blocks[k].colorCount; l++) {
-                    std::cout << (int)frame.pixelSets[j].blocks[k].colors[l] << " ";
+                for (int l = 0; l < frame.ApePixelSets[j].blocks[k].colorCount; l++) {
+                    std::cout << (int)frame.ApePixelSets[j].blocks[k].colors[l] << " ";
                 }
                 std::cout << std::endl;
             }
@@ -550,9 +552,9 @@ int ApeCore::save(std::string fileName)
         output.write((char*)&frame.unk2, 1);
 
         // write pixel sets
-        for (PixelSet &pixelSet : frame.pixelSets) {
-            output.write((char*)&pixelSet.blockCount, 1);
-            for (PixelBlock &block : pixelSet.blocks) {
+        for (ApePixelSet &ApePixelSet : frame.ApePixelSets) {
+            output.write((char*)&ApePixelSet.blockCount, 1);
+            for (ApePixelBlock &block : ApePixelSet.blocks) {
                 output.write((char*)&block.offset, 1);
                 output.write((char*)&block.colorCount, 1);
                 output.write((char*)block.colors.data(), block.colorCount);

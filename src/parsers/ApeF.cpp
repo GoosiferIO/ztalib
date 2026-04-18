@@ -5,7 +5,7 @@
 ApeF::ApeF()
 {
     // init ApeData
-    apef = ApeData();
+    apef = std::make_unique<ApeData>();
 
     // init other members
     apef.pixelBlocks = std::vector<std::vector<ApePixelBlock>>();

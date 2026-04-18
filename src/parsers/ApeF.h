@@ -22,6 +22,7 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+#include <memory>
 
 #include "./include/stb_image_write.h"
 #include "../data/ApeData.h"
@@ -61,7 +62,7 @@ class ApeF
         // output buffers
         ApeFrameBuffer** frameBuffers;
         // data
-        ApeData apef;
+        std::unique_ptr<ApeData> apef;
         // other
         int colorModel;
     };

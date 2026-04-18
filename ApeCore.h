@@ -25,6 +25,8 @@
 #include "./include/stb_image_write.h"
 #include "src/data/ApePixelBlock.h"
 #include "src/data/ApePixelSet.h"
+#include "src/data/ApeFrame.h"
+#include "src/data/ApeHeader.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -67,13 +69,13 @@ class ApeCore
         int getFrameCount();
         OutputBuffer** apeBuffer();
         std::string getPalLocation();
-        std::vector<Frame>& getFrames();
+        std::vector<ApeFrame>& getFrames();
         std::vector<Color>& getColors() { return colors; }
         static int validateGraphicFile(std::string fileName);
         static int validatePaletteFile(std::string fileName);
         static int hasBackgroundFrame(std::string fileName);
         // return header info
-        static Header getHeader(std::string fileName);
+        static ApeHeader getHeader(std::string fileName);
 
     private:
         int readPal(std::string fileName);
@@ -84,8 +86,8 @@ class ApeCore
         std::ifstream input;
         std::ifstream pal;
         OutputBuffer** frameBuffers;
-        Header header;
-        std::vector<Frame> frames;
+        ApeHeader header;
+        std::vector<ApeFrame> frames;
         std::vector<std::vector<ApePixelBlock>> ApePixelBlocks;
         std::vector<Color> colors;
         bool hasBackground;
@@ -100,7 +102,7 @@ ApeCore::ApeCore()
     header.palNameSize = 0;
     header.frameCount = 0;
     header.palName = std::vector<char>();
-    frames = std::vector<Frame>();
+    frames = std::vector<ApeFrame>();
     ApePixelBlocks = std::vector<std::vector<ApePixelBlock>>();
     colors = std::vector<Color>();
     input = std::ifstream();
@@ -153,7 +155,7 @@ OutputBuffer** ApeCore::apeBuffer()
     return frameBuffers;
 }
 
-std::vector<Frame>& ApeCore::getFrames() 
+std::vector<ApeFrame>& ApeCore::getFrames() 
 {
     return frames;
 }
@@ -274,7 +276,7 @@ int ApeCore::writeBuffer()
     int numBuffers = getFrameCount();
     frameBuffers = new OutputBuffer*[numBuffers];
 
-    for (Frame &frame : frames) 
+    for (ApeFrame &frame : frames) 
     {
         int index = &frame - &frames[0];
         OutputBuffer output = OutputBuffer();
@@ -425,7 +427,7 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read frames
     for (int i = 0; i < header.frameCount; i++) {
-        Frame frame;
+        ApeFrame frame;
         input.read((char*)&frame.frameSize, 4);
         input.read((char*)&frame.height, 2);
         input.read((char*)&frame.width, 2);
@@ -460,7 +462,7 @@ int ApeCore::load(std::string fileName, int colorModel, std::string ioPal)
         frames[i] = frame;
 
         // print frame
-        std::cout << "Frame " << i << std::endl;
+        std::cout << "ApeFrame " << i << std::endl;
         std::cout << "\tframeSize: " << frame.frameSize << " bytes" << std::endl;
         std::cout << "\theight: " << (int)frame.height << " px" << std::endl;
         std::cout << "\twidth: " << (int)frame.width << " px" << std::endl;
@@ -520,7 +522,7 @@ int ApeCore::save(std::string fileName)
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (Frame &frame : frames) {
+    for (ApeFrame &frame : frames) {
         output.write((char*)&frame.frameSize, 4);
         output.write((char*)&frame.height, 2);
         output.write((char*)&frame.width, 2);
@@ -557,7 +559,7 @@ int ApeCore::validateGraphicFile(std::string fileName)
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
-    Header hdr;
+    ApeHeader hdr;
     
     // if file is not open, return false
     if (!graphic.is_open()) {
@@ -614,7 +616,7 @@ int ApeCore::validatePaletteFile(std::string fileName)
     // }
 
     // // Get header info
-    // Header hdr = getHeader(fileName);
+    // ApeHeader hdr = getHeader(fileName);
 
     // // if pal name is empty, return false
     // if (hdr.palName.empty() || hdr.palNameSize == 0 || hdr.palNameSize < 0) {
@@ -688,10 +690,10 @@ int ApeCore::exportToPNG(std::string fileName, OutputBuffer output)
     return 1;
 }
 
-Header ApeCore::getHeader(std::string fileName) 
+ApeHeader ApeCore::getHeader(std::string fileName) 
 {
     std::ifstream graphic(fileName, std::ios::binary);
-    Header hdr;
+    ApeHeader hdr;
     if (!graphic.is_open()) {
         return hdr;
     }

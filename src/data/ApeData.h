@@ -1,16 +1,22 @@
-#pragma once
+#ifndef APEDATA_H
+#define APEDATA_H
+
 #include <vector>
+#include <memory>
+
+// structs
 #include "ApeFrame.h"
 #include "ApeInfo.h"
-#include "../parsers/PalF.h"
 #include "ApeFrameBuffer.h"
+
+// parsers
 #include "../parsers/PalF.h"
 
 class ApeData {
     public:
         ApeInfo info;
         std::vector<ApeFrame> frames;
-        PalF palette;
+        std::unique_ptr<PalF> palette;
         bool hasBackground = false;
 
         ApeData();
@@ -21,5 +27,7 @@ ApeData::ApeData()
     info.speed = 0;
     info.frameCount = 0;
     frames = std::vector<ApeFrame>();
-    palette = PalF();
+    palette = std::unique_ptr<PalF>(new PalF());
 }
+
+#endif // APEDATA_H

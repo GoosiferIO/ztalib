@@ -56,7 +56,7 @@ int ApeF::getFrameCount()
 
 std::string ApeF::getPalLocation() 
 {
-    return palLocation;
+    return apef->palette->location;
 }
 
 
@@ -228,9 +228,9 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     frames.resize(header.frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
-        palLocation = std::string(header.palName.data());
+        apef->palette->location = std::string(header.palName.data());
     else
-        palLocation = ioPal;
+        apef->palette->location = ioPal;
 
     if (hasBackground) {
         header.frameCount += 1;
@@ -245,7 +245,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "\tframes: " << frames.size() << std::endl;
 
     // ------------------------------- read palette
-    ApeF::readPal(palLocation);
+    ApeF::readPal(apef->palette->location);
 
     // ------------------------------- read frames
     for (int i = 0; i < header.frameCount; i++) {
@@ -367,7 +367,7 @@ int ApeF::save(std::string fileName)
     output.close();
 
     // write palette
-    // ApeF::writePal(palLocation);
+    // ApeF::writePal(apef->palette->location);
 
     return 1;
 }

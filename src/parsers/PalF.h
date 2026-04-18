@@ -11,6 +11,7 @@ class PalF {
         int load(std::string fileName);
         virtual ~PalF();
         static int validatePaletteFile(std::string fileName);
+        std::string location;
 
     private:
         int readPal(std::string fileName);
@@ -18,7 +19,6 @@ class PalF {
         std::vector<ApeColor> colors;
         uint32_t nameSize;
         std::vector<char> name;
-        std::string location;
 };
 
 PalF::PalF()

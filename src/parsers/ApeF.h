@@ -61,14 +61,9 @@ class ApeF
         // output buffers
         ApeFrameBuffer** frameBuffers;
         // data
-        ApeInfo info;
-        std::vector<ApeFrame> frames;
-        std::vector<std::vector<ApePixelBlock>> pixelBlocks;
-        PalF palFile;
+        ApeData apef;
         // other
-        bool hasBackground = false;
         int colorModel;
-        std::string palLocation;
     };
 
 #endif // APECORE_H

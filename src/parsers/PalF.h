@@ -18,4 +18,5 @@ class PalF {
         std::vector<ApeColor> colors;
         uint32_t palNameSize;
         std::vector<char> palName;
+        std::string palLocation;
 };

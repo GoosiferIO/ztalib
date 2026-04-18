@@ -10,6 +10,6 @@ struct ApeData {
     ApeInfo info;
     std::vector<ApeFrame> frames;
     PalF palette;
-    std::vector<std::string> frameNames;
-    std::vector<std::string> paletteNames;
+    bool hasBackground = false;
+
 };

@@ -41,19 +41,6 @@ struct Header
     uint32_t frameCount;
 };
 
-struct PixelBlock 
-{
-    uint8_t offset; // How many transparent pixels before drawing
-    uint8_t colorCount; // How many colors in this block
-    std::vector<uint8_t> colors; // Color indexes in pal
-};
-
-struct PixelSet 
-{
-    uint8_t blockCount; // How many pixel blocks
-    std::vector<PixelBlock> blocks; // The pixel blocks
-};
-
 struct Frame
 {
     uint32_t frameSize; // in bytes

@@ -16,4 +16,6 @@ class PalF {
         int readPal(std::string fileName);
         std::ifstream palFile;
         std::vector<ApeColor> colors;
+        uint32_t palNameSize;
+        std::vector<char> palName;
 };

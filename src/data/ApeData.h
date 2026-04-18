@@ -1,14 +1,15 @@
 #pragma once
 #include <vector>
 #include "ApeFrame.h"
-#include "ApeHeader.h"
+#include "ApeInfo.h"
 #include "../parsers/PalF.h"
 #include "ApeFrameBuffer.h"
+#include "../parsers/PalF.h"
 
 struct ApeData {
-    ApeHeader header;
+    ApeInfo info;
     std::vector<ApeFrame> frames;
-    std::vector<ApePalette> palettes;
+    PalF palette;
     std::vector<std::string> frameNames;
     std::vector<std::string> paletteNames;
 };

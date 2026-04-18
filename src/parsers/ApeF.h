@@ -24,13 +24,7 @@
 #include <cstring>
 
 #include "./include/stb_image_write.h"
-#include "src/data/ApePixelBlock.h"
-#include "src/data/ApePixelSet.h"
-#include "src/data/ApeFrame.h"
-#include "src/data/ApeInfo.h"
-#include "src/data/ApeColor.h"
-#include "src/data/ApeFrameBuffer.h"
-#include "src/parsers/PalF.h"
+#include "../data/ApeData.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"

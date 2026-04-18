@@ -14,9 +14,20 @@ class PalF {
 
     private:
         int readPal(std::string fileName);
-        std::ifstream palFile;
+        std::ifstream file;
         std::vector<ApeColor> colors;
-        uint32_t palNameSize;
-        std::vector<char> palName;
-        std::string palLocation;
+        uint32_t nameSize;
+        std::vector<char> name;
+        std::string location;
 };
+
+PalF::PalF()
+{
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
+        std::ifstream::failbit | std::ifstream::badbit));
+    colors = std::vector<ApeColor>();
+    nameSize = 0;
+    name = std::vector<char>();
+    location = "";
+}

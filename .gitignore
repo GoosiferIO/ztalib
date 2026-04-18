@@ -1,11 +1,21 @@
-# Ignore all files by default
+# start by ignoring all files
 *
 
-# Keep these specific exceptions
-!*.md
-!*.cpp
-!CMakeLists.txt
-!*.h
-!*.py
-!LICENSE
-!*.gitignore
+# re-include all files that have extensions (to exclude extensionless files)
+!/**/
+!*.*
+
+# directories
+/.venv
+/.vscode
+
+# extensions
+*.dll
+*.so
+*.a
+*.exe
+*.jpg
+*.png
+*.gif
+*.pal
+*.zip

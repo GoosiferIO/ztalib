@@ -22,12 +22,14 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+
 #include "./include/stb_image_write.h"
 #include "src/data/ApePixelBlock.h"
 #include "src/data/ApePixelSet.h"
 #include "src/data/ApeFrame.h"
 #include "src/data/ApeHeader.h"
 #include "src/data/ApeColor.h"
+#include "src/data/ApeFrameBuffer.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -39,16 +41,6 @@
 
 // -------------------------------- Standard Pixel Output
 
-struct OutputBuffer 
-{
-    uint8_t* pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
-    int width;
-    int height;
-    int offsetX;
-    int offsetY;
-    int channels;
-};
-
 class ApeCore
 {
     public: 
@@ -57,9 +49,9 @@ class ApeCore
 
         int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
         int save(std::string fileName);
-        int exportToPNG(std::string fileName, OutputBuffer output);
+        int exportToPNG(std::string fileName, ApeFrameBuffer output);
         int getFrameCount();
-        OutputBuffer** apeBuffer();
+        ApeFrameBuffer** apeBuffer();
         std::string getPalLocation();
         std::vector<ApeFrame>& getFrames();
         std::vector<ApeColor>& getColors() { return colors; }
@@ -77,7 +69,7 @@ class ApeCore
 
         std::ifstream input;
         std::ifstream pal;
-        OutputBuffer** frameBuffers;
+        ApeFrameBuffer** frameBuffers;
         ApeHeader header;
         std::vector<ApeFrame> frames;
         std::vector<std::vector<ApePixelBlock>> ApePixelBlocks;
@@ -103,7 +95,7 @@ ApeCore::ApeCore()
     colorModel = 0;
     palLocation = "";
 
-    frameBuffers = new OutputBuffer*[1];
+    frameBuffers = new ApeFrameBuffer*[1];
 }
 
 ApeCore::~ApeCore()
@@ -142,7 +134,7 @@ ApeCore::~ApeCore()
     header.palName.clear();    
 }
 
-OutputBuffer** ApeCore::apeBuffer()
+ApeFrameBuffer** ApeCore::apeBuffer()
 {
     return frameBuffers;
 }
@@ -266,12 +258,12 @@ int ApeCore::writeBuffer()
     }
 
     int numBuffers = getFrameCount();
-    frameBuffers = new OutputBuffer*[numBuffers];
+    frameBuffers = new ApeFrameBuffer*[numBuffers];
 
     for (ApeFrame &frame : frames) 
     {
         int index = &frame - &frames[0];
-        OutputBuffer output = OutputBuffer();
+        ApeFrameBuffer output = ApeFrameBuffer();
 
         // Set dimensions and format
         output.width = static_cast<int>(frame.width);
@@ -359,7 +351,7 @@ int ApeCore::writeBuffer()
         }
         
         // Store the completed buffer
-        frameBuffers[index] = new OutputBuffer(output);
+        frameBuffers[index] = new ApeFrameBuffer(output);
     }
 
     return 1;
@@ -665,7 +657,7 @@ int ApeCore::hasBackgroundFrame(std::string fileName)
     return hasBackground;
 }
 
-int ApeCore::exportToPNG(std::string fileName, OutputBuffer output)
+int ApeCore::exportToPNG(std::string fileName, ApeFrameBuffer output)
 {
     if (!output.pixels) {
         std::cerr << "No pixels to write" << std::endl;

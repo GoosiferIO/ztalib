@@ -53,11 +53,10 @@ class ApeCore
         int getFrameCount();
         ApeFrameBuffer** getFrameBuffers();
         std::string getPalLocation();
-        std::vector<ApeFrame>& getFrames();
         std::vector<ApeColor>& getColors() { return colors; }
         static int validateGraphicFile(std::string fileName);
         static int validatePaletteFile(std::string fileName);
-        static int hasBackgroundFrame(std::string fileName);
+        int hasBackgroundFrame();
         // return header info
         static ApeHeader getHeader(std::string fileName);
 
@@ -67,14 +66,21 @@ class ApeCore
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
 
+        // binary input
         std::ifstream input;
         std::ifstream pal;
+
+        // output buffers
         ApeFrameBuffer** frameBuffers;
+
+        // data
         ApeHeader header;
         std::vector<ApeFrame> frames;
         std::vector<std::vector<ApePixelBlock>> ApePixelBlocks;
         std::vector<ApeColor> colors;
-        bool hasBackground;
+
+        // other
+        bool hasBackground = false;
         int colorModel;
         std::string palLocation;
     };
@@ -137,11 +143,6 @@ ApeCore::~ApeCore()
 ApeFrameBuffer** ApeCore::getFrameBuffers()
 {
     return frameBuffers;
-}
-
-std::vector<ApeFrame>& ApeCore::getFrames() 
-{
-    return frames;
 }
 
 int ApeCore::getFrameCount() 
@@ -635,25 +636,8 @@ int ApeCore::validatePaletteFile(std::string fileName)
     return isValid;
 }
 
-int ApeCore::hasBackgroundFrame(std::string fileName) 
+int ApeCore::hasBackgroundFrame() 
 {
-    std::ifstream graphic(fileName, std::ios::binary);
-    if (!graphic.is_open()) {
-        return 0;
-    }
-
-    // if has magic bytes FATZ
-    if (hasMagic(graphic)) {
-        // skip 9 bytes
-        graphic.seekg(8, std::ios::cur);
-    }
-    else {
-        graphic.close();
-        return 0;
-    }
-    bool hasBackground = false;
-    graphic.read((char*)&hasBackground, 1);
-    graphic.close();
     return hasBackground;
 }
 

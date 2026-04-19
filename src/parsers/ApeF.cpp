@@ -41,7 +41,7 @@ ApeF::~ApeF()
     }
 
     // free header
-    apef->info.palName.clear();    
+    apef->info->name.clear();    
 }
 
 ApeFrameBuffer** ApeF::getFrameBuffers()
@@ -51,7 +51,7 @@ ApeFrameBuffer** ApeF::getFrameBuffers()
 
 int ApeF::getFrameCount() 
 {
-    return apef->info.frameCount;
+    return apef->info->frameCount;
 }
 
 std::string ApeF::getPalLocation() 
@@ -220,35 +220,35 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         std::cout << "\tType: not fatz" << std::endl;
     }
 
-    file.read((char*)&header.speed, 4); // animation speed in ms
-    file.read((char*)&header.palNameSize, 4); // size of palette name
-    header.palName.resize(header.palNameSize); // resize to size
-    file.read(header.palName.data(), header.palNameSize); // read palette name
-    file.read((char*)&header.frameCount, 4); // number of frames
-    frames.resize(header.frameCount); // resize frames to frame count
+    file.read((char*)&apef->info->speed, 4); // animation speed in ms
+    file.read((char*)&apef->palette->nameSize, 4); // size of palette name
+    apef->info->palName.resize(apef->palette->nameSize); // resize to size
+    file.read(apef->info->palName.data(), apef->palette->nameSize); // read palette name
+    file.read((char*)&apef->info->frameCount, 4); // number of frames
+    frames.resize(apef->info->frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
-        apef->palette->location = std::string(header.palName.data());
+        apef->palette->location = std::string(apef->info->palName.data());
     else
         apef->palette->location = ioPal;
 
     if (apef->hasBackground) {
-        header.frameCount += 1;
-        frames.resize(header.frameCount);
+        apef->info->frameCount += 1;
+        frames.resize(apef->info->frameCount);
     }
 
     // print header
-    std::cout << "\tspeed: " << header.speed << " ms" << std::endl;
-    std::cout << "\tpalNameSize: " << header.palNameSize << " bytes" << std::endl;
-    std::cout << "\tpalName: " << header.palName.data() << std::endl;
-    std::cout << "\tframeCount: " << header.frameCount << std::endl;
+    std::cout << "\tspeed: " << apef->info->speed << " ms" << std::endl;
+    std::cout << "\tpalNameSize: " << apef->palette->nameSize << " bytes" << std::endl;
+    std::cout << "\tpalName: " << apef->info->name.data() << std::endl;
+    std::cout << "\tframeCount: " << apef->info->frameCount << std::endl;
     std::cout << "\tframes: " << frames.size() << std::endl;
 
     // ------------------------------- read palette
     ApeF::readPal(apef->palette->location);
 
     // ------------------------------- read frames
-    for (int i = 0; i < header.frameCount; i++) {
+    for (int i = 0; i < apef->info->frameCount; i++) {
         ApeFrame frame;
         file.read((char*)&frame.frameSize, 4);
         file.read((char*)&frame.height, 2);
@@ -337,10 +337,10 @@ int ApeF::save(std::string fileName)
     }
 
     // -------------------------------------- write header
-    output.write((char*)&header.speed, 4); // speed in ms
-    output.write((char*)&header.palNameSize, 4); // size of palette name
-    output.write(header.palName.data(), header.palNameSize); // palette name
-    output.write((char*)&header.frameCount, 4); // frame count
+    output.write((char*)&apef->info->speed, 4); // speed in ms
+    output.write((char*)&apef->palette->nameSize, 4); // size of palette name
+    output.write(apef->info->palName.data(), apef->palette->nameSize); // palette name
+    output.write((char*)&apef->info->frameCount, 4); // frame count
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal

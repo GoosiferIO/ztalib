@@ -11,11 +11,25 @@ class PalF {
         int load(std::string fileName);
         virtual ~PalF();
         static int validatePaletteFile(std::string fileName);
+        std::string location;
+        uint32_t nameSize;
+        std::vector<char> name;
+        int colorModel;
 
     private:
         int readPal(std::string fileName);
-        std::ifstream palFile;
+        std::ifstream file;
         std::vector<ApeColor> colors;
-        uint32_t palNameSize;
-        std::vector<char> palName;
 };
+
+PalF::PalF()
+{
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
+        std::ifstream::failbit | std::ifstream::badbit));
+    colors = std::vector<ApeColor>();
+    nameSize = 0;
+    name = std::vector<char>();
+    location = "";
+    colorModel = 0;
+}

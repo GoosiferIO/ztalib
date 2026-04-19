@@ -4,26 +4,23 @@
 
 ApeF::ApeF()
 {
-    hasBackground = false;
-    info.speed = 0;
-    info.frameCount = 0;
-    frames = std::vector<ApeFrame>();
-    pixelBlocks = std::vector<std::vector<ApePixelBlock>>();
-    palFile = PalF();
-    input = std::ifstream();
-    input.exceptions(static_cast<std::ios_base::iostate>(
+    // init ApeData
+    apef = std::make_unique<ApeData>(new ApeData());
+
+    // init other members
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
-    palLocation = "";
 
     frameBuffers = new ApeFrameBuffer*[1];
 }
 
 ApeF::~ApeF()
 { 
-    if (input.is_open()) 
+    if (file.is_open()) 
     {
-        input.close();
+        file.close();
     }
 
     // free frame buffers
@@ -35,16 +32,16 @@ ApeF::~ApeF()
     }
 
     // free frames
-    frames.clear();
+    apef->frames.clear();
 
     // free pixel blocks
-    for (std::vector<ApePixelBlock> &blocks : pixelBlocks) 
+    for (std::vector<ApePixelBlock> &blocks : apef->pixelBlocks) 
     {
         blocks.clear();
     }
 
     // free header
-    info.palName.clear();    
+    apef->palette->name.clear();    
 }
 
 ApeFrameBuffer** ApeF::getFrameBuffers()
@@ -54,41 +51,41 @@ ApeFrameBuffer** ApeF::getFrameBuffers()
 
 int ApeF::getFrameCount() 
 {
-    return info.frameCount;
+    return apef->info->frameCount;
 }
 
 std::string ApeF::getPalLocation() 
 {
-    return palLocation;
+    return apef->palette->location;
 }
 
 
-int ApeF::hasMagic(std::ifstream &input)
+int ApeF::hasMagic(std::ifstream &file)
 {
     char magic[5] = {0};
-    input.read(magic, 4);
+    file.read(magic, 4);
 
     // std::cout << "\tMagic Bytes: " << magic << std::endl;
     
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
-    if (input.gcount() < 4) 
+    if (file.gcount() < 4) 
     {
-        input.clear();  
-        input.seekg(0, std::ios::beg);
+        file.clear();  
+        file.seekg(0, std::ios::beg);
         return 0;
     }
 
     // test for FATZ
     if (strcmp(magic, MAGIC) != 0) {
-        input.clear();
-        input.seekg(0, std::ios::beg);
+        file.clear();
+        file.seekg(0, std::ios::beg);
         return 0;
     }
 
     // FATZ found
-    input.clear();
-    input.seekg(0, std::ios::beg);
+    file.clear();
+    file.seekg(0, std::ios::beg);
     return 1;
 }
 
@@ -202,8 +199,8 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
-    input.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
-    if (!input.is_open()) {
+    file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
+    if (!file.is_open()) {
         return -1;
     }
 
@@ -212,66 +209,66 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "Header" << std::endl;
 
     // check if fatz
-    if (hasMagic(input)) {
+    if (hasMagic(file)) {
         // skip 8 bytes
-        input.seekg(8, std::ios::cur);
+        file.seekg(8, std::ios::cur);
         // read 9th byte
-        input.read((char*)&hasBackground, 1);
+        file.read((char*)&apef->hasBackground, 1);
         std::cout << "\tType: is fatz" << std::endl;
-        std::cout << "\thasBackground: " << hasBackground << std::endl;
+        std::cout << "\thasBackground: " << apef->hasBackground << std::endl;
     } else {
         std::cout << "\tType: not fatz" << std::endl;
     }
 
-    input.read((char*)&header.speed, 4); // animation speed in ms
-    input.read((char*)&header.palNameSize, 4); // size of palette name
-    header.palName.resize(header.palNameSize); // resize to size
-    input.read(header.palName.data(), header.palNameSize); // read palette name
-    input.read((char*)&header.frameCount, 4); // number of frames
-    frames.resize(header.frameCount); // resize frames to frame count
+    file.read((char*)&apef->info->speed, 4); // animation speed in ms
+    file.read((char*)&apef->palette->nameSize, 4); // size of palette name
+    apef->palette->name.resize(apef->palette->nameSize); // resize to size
+    file.read(apef->palette->name.data(), apef->palette->nameSize); // read palette name
+    file.read((char*)&apef->info->frameCount, 4); // number of frames
+    frames.resize(apef->info->frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
-        palLocation = std::string(header.palName.data());
+        apef->palette->location = std::string(apef->palette->name.data());
     else
-        palLocation = ioPal;
+        apef->palette->location = ioPal;
 
-    if (hasBackground) {
-        header.frameCount += 1;
-        frames.resize(header.frameCount);
+    if (apef->hasBackground) {
+        apef->info->frameCount += 1;
+        frames.resize(apef->info->frameCount);
     }
 
     // print header
-    std::cout << "\tspeed: " << header.speed << " ms" << std::endl;
-    std::cout << "\tpalNameSize: " << header.palNameSize << " bytes" << std::endl;
-    std::cout << "\tpalName: " << header.palName.data() << std::endl;
-    std::cout << "\tframeCount: " << header.frameCount << std::endl;
+    std::cout << "\tspeed: " << apef->info->speed << " ms" << std::endl;
+    std::cout << "\tpalNameSize: " << apef->palette->nameSize << " bytes" << std::endl;
+    std::cout << "\tpalName: " << apef->palette->name.data() << std::endl;
+    std::cout << "\tframeCount: " << apef->info->frameCount << std::endl;
     std::cout << "\tframes: " << frames.size() << std::endl;
 
     // ------------------------------- read palette
-    ApeF::readPal(palLocation);
+    ApeF::readPal(apef->palette->location);
 
     // ------------------------------- read frames
-    for (int i = 0; i < header.frameCount; i++) {
+    for (int i = 0; i < apef->info->frameCount; i++) {
         ApeFrame frame;
-        input.read((char*)&frame.frameSize, 4);
-        input.read((char*)&frame.height, 2);
-        input.read((char*)&frame.width, 2);
-        input.read((char*)&frame.y, 2);
-        input.read((char*)&frame.x, 2);
-        input.read((char*)&frame.unk1, 1); // always 0?
-        input.read((char*)&frame.unk2, 1); // always 0?
+        file.read((char*)&frame.frameSize, 4);
+        file.read((char*)&frame.height, 2);
+        file.read((char*)&frame.width, 2);
+        file.read((char*)&frame.y, 2);
+        file.read((char*)&frame.x, 2);
+        file.read((char*)&frame.unk1, 1); // always 0?
+        file.read((char*)&frame.unk2, 1); // always 0?
 
         // read pixel sets
         for (int j = 0; j < frame.height; j++) {
             ApePixelSet ApePixelSet;
-            input.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
+            file.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
             ApePixelSet.blocks.resize(ApePixelSet.blockCount); // resize to block count
             for (int k = 0; k < ApePixelSet.blockCount; k++) { // read each block
                 ApePixelBlock block;
-                input.read((char*)&block.offset, 1); // offset
-                input.read((char*)&block.colorCount, 1); // color count
+                file.read((char*)&block.offset, 1); // offset
+                file.read((char*)&block.colorCount, 1); // color count
                 block.colors.resize(block.colorCount); // resize to color count
-                input.read((char*)block.colors.data(), block.colorCount); // colors
+                file.read((char*)block.colors.data(), block.colorCount); // colors
                 ApePixelSet.blocks[k] = block; // store block
             }
 
@@ -312,7 +309,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         }
     }
 
-    input.close();
+    file.close();
 
     // write output buffer
     if (ApeF::writeBuffer() > 0) {
@@ -333,17 +330,17 @@ int ApeF::save(std::string fileName)
         return -1;
     }
 
-    if (hasBackground) 
+    if (apef->hasBackground) 
     {
         // WRITE: FATZ
         output.write(MAGIC, 4);
     }
 
     // -------------------------------------- write header
-    output.write((char*)&header.speed, 4); // speed in ms
-    output.write((char*)&header.palNameSize, 4); // size of palette name
-    output.write(header.palName.data(), header.palNameSize); // palette name
-    output.write((char*)&header.frameCount, 4); // frame count
+    output.write((char*)&apef->info->speed, 4); // speed in ms
+    output.write((char*)&apef->palette->nameSize, 4); // size of palette name
+    output.write(apef->palette->name.data(), apef->palette->nameSize); // palette name
+    output.write((char*)&apef->info->frameCount, 4); // frame count
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
@@ -370,7 +367,7 @@ int ApeF::save(std::string fileName)
     output.close();
 
     // write palette
-    // ApeF::writePal(palLocation);
+    // ApeF::writePal(apef->palette->location);
 
     return 1;
 }
@@ -384,7 +381,8 @@ int ApeF::validateGraphicFile(std::string fileName)
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
-    ApeInfo hdr;
+    std::unique_ptr<PalF> pal = std::make_unique<PalF>(new PalF());
+    std::unique_ptr<ApeInfo> info = std::make_unique<ApeInfo>(new ApeInfo());
     
     // if file is not open, return false
     if (!graphic.is_open()) {
@@ -406,19 +404,19 @@ int ApeF::validateGraphicFile(std::string fileName)
     // - HAS BACKGROUND - 1 byte
     // does not mean file is invalid, just not a FATZ file or ZTAF (reverse FATZ)
 
-    graphic.read((char*)&hdr.speed, 4); // speed in ms
-    graphic.read((char*)&hdr.palNameSize, 4); // size of palette name
-    hdr.palName.resize(hdr.palNameSize); // resize to size
-    graphic.read(hdr.palName.data(), hdr.palNameSize); // read palette name
-    graphic.read((char*)&hdr.frameCount, 4); // frame count
+    graphic.read((char*)&info->speed, 4); // speed in ms
+    graphic.read((char*)&pal->nameSize, 4); // size of palette name
+    pal->name.resize(pal->nameSize); // resize to size
+    graphic.read(pal->name.data(), pal->nameSize); // read palette name
+    graphic.read((char*)&info->frameCount, 4); // frame count
 
     // if pal name is empty, return false
-    if (hdr.palName.empty() || hdr.palNameSize == 0 || hdr.palNameSize < 0) {
+    if (pal->name.empty() || pal->nameSize == 0 || pal->nameSize < 0) {
         // if no palette exists then immediately return false
         return 0;
     }
 
-    std::string palette(hdr.palName.data());
+    std::string palette(pal->name.data());
 
     // if pal name has '.pal' extension, return true
     if (palette.find(".pal") != std::string::npos) {
@@ -431,7 +429,7 @@ int ApeF::validateGraphicFile(std::string fileName)
 
 int ApeF::hasBackgroundFrame() 
 {
-    return hasBackground;
+    return apef->hasBackground;
 }
 
 int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)
@@ -451,26 +449,7 @@ int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)
     return 1;
 }
 
-ApeInfo ApeF::getHeader(std::string fileName) 
+std::unique_ptr<ApeInfo> ApeF::getHeader(std::string fileName) 
 {
-    std::ifstream graphic(fileName, std::ios::binary);
-    ApeInfo hdr;
-    if (!graphic.is_open()) {
-        return hdr;
-    }
-
-    // if has magic bytes FATZ
-    if (hasMagic(graphic)) {
-        // skip 9 bytes
-        graphic.seekg(9, std::ios::cur);
-    }
-
-    graphic.read((char*)&hdr.speed, 4); // speed in ms
-    graphic.read((char*)&hdr.palNameSize, 4); // size of palette name
-    hdr.palName.resize(hdr.palNameSize); // resize to size
-    graphic.read(hdr.palName.data(), hdr.palNameSize); // read palette name
-    graphic.read((char*)&hdr.frameCount, 4); // frame count
-
-    graphic.close();
-    return hdr;
+    return apef->info ? std::make_unique<ApeInfo>(new ApeInfo(*apef->info)) : nullptr;
 }

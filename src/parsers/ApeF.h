@@ -1,7 +1,7 @@
-#ifndef APECORE_H
-#define APECORE_H
+#ifndef APEF_H
+#define APEF_H
 
-// APE.CORE - ZT1 Graphics Parser
+// ape-graphics-parser - ZT1 Graphics Parser
 // by Eric Galvan (Goosifer.IO)
 // https://github.com/openztcc/APE.Core
 // Licensed under MIT (see LICENSE)
@@ -22,15 +22,10 @@
 #include <iostream>
 #include <cstdint>
 #include <cstring>
+#include <memory>
 
 #include "./include/stb_image_write.h"
-#include "src/data/ApePixelBlock.h"
-#include "src/data/ApePixelSet.h"
-#include "src/data/ApeFrame.h"
-#include "src/data/ApeInfo.h"
-#include "src/data/ApeColor.h"
-#include "src/data/ApeFrameBuffer.h"
-#include "src/parsers/PalF.h"
+#include "../data/ApeData.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -57,24 +52,19 @@ class ApeF
         static int validateGraphicFile(std::string fileName);
         int hasBackgroundFrame();
         // return header info
-        static ApeInfo getHeader(std::string fileName);
+        std::unique_ptr<ApeInfo> getHeader(std::string fileName);
 
     private:
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
         // binary input
-        std::ifstream input;
+        std::ifstream file;
         // output buffers
         ApeFrameBuffer** frameBuffers;
         // data
-        ApeInfo info;
-        std::vector<ApeFrame> frames;
-        std::vector<std::vector<ApePixelBlock>> pixelBlocks;
-        PalF palFile;
+        std::unique_ptr<ApeData> apef;
         // other
-        bool hasBackground = false;
         int colorModel;
-        std::string palLocation;
     };
 
-#endif // APECORE_H
+#endif // APEF_H

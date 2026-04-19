@@ -4,25 +4,25 @@ int PalF::readPal(std::string fileName)
 {
     std::cout << "Reading palette: " << fileName << std::endl;
     
-    palFile.open(fileName, std::ios::binary);
-    if (!palFile.is_open()) {
+    file.open(fileName, std::ios::binary);
+    if (!file.is_open()) {
         std::cerr << "ERROR: Could not open palette file: " << fileName << std::endl;
         return -1;
     }
 
     // Read color count (4 bytes, little-endian)
     uint16_t colorCount = 0;
-    palFile.read(reinterpret_cast<char*>(&colorCount), 2);
+    file.read(reinterpret_cast<char*>(&colorCount), 2);
 
     // Skip 2
-    palFile.seekg(2, std::ios::cur);
+    file.seekg(2, std::ios::cur);
     
     std::cout << "\tColor count: " << colorCount << std::endl;
 
     // Validate color count
     if (colorCount == 0 || colorCount > 256) {
         std::cerr << "ERROR: Invalid color count: " << colorCount << std::endl;
-        palFile.close();
+        file.close();
         return -2;
     }
 
@@ -37,7 +37,7 @@ int PalF::readPal(std::string fileName)
         // palFile.read(reinterpret_cast<char*>(&abgr), 4);
 
         ApeColor color;
-        palFile.read(reinterpret_cast<char*>(&color), 4);
+        file.read(reinterpret_cast<char*>(&color), 4);
 
         // Convert RGBA to BGRA if necessary
         if (colorModel == 1) {
@@ -56,7 +56,7 @@ int PalF::readPal(std::string fileName)
                   << std::endl;
     }
 
-    palFile.close();
+    file.close();
 
     // Fill remaining colors if necessary
     while (colors.size() < 256) {

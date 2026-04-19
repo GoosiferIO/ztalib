@@ -14,6 +14,7 @@ class PalF {
         std::string location;
         uint32_t nameSize;
         std::vector<char> name;
+        int colorModel;
 
     private:
         int readPal(std::string fileName);
@@ -30,4 +31,5 @@ PalF::PalF()
     nameSize = 0;
     name = std::vector<char>();
     location = "";
+    colorModel = 0;
 }

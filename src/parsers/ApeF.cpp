@@ -41,7 +41,7 @@ ApeF::~ApeF()
     }
 
     // free header
-    apef->info->name.clear();    
+    apef->palette->name.clear();    
 }
 
 ApeFrameBuffer** ApeF::getFrameBuffers()
@@ -222,13 +222,13 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
     file.read((char*)&apef->info->speed, 4); // animation speed in ms
     file.read((char*)&apef->palette->nameSize, 4); // size of palette name
-    apef->info->palName.resize(apef->palette->nameSize); // resize to size
-    file.read(apef->info->palName.data(), apef->palette->nameSize); // read palette name
+    apef->palette->name.resize(apef->palette->nameSize); // resize to size
+    file.read(apef->palette->name.data(), apef->palette->nameSize); // read palette name
     file.read((char*)&apef->info->frameCount, 4); // number of frames
     frames.resize(apef->info->frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
-        apef->palette->location = std::string(apef->info->palName.data());
+        apef->palette->location = std::string(apef->palette->name.data());
     else
         apef->palette->location = ioPal;
 
@@ -240,7 +240,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     // print header
     std::cout << "\tspeed: " << apef->info->speed << " ms" << std::endl;
     std::cout << "\tpalNameSize: " << apef->palette->nameSize << " bytes" << std::endl;
-    std::cout << "\tpalName: " << apef->info->name.data() << std::endl;
+    std::cout << "\tpalName: " << apef->palette->name.data() << std::endl;
     std::cout << "\tframeCount: " << apef->info->frameCount << std::endl;
     std::cout << "\tframes: " << frames.size() << std::endl;
 
@@ -339,7 +339,7 @@ int ApeF::save(std::string fileName)
     // -------------------------------------- write header
     output.write((char*)&apef->info->speed, 4); // speed in ms
     output.write((char*)&apef->palette->nameSize, 4); // size of palette name
-    output.write(apef->info->palName.data(), apef->palette->nameSize); // palette name
+    output.write(apef->palette->name.data(), apef->palette->nameSize); // palette name
     output.write((char*)&apef->info->frameCount, 4); // frame count
 
     // write frames
@@ -381,7 +381,8 @@ int ApeF::validateGraphicFile(std::string fileName)
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
-    ApeInfo hdr;
+    std::unique_ptr<PalF> pal = std::make_unique<PalF>(new PalF());
+    std::unique_ptr<ApeInfo> info = std::make_unique<ApeInfo>(new ApeInfo());
     
     // if file is not open, return false
     if (!graphic.is_open()) {
@@ -403,19 +404,19 @@ int ApeF::validateGraphicFile(std::string fileName)
     // - HAS BACKGROUND - 1 byte
     // does not mean file is invalid, just not a FATZ file or ZTAF (reverse FATZ)
 
-    graphic.read((char*)&hdr.speed, 4); // speed in ms
-    graphic.read((char*)&hdr.palNameSize, 4); // size of palette name
-    hdr.palName.resize(hdr.palNameSize); // resize to size
-    graphic.read(hdr.palName.data(), hdr.palNameSize); // read palette name
-    graphic.read((char*)&hdr.frameCount, 4); // frame count
+    graphic.read((char*)&info->speed, 4); // speed in ms
+    graphic.read((char*)&pal->nameSize, 4); // size of palette name
+    pal->name.resize(pal->nameSize); // resize to size
+    graphic.read(pal->name.data(), pal->nameSize); // read palette name
+    graphic.read((char*)&info->frameCount, 4); // frame count
 
     // if pal name is empty, return false
-    if (hdr.palName.empty() || hdr.palNameSize == 0 || hdr.palNameSize < 0) {
+    if (pal->name.empty() || pal->nameSize == 0 || pal->nameSize < 0) {
         // if no palette exists then immediately return false
         return 0;
     }
 
-    std::string palette(hdr.palName.data());
+    std::string palette(pal->name.data());
 
     // if pal name has '.pal' extension, return true
     if (palette.find(".pal") != std::string::npos) {
@@ -448,26 +449,7 @@ int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)
     return 1;
 }
 
-ApeInfo ApeF::getHeader(std::string fileName) 
+std::unique_ptr<ApeInfo> ApeF::getHeader(std::string fileName) 
 {
-    std::ifstream graphic(fileName, std::ios::binary);
-    ApeInfo hdr;
-    if (!graphic.is_open()) {
-        return hdr;
-    }
-
-    // if has magic bytes FATZ
-    if (hasMagic(graphic)) {
-        // skip 9 bytes
-        graphic.seekg(9, std::ios::cur);
-    }
-
-    graphic.read((char*)&hdr.speed, 4); // speed in ms
-    graphic.read((char*)&hdr.palNameSize, 4); // size of palette name
-    hdr.palName.resize(hdr.palNameSize); // resize to size
-    graphic.read(hdr.palName.data(), hdr.palNameSize); // read palette name
-    graphic.read((char*)&hdr.frameCount, 4); // frame count
-
-    graphic.close();
-    return hdr;
+    return apef->info ? std::make_unique<ApeInfo>(new ApeInfo(*apef->info)) : nullptr;
 }

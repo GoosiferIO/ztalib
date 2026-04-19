@@ -52,7 +52,7 @@ class ApeF
         static int validateGraphicFile(std::string fileName);
         int hasBackgroundFrame();
         // return header info
-        static ApeInfo getHeader(std::string fileName);
+        std::unique_ptr<ApeInfo> getHeader(std::string fileName);
 
     private:
         static int hasMagic(std::ifstream &input);

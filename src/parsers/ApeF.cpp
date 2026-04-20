@@ -101,17 +101,17 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read frames
     for (int i = 0; i < _data->info->frameCount; i++) {
-        ApeFrame frame;
-        _file.read((char*)&frame.frameSize, 4);
-        _file.read((char*)&frame.height, 2);
-        _file.read((char*)&frame.width, 2);
-        _file.read((char*)&frame.y, 2);
-        _file.read((char*)&frame.x, 2);
-        _file.read((char*)&frame.unk1, 1); // always 0?
-        _file.read((char*)&frame.unk2, 1); // always 0?
+        std::unique_ptr<ApeFrame> frame = std::make_unique<ApeFrame>();
+        _file.read((char*)&frame->frameSize, 4);
+        _file.read((char*)&frame->height, 2);
+        _file.read((char*)&frame->width, 2);
+        _file.read((char*)&frame->y, 2);
+        _file.read((char*)&frame->x, 2);
+        _file.read((char*)&frame->unk1, 1); // always 0?
+        _file.read((char*)&frame->unk2, 1); // always 0?
 
         // read pixel sets
-        for (int j = 0; j < frame.height; j++) {
+        for (int j = 0; j < frame->height; j++) {
             ApePixelSet ApePixelSet;
             _file.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
             ApePixelSet.blocks.resize(ApePixelSet.blockCount); // resize to block count
@@ -129,32 +129,32 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
             // if (ApePixelSet.blockCount == 0) {
             //     ApePixelSet.blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
             // }
-            frame.pixelSets.push_back(ApePixelSet); // store pixel set
+            frame->pixelSets.push_back(ApePixelSet); // store pixel set
         }
 
         // store frame
-        _data->frames[i] = frame;
+        _data->frames[i] = std::move(frame);
 
         // print frame
         std::cout << "ApeFrame " << i << std::endl;
-        std::cout << "\tframeSize: " << frame.frameSize << " bytes" << std::endl;
-        std::cout << "\theight: " << (int)frame.height << " px" << std::endl;
-        std::cout << "\twidth: " << (int)frame.width << " px" << std::endl;
-        std::cout << "\ty: " << (int)frame.y << std::endl;
-        std::cout << "\tx: " << (int)frame.x << std::endl;
-        std::cout << "\tunk1: " << (int)frame.unk1 << std::endl;
-        std::cout << "\tunk2: " << (int)frame.unk2 << std::endl;
-        std::cout << "\tApePixelSets: " << frame.pixelSets.size() << std::endl;
-        for (int j = 0; j < frame.pixelSets.size(); j++) {
+        std::cout << "\tframeSize: " << frame->frameSize << " bytes" << std::endl;
+        std::cout << "\theight: " << (int)frame->height << " px" << std::endl;
+        std::cout << "\twidth: " << (int)frame->width << " px" << std::endl;
+        std::cout << "\ty: " << (int)frame->y << std::endl;
+        std::cout << "\tx: " << (int)frame->x << std::endl;
+        std::cout << "\tunk1: " << (int)frame->unk1 << std::endl;
+        std::cout << "\tunk2: " << (int)frame->unk2 << std::endl;
+        std::cout << "\tApePixelSets: " << frame->pixelSets.size() << std::endl;
+        for (int j = 0; j < frame->pixelSets.size(); j++) {
             std::cout << "\t\tApePixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)frame.pixelSets[j].blockCount << std::endl;
-            for (int k = 0; k < frame.pixelSets[j].blocks.size(); k++) {
+            std::cout << "\t\t\tblockCount: " << (int)frame->pixelSets[j].blockCount << std::endl;
+            for (int k = 0; k < frame->pixelSets[j].blocks.size(); k++) {
                 std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)frame.pixelSets[j].blocks[k].offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)frame.pixelSets[j].blocks[k].colorCount << std::endl;
+                std::cout << "\t\t\t\toffset: " << (int)frame->pixelSets[j].blocks[k].offset << std::endl;
+                std::cout << "\t\t\t\tcolorCount: " << (int)frame->pixelSets[j].blocks[k].colorCount << std::endl;
                 std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < frame.pixelSets[j].blocks[k].colorCount; l++) {
-                    std::cout << (int)frame.pixelSets[j].blocks[k].colors[l] << " ";
+                for (int l = 0; l < frame->pixelSets[j].blocks[k].colorCount; l++) {
+                    std::cout << (int)frame->pixelSets[j].blocks[k].colors[l] << " ";
                 }
                 std::cout << std::endl;
             }

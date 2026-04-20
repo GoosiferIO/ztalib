@@ -59,11 +59,11 @@ class ApeF
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
         // binary input
-        std::ifstream file;
+        std::ifstream _file;
         // output buffers
-        std::vector<std::unique_ptr<ApeFrameBuffer>> frameBuffers;
+        std::vector<std::unique_ptr<ApeFrameBuffer>> _frameBuffers;
         // data
-        std::unique_ptr<ApeData> apef;
+        std::unique_ptr<ApeData> _data;
         // other
         int colorModel;
     };

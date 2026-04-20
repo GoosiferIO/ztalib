@@ -45,36 +45,6 @@ std::string ApeF::getPalLocation()
     return _data->palette->location;
 }
 
-
-int ApeF::hasMagic(std::ifstream &_file)
-{
-    char magic[5] = {0};
-    _file.read(magic, 4);
-
-    // std::cout << "\tMagic Bytes: " << magic << std::endl;
-    
-    // read at least 4 bytes
-    // if less than 4 bytes, not FATZ
-    if (_file.gcount() < 4) 
-    {
-        _file.clear();  
-        _file.seekg(0, std::ios::beg);
-        return 0;
-    }
-
-    // test for FATZ
-    if (strcmp(magic, MAGIC) != 0) {
-        _file.clear();
-        _file.seekg(0, std::ios::beg);
-        return 0;
-    }
-
-    // FATZ found
-    _file.clear();
-    _file.seekg(0, std::ios::beg);
-    return 1;
-}
-
 // ApeColor model 0 = RGBA
 // ApeColor model 1 = BGRA
 int ApeF::load(std::string fileName, int colorModel, std::string ioPal)

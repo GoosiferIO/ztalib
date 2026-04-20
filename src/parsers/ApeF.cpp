@@ -112,22 +112,22 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
         // read pixel sets
         for (int j = 0; j < frame->height; j++) {
-            ApePixelSet pixelSet;
-            _file.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
-            pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
-            for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
-                ApePixelBlock block;
-                _file.read((char*)&block.offset, 1); // offset
-                _file.read((char*)&block.colorCount, 1); // color count
-                block.colors.resize(block.colorCount); // resize to color count
-                _file.read((char*)block.colors.data(), block.colorCount); // colors
-                pixelSet.blocks[k] = block; // store block
+            std::unique_ptr<ApePixelSet> pixelSet = std::make_unique<ApePixelSet>();
+            _file.read((char*)&pixelSet->blockCount, 1); // how many pixel blocks
+            pixelSet->blocks.resize(pixelSet->blockCount); // resize to block count
+            for (int k = 0; k < pixelSet->blockCount; k++) { // read each block
+                std::unique_ptr<ApePixelBlock> block = std::make_unique<ApePixelBlock>();
+                _file.read((char*)&block->offset, 1); // offset
+                _file.read((char*)&block->colorCount, 1); // color count
+                block->colors.resize(block->colorCount); // resize to color count
+                _file.read((char*)block->colors.data(), block->colorCount); // colors
+                pixelSet->blocks[k] = std::move(block); // store block
             }
 
             // // TODO: test issues that might arise from this
             // // Possible issue: skips some pixels and leaves them blank
-            // if (pixelSet.blockCount == 0) {
-            //     pixelSet.blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
+            // if (pixelSet->blockCount == 0) {
+            //     pixelSet->blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
             // }
             frame->pixelSets.push_back(pixelSet); // store pixel set
         }
@@ -206,9 +206,9 @@ int ApeF::save(std::string fileName)
         output.write((char*)&frame->unk2, 1);
 
         // write pixel sets
-        for (const std::unique_ptr<ApePixelSet>& ApePixelSet : frame->pixelSets) {
-            output.write((char*)&ApePixelSet->blockCount, 1);
-            for (const std::unique_ptr<ApePixelBlock>& block : ApePixelSet->blocks) {
+        for (const std::unique_ptr<ApePixelSet>& pixelSet : frame->pixelSets) {
+            output.write((char*)&pixelSet->blockCount, 1);
+            for (const std::unique_ptr<ApePixelBlock>& block : pixelSet->blocks) {
                 output.write((char*)&block->offset, 1);
                 output.write((char*)&block->colorCount, 1);
                 output.write((char*)block->colors.data(), block->colorCount);

@@ -27,6 +27,7 @@
 #include "./include/stb_image_write.h"
 #include "../data/ApeData.h"
 #include "../data/ApeFrameBuffer.h"
+#include "../other/ApeUtils.h"
 
 #define APE_CORE_VERSION "0.6.4"
 

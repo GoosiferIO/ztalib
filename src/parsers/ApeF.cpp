@@ -30,7 +30,7 @@ ApeF::~ApeF()
     _data->palette->name.clear();    
 }
 
-ApeFrameBuffer** ApeF::getFrameBuffers()
+std::vector<std::unique_ptr<ApeFrameBuffer>> ApeF::getFrameBuffers()
 {
     return _frameBuffer;
 }
@@ -61,7 +61,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "Header" << std::endl;
 
     // check if fatz
-    if (hasMagic(_file)) {
+    if (ApeUtils::hasMagic(_file)) {
         // skip 8 bytes
         _file.seekg(8, std::ios::cur);
         // read 9th byte

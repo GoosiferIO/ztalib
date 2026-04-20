@@ -127,7 +127,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
             // // TODO: test issues that might arise from this
             // // Possible issue: skips some pixels and leaves them blank
             // if (pixelSet->blockCount == 0) {
-            //     pixelSet->blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
+            //     pixelSet->blocks.push_back(std::make_unique<ApePixelBlock>(0, 0, std::vector<uint8_t>()));
             // }
             frame->pixelSets.push_back(pixelSet); // store pixel set
         }
@@ -147,14 +147,14 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         std::cout << "\tApePixelSets: " << frame->pixelSets.size() << std::endl;
         for (int j = 0; j < frame->pixelSets.size(); j++) {
             std::cout << "\t\tApePixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)frame->pixelSets[j].blockCount << std::endl;
-            for (int k = 0; k < frame->pixelSets[j].blocks.size(); k++) {
+            std::cout << "\t\t\tblockCount: " << (int)frame->pixelSets[j]->blockCount << std::endl;
+            for (int k = 0; k < frame->pixelSets[j]->blocks.size(); k++) {
                 std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)frame->pixelSets[j].blocks[k].offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)frame->pixelSets[j].blocks[k].colorCount << std::endl;
+                std::cout << "\t\t\t\toffset: " << (int)frame->pixelSets[j]->blocks[k]->offset << std::endl;
+                std::cout << "\t\t\t\tcolorCount: " << (int)frame->pixelSets[j]->blocks[k]->colorCount << std::endl;
                 std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < frame->pixelSets[j].blocks[k].colorCount; l++) {
-                    std::cout << (int)frame->pixelSets[j].blocks[k].colors[l] << " ";
+                for (int l = 0; l < frame->pixelSets[j]->blocks[k]->colorCount; l++) {
+                    std::cout << (int)frame->pixelSets[j]->blocks[k]->colors[l] << " ";
                 }
                 std::cout << std::endl;
             }

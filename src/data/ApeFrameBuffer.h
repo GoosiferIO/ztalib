@@ -20,9 +20,9 @@ class ApeFrameBuffer
     ~ApeFrameBuffer();
     std::vector<std::unique_ptr<ApeFrameBufferObject>> _buffer;
     std::vector<std::unique_ptr<ApeFrame>> _frames;
-    std::unique_ptr<ApeData> _data;
     private:
     int createBuffer();
+    std::unique_ptr<ApeData> _data;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data) 

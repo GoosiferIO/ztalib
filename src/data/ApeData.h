@@ -7,7 +7,6 @@
 // structs
 #include "ApeFrame.h"
 #include "ApeInfo.h"
-#include "ApeFrameBuffer.h"
 
 // parsers
 #include "../parsers/PalF.h"

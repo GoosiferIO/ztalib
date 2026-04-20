@@ -24,7 +24,7 @@
 #include <cstring>
 #include <memory>
 
-#include "./include/stb_image_write.h"
+#include "../../include/stb_image_write.h"
 #include "../data/ApeData.h"
 #include "../data/ApeFrameBuffer.h"
 #include "../other/ApeUtils.h"

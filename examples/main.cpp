@@ -2,8 +2,8 @@
 #include "../include/apespeed.h"
 #include <string>
 #include <iostream>
-#include <chrono>
-#include <omp.h>
+// #include <chrono>
+// #include <omp.h>
 
 int main(int argc, char const *argv[])
 {
@@ -38,23 +38,23 @@ int main(int argc, char const *argv[])
         std::cout << "Output name set to default" << std::endl;
     }
 
-    omp_set_num_threads(num_threads);
+    // omp_set_num_threads(num_threads);
 
-    // Start test 
-    double total_time = 0.0;
-    auto start = std::chrono::high_resolution_clock::now();
+    // // Start test 
+    // double total_time = 0.0;
+    // auto start = std::chrono::high_resolution_clock::now();
 
     if (!core.load(input_file, 0, palette_file)) {
         std::cerr << "Failed to load file: " << input_file << std::endl;
         return 1;
     }
-    auto end = std::chrono::high_resolution_clock::now();
+    // auto end = std::chrono::high_resolution_clock::now();
 
 
-    std::chrono::duration<double> runtime = end - start;
-    total_time += runtime.count();
-    std::cout << "Time taken to decode " << core.getFrameCount() << " frames: " << total_time << " seconds" << std::endl;
-    std::cout << "Average time per frame: " << total_time / core.getFrameCount() << " seconds" << std::endl;
+    // std::chrono::duration<double> runtime = end - start;
+    // total_time += runtime.count();
+    // std::cout << "Time taken to decode " << core.getFrameCount() << " frames: " << total_time << " seconds" << std::endl;
+    // std::cout << "Average time per frame: " << total_time / core.getFrameCount() << " seconds" << std::endl;
 
     // NOTE: UNCOMMENT THIS TO WRITE PNGs
     // int numBuffers = core.getFrameCount();

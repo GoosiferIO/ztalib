@@ -16,7 +16,7 @@ public:
         int offsetY;
         int channels;
     };
-    ApeFrameBuffer(std::unique_ptr<ApeData> data);
+    ApeFrameBuffer(const ApeData& data);
     ~ApeFrameBuffer();
     std::vector<std::unique_ptr<BufferObject>> getBuffer();
 
@@ -28,7 +28,7 @@ private:
     std::vector<std::unique_ptr<ApeFrame>> _frames;
 };
 
-ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data)
+ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     : _data(std::move(data)),
       _colorModel(0)
 {

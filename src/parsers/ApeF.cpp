@@ -164,9 +164,9 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     _file.close();
 
     // write output buffer
-    std::unique_ptr<ApeFrameBuffer> apeFrameBuffer 
-    = std::make_unique<ApeFrameBuffer>(new ApeFrameBuffer(std::move(_data)));
-    _frameBuffer = apeFrameBuffer->getBuffer();
+    ApeFrameBuffer apeFrameBuffer(*_data);
+    _frameBuffer = std::move(apeFrameBuffer.getBuffer());
+    
     if (_frameBuffer.empty()) 
     {
         return -2;

@@ -60,7 +60,7 @@ class ApeF
         // binary input
         std::ifstream file;
         // output buffers
-        ApeFrameBuffer** frameBuffers;
+        ApeFrameBuffer** frameBuffer;
         // data
         std::unique_ptr<ApeData> apef;
         // other

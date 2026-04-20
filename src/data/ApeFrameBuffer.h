@@ -16,10 +16,19 @@ class ApeFrameBuffer
         int offsetY;
         int channels;
     };
-
+    ApeFrameBuffer();
+    ~ApeFrameBuffer();
+    std::vector<std::unique_ptr<ApeFrameBufferObject>> buffer;
+    std::vector<std::unique_ptr<ApeFrame>> frames;
+    private:
     int createBuffer();
-    std::vector<ApeFrameBufferObject> buffers;
 };
+
+ApeFrameBuffer::ApeFrameBuffer()
+{
+    buffer = std::vector<std::unique_ptr<ApeFrameBufferObject>>();
+    frames = std::vector<std::unique_ptr<ApeFrame>>();
+}
 
 int ApeFrameBuffer::createBuffer() 
 {
@@ -28,7 +37,6 @@ int ApeFrameBuffer::createBuffer()
     }
 
     int numBuffers = getFrameCount();
-    frameBuffers = new ApeFrameBuffer*[numBuffers];
 
     for (ApeFrame &frame : frames) 
     {
@@ -121,7 +129,7 @@ int ApeFrameBuffer::createBuffer()
         }
         
         // Store the completed buffer
-        frameBuffers[index] = new ApeFrameBuffer(output);
+        buffers[index] = new ApeFrameBuffer(output);
     }
 
     return 1;

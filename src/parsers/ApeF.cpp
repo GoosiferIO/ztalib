@@ -13,7 +13,7 @@ ApeF::ApeF()
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
 
-    frameBuffers = new ApeFrameBuffer*[1];
+    frameBuffer = new ApeFrameBuffer*[1];
 }
 
 ApeF::~ApeF()
@@ -27,8 +27,8 @@ ApeF::~ApeF()
     int numBuffers = getFrameCount();
     for (int i = 0; i < numBuffers; i++) 
     {
-        delete[] frameBuffers[i]->pixels;
-        delete frameBuffers[i];
+        delete[] frameBuffer[i]->pixels;
+        delete frameBuffer[i];
     }
 
     // free frames
@@ -46,7 +46,7 @@ ApeF::~ApeF()
 
 ApeFrameBuffer** ApeF::getFrameBuffers()
 {
-    return frameBuffers;
+    return frameBuffer;
 }
 
 int ApeF::getFrameCount() 

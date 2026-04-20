@@ -121,7 +121,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     apef->palette->name.resize(apef->palette->nameSize); // resize to size
     file.read(apef->palette->name.data(), apef->palette->nameSize); // read palette name
     file.read((char*)&apef->info->frameCount, 4); // number of frames
-    frames.resize(apef->info->frameCount); // resize frames to frame count
+    apef->frames.resize(apef->info->frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
         apef->palette->location = std::string(apef->palette->name.data());
@@ -130,7 +130,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
     if (apef->hasBackground) {
         apef->info->frameCount += 1;
-        frames.resize(apef->info->frameCount);
+        apef->frames.resize(apef->info->frameCount);
     }
 
     // print header
@@ -138,7 +138,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "\tpalNameSize: " << apef->palette->nameSize << " bytes" << std::endl;
     std::cout << "\tpalName: " << apef->palette->name.data() << std::endl;
     std::cout << "\tframeCount: " << apef->info->frameCount << std::endl;
-    std::cout << "\tframes: " << frames.size() << std::endl;
+    std::cout << "\tframes: " << apef->frames.size() << std::endl;
 
     // ------------------------------- read palette
     ApeF::readPal(apef->palette->location);
@@ -177,7 +177,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         }
 
         // store frame
-        frames[i] = frame;
+        apef->frames[i] = frame;
 
         // print frame
         std::cout << "ApeFrame " << i << std::endl;
@@ -240,22 +240,22 @@ int ApeF::save(std::string fileName)
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (ApeFrame &frame : frames) {
-        output.write((char*)&frame.frameSize, 4);
-        output.write((char*)&frame.height, 2);
-        output.write((char*)&frame.width, 2);
-        output.write((char*)&frame.x, 2);
-        output.write((char*)&frame.y, 2);
-        output.write((char*)&frame.unk1, 1);
-        output.write((char*)&frame.unk2, 1);
+    for (const std::unique_ptr<ApeFrame>& frame : apef->frames) {
+        output.write((char*)&frame->frameSize, 4);
+        output.write((char*)&frame->height, 2);
+        output.write((char*)&frame->width, 2);
+        output.write((char*)&frame->x, 2);
+        output.write((char*)&frame->y, 2);
+        output.write((char*)&frame->unk1, 1);
+        output.write((char*)&frame->unk2, 1);
 
         // write pixel sets
-        for (ApePixelSet &ApePixelSet : frame.pixelSets) {
-            output.write((char*)&ApePixelSet.blockCount, 1);
-            for (ApePixelBlock &block : ApePixelSet.blocks) {
-                output.write((char*)&block.offset, 1);
-                output.write((char*)&block.colorCount, 1);
-                output.write((char*)block.colors.data(), block.colorCount);
+        for (const std::unique_ptr<ApePixelSet>& ApePixelSet : frame->pixelSets) {
+            output.write((char*)&ApePixelSet->blockCount, 1);
+            for (const std::unique_ptr<ApePixelBlock>& block : ApePixelSet->blocks) {
+                output.write((char*)&block->offset, 1);
+                output.write((char*)&block->colorCount, 1);
+                output.write((char*)block->colors.data(), block->colorCount);
             }
         }
     }

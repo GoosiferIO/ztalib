@@ -46,7 +46,8 @@ class ApeF
 
         int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
         int save(std::string fileName);
-        int exportToPNG(std::string fileName, ApeFrameBuffer output);
+        int exportToPNG(std::string fileName, 
+            std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject>);
         int getFrameCount();
         std::vector<std::unique_ptr<ApeFrameBuffer>> getFrameBuffers();
         std::string getPalLocation();

@@ -284,14 +284,16 @@ int ApeF::hasBackgroundFrame()
     return _data->hasBackground;
 }
 
-int ApeF::exportToPNG(std::string fileName, ApeFrameBuffer output)
+int ApeF::exportToPNG(
+    std::string fileName, 
+    std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject> output)
 {
-    if (!output.pixels) {
+    if (!output->pixels) {
         std::cerr << "No pixels to write" << std::endl;
         return -1;
     }
 
-    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels, 0)) {
+    if (!stbi_write_png(fileName.c_str(), output->width, output->height, output->channels, output->pixels, 0)) {
         std::cerr << "Failed to write image" << std::endl;
         return -2;
     } else {

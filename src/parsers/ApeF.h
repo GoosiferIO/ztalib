@@ -14,7 +14,7 @@
 //
 // Credits to the original author of the STB image library (for PNG writing):
 // - Sean Barrett (released under public domain/MIT)
-// 
+//
 // Version 0.6.3
 
 #include <fstream>
@@ -32,39 +32,38 @@
 #define APE_CORE_VERSION "0.6.4"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
-// The ninth byte is a boolean value that specifies if there is an 
-// a background frame 
-
+// The ninth byte is a boolean value that specifies if there is an
+// a background frame
 
 // -------------------------------- Standard Pixel Output
 
 class ApeF
 {
-    public: 
-        ApeF();
-        virtual ~ApeF();
+public:
+    ApeF();
+    virtual ~ApeF();
 
-        int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
-        int save(std::string fileName);
-        int exportToPng(std::string fileName, 
-            std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject>);
-        int getFrameCount();
-        std::vector<std::unique_ptr<ApeFrameBuffer>> getFrameBuffers();
-        std::string getPalLocation();
-        static int validateGraphicFile(std::string fileName);
-        int hasBackgroundFrame();
-        // return header info
-        std::unique_ptr<ApeInfo> getHeader(std::string fileName);
+    int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
+    int save(std::string fileName);
+    int exportToPng(std::string fileName,
+                    std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject>);
+    int getFrameCount();
+    std::vector<std::unique_ptr<ApeFrameBuffer>> getFrameBuffers();
+    std::string getPalLocation();
+    static int validateGraphicFile(std::string fileName);
+    int hasBackgroundFrame();
+    // return header info
+    std::unique_ptr<ApeInfo> getHeader(std::string fileName);
 
-    private:        
-        // binary input
-        std::ifstream _file;
-        // output buffers
-        std::vector<std::unique_ptr<ApeFrameBuffer>> _frameBuffer;
-        // data
-        std::unique_ptr<ApeData> _data;
-        // other
-        int colorModel;
-    };
+private:
+    // binary input
+    std::ifstream _file;
+    // output buffers
+    std::vector<std::unique_ptr<ApeFrameBuffer>> _frameBuffer;
+    // data
+    std::unique_ptr<ApeData> _data;
+    // other
+    int colorModel;
+};
 
 #endif // APEF_H

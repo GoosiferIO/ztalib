@@ -16,31 +16,33 @@ class ApeFrameBuffer
         int offsetY;
         int channels;
     };
-    ApeFrameBuffer();
+    ApeFrameBuffer(std::unique_ptr<ApeData> data);
     ~ApeFrameBuffer();
-    std::vector<std::unique_ptr<ApeFrameBufferObject>> buffer;
-    std::vector<std::unique_ptr<ApeFrame>> frames;
+    std::vector<std::unique_ptr<ApeFrameBufferObject>> _buffer;
+    std::vector<std::unique_ptr<ApeFrame>> _frames;
+    std::unique_ptr<ApeData> _data;
     private:
     int createBuffer();
 };
 
-ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data)
+ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data) 
+: _data(std::move(data))
 {
-    buffer = std::vector<std::unique_ptr<ApeFrameBufferObject>>();
-    frames = std::vector<std::unique_ptr<ApeFrame>>();
+    _buffer = std::vector<std::unique_ptr<ApeFrameBufferObject>>();
+    _frames = std::vector<std::unique_ptr<ApeFrame>>();
 }
 
 int ApeFrameBuffer::createBuffer() 
 {
-    if (frames.empty()) {
+    if (_frames.empty()) {
         return 0;
     }
 
-    int numBuffers = getFrameCount();
+    int numBuffers = _data->info->frameCount;
 
-    for (const std::unique_ptr<ApeFrame>& frame : frames) 
+    for (const std::unique_ptr<ApeFrame>& frame : _frames) 
     {
-        int index = &frame - &frames[0];
+        int index = &frame - &_frames[0];
         std::unique_ptr<ApeFrameBufferObject> bufferObject = std::make_unique<ApeFrameBufferObject>();
 
         // Set dimensions and format
@@ -50,7 +52,7 @@ int ApeFrameBuffer::createBuffer()
         bufferObject->offsetY = static_cast<int>(frame->y);
         bufferObject->channels = 4;  // RGBA/BGRA
 
-        // Calculate buffer size and initialize with transparent pixels
+        // Calculate _buffer size and initialize with transparent pixels
         size_t bufferSize = bufferObject->width * bufferObject->height * bufferObject->channels;
         bufferObject->pixels = new uint8_t[bufferSize];
         for (size_t i = 0; i < bufferSize; i += 4) {
@@ -97,10 +99,10 @@ int ApeFrameBuffer::createBuffer()
                         continue;
                     }
 
-                    // Calculate pixel position in buffer
+                    // Calculate pixel position in _buffer
                     size_t pixelIndex = (row * bufferObject->width + xPos) * bufferObject->channels;
                     
-                    // Ensure we don't write outside the buffer
+                    // Ensure we don't write outside the _buffer
                     if (pixelIndex + 3 >= bufferSize) {
                         std::cerr << "ERROR: Buffer overflow prevented at position " 
                                  << pixelIndex << std::endl;
@@ -128,8 +130,8 @@ int ApeFrameBuffer::createBuffer()
             }
         }
         
-        // Store the completed buffer
-        buffer[index] = new ApeFrameBuffer(output);
+        // Store the completed _buffer
+        _buffer[index] = new ApeFrameBuffer(output);
     }
 
     return 1;

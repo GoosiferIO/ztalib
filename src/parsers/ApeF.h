@@ -57,7 +57,6 @@ class ApeF
         std::unique_ptr<ApeInfo> getHeader(std::string fileName);
 
     private:        
-        int writeBuffer();
         // binary input
         std::ifstream _file;
         // output buffers

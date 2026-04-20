@@ -284,7 +284,7 @@ int ApeF::hasBackgroundFrame()
     return _data->hasBackground;
 }
 
-int ApeF::exportToPNG(
+int ApeF::exportToPng(
     std::string fileName, 
     std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject> output)
 {

@@ -23,10 +23,12 @@ class ApeFrameBuffer
     private:
     int createBuffer();
     std::unique_ptr<ApeData> _data;
+    int _colorModel = 0; // 0 = RGBA, 1 = BGRA
 };
 
 ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data) 
-: _data(std::move(data))
+: _data(std::move(data)),
+  _colorModel(0)
 {
     _buffer = std::vector<std::unique_ptr<ApeFrameBufferObject>>();
     _frames = std::vector<std::unique_ptr<ApeFrame>>();
@@ -70,11 +72,11 @@ int ApeFrameBuffer::createBuffer()
                 continue;
             }
 
-            ApePixelSet &ApePixelSet = frame->pixelSets[row];
+            std::unique_ptr<ApePixelSet> pixelSet = std::make_unique<ApePixelSet>(frame->pixelSets[row]);
             int xPos = 0;  // Reset horizontal position for each new row
 
             // Process each block in the row
-            for (ApePixelBlock &ApePixelBlock : ApePixelSet.blocks) 
+            for (ApePixelBlock &ApePixelBlock : pixelSet->blocks) 
             {
                 // Apply offset from current position
                 xPos += ApePixelBlock.offset;
@@ -113,7 +115,7 @@ int ApeFrameBuffer::createBuffer()
                     ApeColor &color = colors[colorIndex];
 
                     // Write pixel data according to color model
-                    if (colorModel == 1) {  // BGRA mode
+                    if (_colorModel == 1) {  // BGRA mode
                         bufferObject->pixels[pixelIndex] = color.b;
                         bufferObject->pixels[pixelIndex + 1] = color.g;
                         bufferObject->pixels[pixelIndex + 2] = color.r;
@@ -131,7 +133,7 @@ int ApeFrameBuffer::createBuffer()
         }
         
         // Store the completed _buffer
-        _buffer[index] = new ApeFrameBuffer(output);
+        _buffer.push_back(std::move(bufferObject));
     }
 
     return 1;

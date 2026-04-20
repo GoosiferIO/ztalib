@@ -17,9 +17,8 @@ class PalF {
         int colorModel;
         int numColors;
         std::unique_ptr<ApeColor> getColor(int index);
-
-    private:
         int read(std::string fileName);
+    private:
         std::ifstream file;
         std::vector<ApeColor> colors;
 };

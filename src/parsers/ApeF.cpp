@@ -97,7 +97,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "\tframes: " << _data->frames.size() << std::endl;
 
     // ------------------------------- read palette
-    ApeF::readPal(_data->palette->location);
+    _data->palette->read(_data->palette->location);
 
     // ------------------------------- read frames
     for (int i = 0; i < _data->info->frameCount; i++) {

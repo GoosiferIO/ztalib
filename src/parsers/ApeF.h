@@ -28,7 +28,6 @@
 #include "../data/ApeData.h"
 #include "../data/ApeFrameBuffer.h"
 
-#define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
@@ -55,8 +54,7 @@ class ApeF
         // return header info
         std::unique_ptr<ApeInfo> getHeader(std::string fileName);
 
-    private:
-        static int hasMagic(std::ifstream &input);
+    private:        
         int writeBuffer();
         // binary input
         std::ifstream _file;

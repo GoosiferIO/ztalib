@@ -37,7 +37,7 @@ ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data)
     createBuffer();
 }
 
-std::vector<std::unique_ptr<BufferObject>> ApeFrameBuffer::getBuffer()
+std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeFrameBuffer::getBuffer()
 {
     return _buffer;
 }
@@ -54,7 +54,8 @@ int ApeFrameBuffer::createBuffer()
     for (const std::unique_ptr<ApeFrame> &frame : _frames)
     {
         int index = &frame - &_frames[0];
-        std::unique_ptr<BufferObject> bufferObject = std::make_unique<BufferObject>();
+        std::unique_ptr<ApeFrameBuffer::BufferObject> bufferObject 
+        = std::make_unique<ApeFrameBuffer::BufferObject>();
 
         // Set dimensions and format
         bufferObject->width = static_cast<int>(frame->width);
@@ -64,7 +65,9 @@ int ApeFrameBuffer::createBuffer()
         bufferObject->channels = 4; // RGBA/BGRA
 
         // Calculate _buffer size and initialize with transparent pixels
-        size_t bufferSize = bufferObject->width * bufferObject->height * bufferObject->channels;
+        size_t bufferSize = bufferObject->width 
+            * bufferObject->height 
+            * bufferObject->channels;
         bufferObject->pixels = new uint8_t[bufferSize];
         for (size_t i = 0; i < bufferSize; i += 4)
         {

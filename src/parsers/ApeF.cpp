@@ -286,7 +286,7 @@ int ApeF::hasBackgroundFrame()
 
 int ApeF::exportToPng(
     std::string fileName, 
-    std::unique_ptr<ApeFrameBuffer::ApeFrameBufferObject> output)
+    std::unique_ptr<ApeFrameBuffer::BufferObject> output)
 {
     if (!output->pixels) {
         std::cerr << "No pixels to write" << std::endl;

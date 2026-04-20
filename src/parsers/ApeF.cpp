@@ -243,7 +243,7 @@ int ApeF::validateGraphicFile(std::string fileName)
     }
 
     // if has magic bytes FATZ
-    if (hasMagic(graphic)) {
+    if (ApeUtils::hasMagic(graphic)) {
         isValid = 1;
 
         // skip 9 bytes

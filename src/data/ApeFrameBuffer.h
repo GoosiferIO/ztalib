@@ -112,19 +112,19 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ApeColor &color = _data->palette->colors[colorIndex];
+                    std::unique_ptr<ApeColor> color = _data->palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
                     if (_colorModel == 1) {  // BGRA mode
-                        bufferObject->pixels[pixelIndex] = color.b;
-                        bufferObject->pixels[pixelIndex + 1] = color.g;
-                        bufferObject->pixels[pixelIndex + 2] = color.r;
-                        bufferObject->pixels[pixelIndex + 3] = color.a;
+                        bufferObject->pixels[pixelIndex] = color->b;
+                        bufferObject->pixels[pixelIndex + 1] = color->g;
+                        bufferObject->pixels[pixelIndex + 2] = color->r;
+                        bufferObject->pixels[pixelIndex + 3] = color->a;
                     } else {  // RGBA mode
-                        bufferObject->pixels[pixelIndex] = color.r;
-                        bufferObject->pixels[pixelIndex + 1] = color.g;
-                        bufferObject->pixels[pixelIndex + 2] = color.b;
-                        bufferObject->pixels[pixelIndex + 3] = color.a;
+                        bufferObject->pixels[pixelIndex] = color->r;
+                        bufferObject->pixels[pixelIndex + 1] = color->g;
+                        bufferObject->pixels[pixelIndex + 2] = color->b;
+                        bufferObject->pixels[pixelIndex + 3] = color->a;
                     }
                     
                     xPos++;  // Move to next horizontal position

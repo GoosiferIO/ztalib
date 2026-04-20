@@ -7,7 +7,7 @@
 class ApeFrameBuffer
 {
 public:
-    struct ApeFrameBufferObject
+    struct BufferObject
     {
         uint8_t *pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
         int width;
@@ -18,21 +18,28 @@ public:
     };
     ApeFrameBuffer(std::unique_ptr<ApeData> data);
     ~ApeFrameBuffer();
-    std::vector<std::unique_ptr<ApeFrameBufferObject>> _buffer;
-    std::vector<std::unique_ptr<ApeFrame>> _frames;
+    std::vector<std::unique_ptr<BufferObject>> getBuffer();
 
 private:
     int createBuffer();
     std::unique_ptr<ApeData> _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
+    std::vector<std::unique_ptr<BufferObject>> _buffer;
+    std::vector<std::unique_ptr<ApeFrame>> _frames;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(std::unique_ptr<ApeData> data)
     : _data(std::move(data)),
       _colorModel(0)
 {
-    _buffer = std::vector<std::unique_ptr<ApeFrameBufferObject>>();
+    _buffer = std::vector<std::unique_ptr<BufferObject>>();
     _frames = std::vector<std::unique_ptr<ApeFrame>>();
+    createBuffer();
+}
+
+std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeFrameBuffer::getBuffer()
+{
+    return _buffer;
 }
 
 int ApeFrameBuffer::createBuffer()
@@ -47,7 +54,8 @@ int ApeFrameBuffer::createBuffer()
     for (const std::unique_ptr<ApeFrame> &frame : _frames)
     {
         int index = &frame - &_frames[0];
-        std::unique_ptr<ApeFrameBufferObject> bufferObject = std::make_unique<ApeFrameBufferObject>();
+        std::unique_ptr<ApeFrameBuffer::BufferObject> bufferObject 
+        = std::make_unique<ApeFrameBuffer::BufferObject>();
 
         // Set dimensions and format
         bufferObject->width = static_cast<int>(frame->width);
@@ -57,7 +65,9 @@ int ApeFrameBuffer::createBuffer()
         bufferObject->channels = 4; // RGBA/BGRA
 
         // Calculate _buffer size and initialize with transparent pixels
-        size_t bufferSize = bufferObject->width * bufferObject->height * bufferObject->channels;
+        size_t bufferSize = bufferObject->width 
+            * bufferObject->height 
+            * bufferObject->channels;
         bufferObject->pixels = new uint8_t[bufferSize];
         for (size_t i = 0; i < bufferSize; i += 4)
         {
@@ -80,19 +90,19 @@ int ApeFrameBuffer::createBuffer()
             int xPos = 0; // Reset horizontal position for each new row
 
             // Process each block in the row
-            for (ApePixelBlock &ApePixelBlock : pixelSet->blocks)
+            for (std::unique_ptr<ApePixelBlock> &block : pixelSet->blocks)
             {
                 // Apply offset from current position
-                xPos += ApePixelBlock.offset;
+                xPos += block->offset;
 
                 // Skip if this is an end-of-line block or empty block
-                if (ApePixelBlock.colorCount == 0)
+                if (block->colorCount == 0)
                 {
                     continue;
                 }
 
                 // Process each color in the block
-                for (uint8_t colorIndex : ApePixelBlock.colors)
+                for (uint8_t colorIndex : block->colors)
                 {
                     // Bounds checking
                     if (xPos >= bufferObject->width)

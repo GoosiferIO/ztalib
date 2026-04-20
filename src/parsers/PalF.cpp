@@ -1,6 +1,6 @@
 #include "PalF.h"
 
-int PalF::readPal(std::string fileName) 
+int PalF::read(std::string fileName) 
 {
     std::cout << "Reading palette: " << fileName << std::endl;
     

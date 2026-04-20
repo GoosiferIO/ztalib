@@ -26,6 +26,7 @@
 
 #include "./include/stb_image_write.h"
 #include "../data/ApeData.h"
+#include "../data/ApeFrameBuffer.h"
 
 #define MAGIC "FATZ"
 #define APE_CORE_VERSION "0.6.4"
@@ -47,7 +48,7 @@ class ApeF
         int save(std::string fileName);
         int exportToPNG(std::string fileName, ApeFrameBuffer output);
         int getFrameCount();
-        ApeFrameBuffer** getFrameBuffers();
+        std::vector<std::unique_ptr<ApeFrameBuffer>> getFrameBuffers();
         std::string getPalLocation();
         static int validateGraphicFile(std::string fileName);
         int hasBackgroundFrame();
@@ -58,11 +59,11 @@ class ApeF
         static int hasMagic(std::ifstream &input);
         int writeBuffer();
         // binary input
-        std::ifstream file;
+        std::ifstream _file;
         // output buffers
-        ApeFrameBuffer** frameBuffers;
+        std::vector<std::unique_ptr<ApeFrameBuffer>> _frameBuffers;
         // data
-        std::unique_ptr<ApeData> apef;
+        std::unique_ptr<ApeData> _data;
         // other
         int colorModel;
     };

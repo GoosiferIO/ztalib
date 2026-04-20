@@ -13,7 +13,7 @@ ApeF::ApeF()
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
 
-    _frameBuffer = new ApeFrameBuffer*[1];
+    _frameBuffer = std::vector<std::unique_ptr<ApeFrameBuffer>>();
 }
 
 ApeF::~ApeF()

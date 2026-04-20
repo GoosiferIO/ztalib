@@ -164,14 +164,13 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     _file.close();
 
     // write output buffer
-    if (ApeF::writeBuffer() > 0) {
-        std::cout << "Wrote output buffer" << std::endl;
-    } else if (ApeF::writeBuffer() == 0) {
-        std::cout << "No frames to write" << std::endl;
-    } else {
-        std::cout << "Failed to write output buffer" << std::endl;
+    std::unique_ptr<ApeFrameBuffer> apeFrameBuffer 
+    = std::make_unique<ApeFrameBuffer>(new ApeFrameBuffer(std::move(_data)));
+    _frameBuffer = apeFrameBuffer->getBuffer();
+    if (_frameBuffer.empty()) 
+    {
+        return -2;
     }
-
     return 1;
 }
 

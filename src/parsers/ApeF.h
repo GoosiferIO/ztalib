@@ -59,7 +59,7 @@ private:
     // binary input
     std::ifstream _file;
     // output buffers
-    std::vector<std::unique_ptr<ApeFrameBuffer>> _frameBuffer;
+    std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> _frameBuffer;
     // data
     std::unique_ptr<ApeData> _data;
     // other

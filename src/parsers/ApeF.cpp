@@ -13,7 +13,7 @@ ApeF::ApeF()
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
 
-    _frameBuffer = std::vector<std::unique_ptr<ApeFrameBuffer>>();
+    _frameBuffer = std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>>();
 }
 
 ApeF::~ApeF()
@@ -30,7 +30,7 @@ ApeF::~ApeF()
     _data->palette->name.clear();    
 }
 
-std::vector<std::unique_ptr<ApeFrameBuffer>> ApeF::getFrameBuffers()
+std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeF::getFrameBuffer()
 {
     return _frameBuffer;
 }

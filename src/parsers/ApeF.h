@@ -48,7 +48,7 @@ public:
     int exportToPng(std::string fileName,
                     std::unique_ptr<ApeFrameBuffer::BufferObject>);
     int getFrameCount();
-    std::vector<std::unique_ptr<ApeFrameBuffer>> getFrameBuffers();
+    std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> getFrameBuffer();
     std::string getPalLocation();
     static int validateGraphicFile(std::string fileName);
     int hasBackgroundFrame();

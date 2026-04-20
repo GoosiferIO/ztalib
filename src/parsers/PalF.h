@@ -16,6 +16,7 @@ class PalF {
         std::vector<char> name;
         int colorModel;
         int numColors;
+        std::unique_ptr<ApeColor> getColor(int index);
 
     private:
         int readPal(std::string fileName);

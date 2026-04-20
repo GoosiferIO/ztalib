@@ -95,7 +95,7 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Validate color index
-                    if (colorIndex >= colors.size()) {
+                    if (colorIndex >= _data->palette->numColors) {
                         std::cerr << "ERROR: Out-of-bounds color index! (" 
                                  << (int)colorIndex << ")" << std::endl;
                         continue;
@@ -112,7 +112,7 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ApeColor &color = colors[colorIndex];
+                    ApeColor &color = _data->palette->colors[colorIndex];
 
                     // Write pixel data according to color model
                     if (_colorModel == 1) {  // BGRA mode

@@ -66,6 +66,15 @@ int PalF::readPal(std::string fileName)
     return 1;
 }
 
+std::unique_ptr<ApeColor> PalF::getColor(int index) 
+{
+    if (index < 0 || index >= numColors) {
+        std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
+        return nullptr;
+    }
+    return std::make_unique<ApeColor>(colors[index]);
+}
+
 // Does a simple validation to see if file is valid APE palette
 // Not a comprehensive check, just a quick validation of the first few bytes
 // Loading in the palette later can return early if the rest is not valid

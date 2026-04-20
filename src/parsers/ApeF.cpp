@@ -112,24 +112,24 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
         // read pixel sets
         for (int j = 0; j < frame->height; j++) {
-            ApePixelSet ApePixelSet;
-            _file.read((char*)&ApePixelSet.blockCount, 1); // how many pixel blocks
-            ApePixelSet.blocks.resize(ApePixelSet.blockCount); // resize to block count
-            for (int k = 0; k < ApePixelSet.blockCount; k++) { // read each block
+            ApePixelSet pixelSet;
+            _file.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
+            pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
+            for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
                 ApePixelBlock block;
                 _file.read((char*)&block.offset, 1); // offset
                 _file.read((char*)&block.colorCount, 1); // color count
                 block.colors.resize(block.colorCount); // resize to color count
                 _file.read((char*)block.colors.data(), block.colorCount); // colors
-                ApePixelSet.blocks[k] = block; // store block
+                pixelSet.blocks[k] = block; // store block
             }
 
             // // TODO: test issues that might arise from this
             // // Possible issue: skips some pixels and leaves them blank
-            // if (ApePixelSet.blockCount == 0) {
-            //     ApePixelSet.blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
+            // if (pixelSet.blockCount == 0) {
+            //     pixelSet.blocks.push_back(ApePixelBlock{0, 0, std::vector<uint8_t>()});
             // }
-            frame->pixelSets.push_back(ApePixelSet); // store pixel set
+            frame->pixelSets.push_back(pixelSet); // store pixel set
         }
 
         // store frame

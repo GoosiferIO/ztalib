@@ -1,6 +1,6 @@
-# APE.Core Parser
+# ztalib
 
-This is an image parsing library for Zoo Tycoon 1 graphics. It's designed to be general enough to be used in any project as long as supported bindings are available. Otherwise it should work out-of-the-box in a given C++ project.
+This is an image parsing library for Zoo Tycoon 1 animation graphics. It's designed to be general enough to be used in any project as long as supported bindings are available. Otherwise it should work out-of-the-box in a given C++ project.
 
 ## Usage
 

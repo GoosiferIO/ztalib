@@ -18,7 +18,7 @@ public:
     std::vector<char> name;
     int colorModel;
     int numColors;
-    std::unique_ptr<ApeColor> getColor(int index);
+    ApeColor getColor(int index);
     int read(std::string fileName);
 
 private:

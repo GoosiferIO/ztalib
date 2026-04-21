@@ -69,14 +69,14 @@ int PalF::read(std::string fileName)
     return 1;
 }
 
-std::unique_ptr<ApeColor> PalF::getColor(int index)
+ApeColor PalF::getColor(int index)
 {
     if (index < 0 || index >= numColors)
     {
         std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
-        return nullptr;
+        return {0, 0, 0, 255}; // Return black (fully opaque) as default
     }
-    return std::make_unique<ApeColor>(colors[index]);
+    return colors[index];
 }
 
 // Does a simple validation to see if file is valid APE palette

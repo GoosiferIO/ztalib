@@ -35,7 +35,7 @@ ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     createBuffer();
 }
 
-const std::vector<BufferObject>& ApeFrameBuffer::getBuffer()
+const std::vector<ApeFrameBuffer::BufferObject>& ApeFrameBuffer::getBuffer()
 {
     return _buffer;
 }
@@ -109,7 +109,7 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Validate color index
-                    if (colorIndex >= _data->palette.numColors)
+                    if (colorIndex >= _data.palette->numColors)
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! ("
                                   << (int)colorIndex << ")" << std::endl;
@@ -128,7 +128,7 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    std::unique_ptr<ApeColor> color = _data->palette->getColor(colorIndex);
+                    std::unique_ptr<ApeColor> color = _data.palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
                     if (_colorModel == 1)

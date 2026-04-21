@@ -13,7 +13,7 @@ ApeF::ApeF()
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
 
-    _frameBuffer = std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>>();
+    _frameBuffer = std::vector<ApeFrameBuffer::BufferObject>();
 }
 
 ApeF::~ApeF()
@@ -30,7 +30,7 @@ ApeF::~ApeF()
     _data->palette->name.clear();    
 }
 
-std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeF::getFrameBuffer()
+std::vector<ApeFrameBuffer::BufferObject> ApeF::getFrameBuffer()
 {
     return _frameBuffer;
 }
@@ -72,12 +72,12 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         std::cout << "\tType: not fatz" << std::endl;
     }
 
-    _file.read((char*)&_data->info->speed, 4); // animation speed in ms
+    _file.read((char*)&_data->info.speed, 4); // animation speed in ms
     _file.read((char*)&_data->palette->nameSize, 4); // size of palette name
     _data->palette->name.resize(_data->palette->nameSize); // resize to size
     _file.read(_data->palette->name.data(), _data->palette->nameSize); // read palette name
-    _file.read((char*)&_data->info->frameCount, 4); // number of frames
-    _data->frames.resize(_data->info->frameCount); // resize frames to frame count
+    _file.read((char*)&_data->info.frameCount, 4); // number of frames
+    _data->frames.resize(_data->info.frameCount); // resize frames to frame count
 
     if (ioPal.empty()) 
         _data->palette->location = std::string(_data->palette->name.data());
@@ -85,22 +85,22 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         _data->palette->location = ioPal;
 
     if (_data->hasBackground) {
-        _data->info->frameCount += 1;
-        _data->frames.resize(_data->info->frameCount);
+        _data->info.frameCount += 1;
+        _data->frames.resize(_data->info.frameCount);
     }
 
     // print header
-    std::cout << "\tspeed: " << _data->info->speed << " ms" << std::endl;
+    std::cout << "\tspeed: " << _data->info.speed << " ms" << std::endl;
     std::cout << "\tpalNameSize: " << _data->palette->nameSize << " bytes" << std::endl;
     std::cout << "\tpalName: " << _data->palette->name.data() << std::endl;
-    std::cout << "\tframeCount: " << _data->info->frameCount << std::endl;
+    std::cout << "\tframeCount: " << _data->info.frameCount << std::endl;
     std::cout << "\tframes: " << _data->frames.size() << std::endl;
 
     // ------------------------------- read palette
     _data->palette->read(_data->palette->location);
 
     // ------------------------------- read frames
-    for (int i = 0; i < _data->info->frameCount; i++) {
+    for (int i = 0; i < _data->info.frameCount; i++) {
         ApeFrame frame = ApeFrame();
         _file.read((char*)&frame.frameSize, 4);
         _file.read((char*)&frame.height, 2);

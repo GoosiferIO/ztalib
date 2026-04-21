@@ -304,8 +304,5 @@ int ApeF::exportToPng(
 
 ApeInfo ApeF::getHeader(std::string fileName) 
 {
-    if (!_data) {
-        return ApeInfo();
-    }
-    return _data.info ? _data.info : ApeInfo();
+    return _data ? _data.info : ApeInfo();
 }

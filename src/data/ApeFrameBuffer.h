@@ -18,24 +18,24 @@ public:
     };
     ApeFrameBuffer(const ApeData& data);
     ~ApeFrameBuffer();
-    std::vector<std::unique_ptr<BufferObject>> getBuffer();
+    std::vector<BufferObject> getBuffer();
 
 private:
     int createBuffer();
     std::unique_ptr<ApeData> _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
-    std::vector<std::unique_ptr<BufferObject>> _buffer;
+    std::vector<BufferObject> _buffer;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     : _data(std::move(data)),
       _colorModel(0)
 {
-    _buffer = std::vector<std::unique_ptr<BufferObject>>();
+    _buffer = std::vector<BufferObject>();
     createBuffer();
 }
 
-std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeFrameBuffer::getBuffer()
+std::vector<BufferObject> ApeFrameBuffer::getBuffer()
 {
     return _buffer;
 }
@@ -49,42 +49,42 @@ int ApeFrameBuffer::createBuffer()
 
     int numBuffers = _data->info->frameCount;
 
-    for (const std::unique_ptr<ApeFrame> &frame : _data->frames)
+    for (const ApeFrame &frame : _data->frames)
     {
         int index = &frame - &_data->frames[0];
-        std::unique_ptr<ApeFrameBuffer::BufferObject> bufferObject 
-        = std::make_unique<ApeFrameBuffer::BufferObject>();
+        ApeFrameBuffer::BufferObject bufferObject 
+        = ApeFrameBuffer::BufferObject();
 
         // Set dimensions and format
-        bufferObject->width = static_cast<int>(frame->width);
-        bufferObject->height = static_cast<int>(frame->height);
-        bufferObject->offsetX = static_cast<int>(frame->x);
-        bufferObject->offsetY = static_cast<int>(frame->y);
-        bufferObject->channels = 4; // RGBA/BGRA
+        bufferObject.width = static_cast<int>(frame->width);
+        bufferObject.height = static_cast<int>(frame->height);
+        bufferObject.offsetX = static_cast<int>(frame->x);
+        bufferObject.offsetY = static_cast<int>(frame->y);
+        bufferObject.channels = 4; // RGBA/BGRA
 
         // Calculate _buffer size and initialize with transparent pixels
         size_t bufferSize = bufferObject->width 
             * bufferObject->height 
             * bufferObject->channels;
-        bufferObject->pixels = new uint8_t[bufferSize];
+        bufferObject.pixels = new uint8_t[bufferSize];
         for (size_t i = 0; i < bufferSize; i += 4)
         {
-            bufferObject->pixels[i] = 0;     // R
-            bufferObject->pixels[i + 1] = 0; // G
-            bufferObject->pixels[i + 2] = 0; // B
-            bufferObject->pixels[i + 3] = 0; // A (Fully transparent)
+            bufferObject.pixels[i] = 0;     // R
+            bufferObject.pixels[i + 1] = 0; // G
+            bufferObject.pixels[i + 2] = 0; // B
+            bufferObject.pixels[i + 3] = 0; // A (Fully transparent)
         }
 
         // Process each row
         for (int row = 0; row < frame->height; row++)
         {
-            if (row >= frame->pixelSets.size())
+            if (row >= frame.pixelSets.size())
             {
                 std::cerr << "ERROR: Row " << row << " exceeds ApePixelSet count!" << std::endl;
                 continue;
             }
 
-            std::unique_ptr<ApePixelSet> pixelSet = std::make_unique<ApePixelSet>(frame->pixelSets[row]);
+            std::unique_ptr<ApePixelSet> pixelSet = std::make_unique<ApePixelSet>(frame.pixelSets[row]);
             int xPos = 0; // Reset horizontal position for each new row
 
             // Process each block in the row
@@ -133,17 +133,17 @@ int ApeFrameBuffer::createBuffer()
                     // Write pixel data according to color model
                     if (_colorModel == 1)
                     { // BGRA mode
-                        bufferObject->pixels[pixelIndex] = color->b;
-                        bufferObject->pixels[pixelIndex + 1] = color->g;
-                        bufferObject->pixels[pixelIndex + 2] = color->r;
-                        bufferObject->pixels[pixelIndex + 3] = color->a;
+                        bufferObject.pixels[pixelIndex] = color->b;
+                        bufferObject.pixels[pixelIndex + 1] = color->g;
+                        bufferObject.pixels[pixelIndex + 2] = color->r;
+                        bufferObject.pixels[pixelIndex + 3] = color->a;
                     }
                     else
                     { // RGBA mode
-                        bufferObject->pixels[pixelIndex] = color->r;
-                        bufferObject->pixels[pixelIndex + 1] = color->g;
-                        bufferObject->pixels[pixelIndex + 2] = color->b;
-                        bufferObject->pixels[pixelIndex + 3] = color->a;
+                        bufferObject.pixels[pixelIndex] = color->r;
+                        bufferObject.pixels[pixelIndex + 1] = color->g;
+                        bufferObject.pixels[pixelIndex + 2] = color->b;
+                        bufferObject.pixels[pixelIndex + 3] = color->a;
                     }
 
                     xPos++; // Move to next horizontal position

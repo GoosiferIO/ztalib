@@ -25,7 +25,6 @@ private:
     std::unique_ptr<ApeData> _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<std::unique_ptr<BufferObject>> _buffer;
-    std::vector<std::unique_ptr<ApeFrame>> _frames;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)

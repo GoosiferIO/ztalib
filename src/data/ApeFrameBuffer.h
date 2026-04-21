@@ -18,7 +18,7 @@ public:
     };
     ApeFrameBuffer(const ApeData& data);
     ~ApeFrameBuffer();
-    std::vector<BufferObject> getBuffer();
+    const std::vector<BufferObject>& getBuffer();
 
 private:
     int createBuffer();
@@ -35,23 +35,23 @@ ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     createBuffer();
 }
 
-std::vector<BufferObject> ApeFrameBuffer::getBuffer()
+const std::vector<BufferObject>& ApeFrameBuffer::getBuffer()
 {
     return _buffer;
 }
 
 int ApeFrameBuffer::createBuffer()
 {
-    if (_date.frames.empty())
+    if (_data.frames.empty())
     {
         return 0;
     }
 
-    int numBuffers = _date.info.frameCount;
+    int numBuffers = _data.info.frameCount;
 
-    for (const ApeFrame &frame : _date.frames)
+    for (const ApeFrame &frame : _data.frames)
     {
-        int index = &frame - &_date.frames[0];
+        int index = &frame - &_data.frames[0];
         ApeFrameBuffer::BufferObject bufferObject 
         = ApeFrameBuffer::BufferObject();
 

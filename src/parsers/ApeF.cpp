@@ -101,27 +101,27 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read frames
     for (int i = 0; i < _data->info->frameCount; i++) {
-        std::unique_ptr<ApeFrame> frame = std::make_unique<ApeFrame>();
-        _file.read((char*)&frame->frameSize, 4);
-        _file.read((char*)&frame->height, 2);
-        _file.read((char*)&frame->width, 2);
-        _file.read((char*)&frame->y, 2);
-        _file.read((char*)&frame->x, 2);
-        _file.read((char*)&frame->unk1, 1); // always 0?
-        _file.read((char*)&frame->unk2, 1); // always 0?
+        ApeFrame frame = ApeFrame();
+        _file.read((char*)&frame.frameSize, 4);
+        _file.read((char*)&frame.height, 2);
+        _file.read((char*)&frame.width, 2);
+        _file.read((char*)&frame.y, 2);
+        _file.read((char*)&frame.x, 2);
+        _file.read((char*)&frame.unk1, 1); // always 0?
+        _file.read((char*)&frame.unk2, 1); // always 0?
 
         // read pixel sets
-        for (int j = 0; j < frame->height; j++) {
-            std::unique_ptr<ApePixelSet> pixelSet = std::make_unique<ApePixelSet>();
-            _file.read((char*)&pixelSet->blockCount, 1); // how many pixel blocks
-            pixelSet->blocks.resize(pixelSet->blockCount); // resize to block count
-            for (int k = 0; k < pixelSet->blockCount; k++) { // read each block
-                std::unique_ptr<ApePixelBlock> block = std::make_unique<ApePixelBlock>();
-                _file.read((char*)&block->offset, 1); // offset
-                _file.read((char*)&block->colorCount, 1); // color count
-                block->colors.resize(block->colorCount); // resize to color count
-                _file.read((char*)block->colors.data(), block->colorCount); // colors
-                pixelSet->blocks[k] = std::move(block); // store block
+        for (int j = 0; j < frame.height; j++) {
+            ApePixelSet pixelSet = ApePixelSet();
+            _file.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
+            pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
+            for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
+                ApePixelBlock block = ApePixelBlock();
+                _file.read((char*)&block.offset, 1); // offset
+                _file.read((char*)&block.colorCount, 1); // color count
+                block.colors.resize(block.colorCount); // resize to color count
+                _file.read((char*)block.colors.data(), block.colorCount); // colors
+                pixelSet.blocks[k] = std::move(block); // store block
             }
 
             // // TODO: test issues that might arise from this
@@ -129,7 +129,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
             // if (pixelSet->blockCount == 0) {
             //     pixelSet->blocks.push_back(std::make_unique<ApePixelBlock>(0, 0, std::vector<uint8_t>()));
             // }
-            frame->pixelSets.push_back(pixelSet); // store pixel set
+            frame.pixelSets.push_back(pixelSet); // store pixel set
         }
 
         // store frame
@@ -137,24 +137,24 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
         // print frame
         std::cout << "ApeFrame " << i << std::endl;
-        std::cout << "\tframeSize: " << frame->frameSize << " bytes" << std::endl;
-        std::cout << "\theight: " << (int)frame->height << " px" << std::endl;
-        std::cout << "\twidth: " << (int)frame->width << " px" << std::endl;
-        std::cout << "\ty: " << (int)frame->y << std::endl;
-        std::cout << "\tx: " << (int)frame->x << std::endl;
-        std::cout << "\tunk1: " << (int)frame->unk1 << std::endl;
-        std::cout << "\tunk2: " << (int)frame->unk2 << std::endl;
-        std::cout << "\tApePixelSets: " << frame->pixelSets.size() << std::endl;
-        for (int j = 0; j < frame->pixelSets.size(); j++) {
+        std::cout << "\tframeSize: " << frame.frameSize << " bytes" << std::endl;
+        std::cout << "\theight: " << (int)frame.height << " px" << std::endl;
+        std::cout << "\twidth: " << (int)frame.width << " px" << std::endl;
+        std::cout << "\ty: " << (int)frame.y << std::endl;
+        std::cout << "\tx: " << (int)frame.x << std::endl;
+        std::cout << "\tunk1: " << (int)frame.unk1 << std::endl;
+        std::cout << "\tunk2: " << (int)frame.unk2 << std::endl;
+        std::cout << "\tApePixelSets: " << frame.pixelSets.size() << std::endl;
+        for (int j = 0; j < frame.pixelSets.size(); j++) {
             std::cout << "\t\tApePixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)frame->pixelSets[j]->blockCount << std::endl;
-            for (int k = 0; k < frame->pixelSets[j]->blocks.size(); k++) {
+            std::cout << "\t\t\tblockCount: " << (int)frame.pixelSets[j].blockCount << std::endl;
+            for (int k = 0; k < frame.pixelSets[j].blocks.size(); k++) {
                 std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)frame->pixelSets[j]->blocks[k]->offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)frame->pixelSets[j]->blocks[k]->colorCount << std::endl;
+                std::cout << "\t\t\t\toffset: " << (int)frame.pixelSets[j].blocks[k].offset << std::endl;
+                std::cout << "\t\t\t\tcolorCount: " << (int)frame.pixelSets[j].blocks[k].colorCount << std::endl;
                 std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < frame->pixelSets[j]->blocks[k]->colorCount; l++) {
-                    std::cout << (int)frame->pixelSets[j]->blocks[k]->colors[l] << " ";
+                for (int l = 0; l < frame.pixelSets[j].blocks[k].colorCount; l++) {
+                    std::cout << (int)frame.pixelSets[j].blocks[k].colors[l] << " ";
                 }
                 std::cout << std::endl;
             }

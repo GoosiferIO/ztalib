@@ -2,6 +2,7 @@
 #define APEUTILS_H
 
 #include <fstream>
+#include <cstring>
 
 #define MAGIC "FATZ"
 

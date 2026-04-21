@@ -46,20 +46,20 @@ public:
     int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
     int exportToPng(std::string fileName,
-                    std::unique_ptr<ApeFrameBuffer::BufferObject>);
+                    ApeFrameBuffer::BufferObject output);
     int getFrameCount();
-    std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> getFrameBuffer();
+    std::vector<ApeFrameBuffer::BufferObject> getFrameBuffer();
     std::string getPalLocation();
     static int validateGraphicFile(std::string fileName);
     int hasBackgroundFrame();
     // return header info
-    std::unique_ptr<ApeInfo> getHeader(std::string fileName);
+    ApeInfo getHeader(std::string fileName);
 
 private:
     // binary input
     std::ifstream _file;
     // output buffers
-    std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> _frameBuffer;
+    std::vector<ApeFrameBuffer::BufferObject> _frameBuffer;
     // data
     std::unique_ptr<ApeData> _data;
     // other

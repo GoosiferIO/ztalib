@@ -302,7 +302,7 @@ int ApeF::exportToPng(
     return 1;
 }
 
-std::unique_ptr<ApeInfo> ApeF::getHeader(std::string fileName) 
+ApeInfo ApeF::getHeader(std::string fileName) 
 {
-    return _data->info ? std::make_unique<ApeInfo>(new ApeInfo(*_data->info)) : nullptr;
+    return _data->info ? *_data->info : ApeInfo();
 }

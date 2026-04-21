@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "ApePixelBlock.h"
+#include <cstdint>
 
 /*
 Struct that contains color information for a single pixel in the PAL file.

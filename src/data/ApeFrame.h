@@ -1,5 +1,5 @@
-#ifndef APE_FRAME_H
-#define APE_FRAME_H
+#ifndef APEFRAME_H
+#define APEFRAME_H
 
 #include <vector>
 #include "ApePixelSet.h"

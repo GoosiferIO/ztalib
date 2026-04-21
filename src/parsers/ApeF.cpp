@@ -195,22 +195,22 @@ int ApeF::save(std::string fileName)
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (const std::unique_ptr<ApeFrame>& frame : _data->frames) {
-        output.write((char*)&frame->frameSize, 4);
-        output.write((char*)&frame->height, 2);
-        output.write((char*)&frame->width, 2);
-        output.write((char*)&frame->x, 2);
-        output.write((char*)&frame->y, 2);
-        output.write((char*)&frame->unk1, 1);
-        output.write((char*)&frame->unk2, 1);
+    for (const ApeFrame& frame : _data->frames) {
+        output.write((char*)&frame.frameSize, 4);
+        output.write((char*)&frame.height, 2);
+        output.write((char*)&frame.width, 2);
+        output.write((char*)&frame.x, 2);
+        output.write((char*)&frame.y, 2);
+        output.write((char*)&frame.unk1, 1);
+        output.write((char*)&frame.unk2, 1);
 
         // write pixel sets
-        for (const std::unique_ptr<ApePixelSet>& pixelSet : frame->pixelSets) {
-            output.write((char*)&pixelSet->blockCount, 1);
-            for (const std::unique_ptr<ApePixelBlock>& block : pixelSet->blocks) {
-                output.write((char*)&block->offset, 1);
-                output.write((char*)&block->colorCount, 1);
-                output.write((char*)block->colors.data(), block->colorCount);
+        for (const ApePixelSet& pixelSet : frame.pixelSets) {
+            output.write((char*)&pixelSet.blockCount, 1);
+            for (const ApePixelBlock& block : pixelSet.blocks) {
+                output.write((char*)&block.offset, 1);
+                output.write((char*)&block.colorCount, 1);
+                output.write((char*)block.colors.data(), block.colorCount);
             }
         }
     }

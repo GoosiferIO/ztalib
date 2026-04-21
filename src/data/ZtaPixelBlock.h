@@ -4,7 +4,7 @@
 #include <vector>
 #include <cstdint>
 
-struct ApePixelBlock 
+struct ZtaPixelBlock 
 {
     uint8_t offset; // How many transparent pixels before drawing
     uint8_t colorCount; // How many colors in this block

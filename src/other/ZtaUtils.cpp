@@ -1,6 +1,6 @@
-#include "ApeUtils.h"
+#include "ZtaUtils.h"
 
-int ApeUtils::hasMagic(std::ifstream &_file)
+int ZtaUtils::hasMagic(std::ifstream &_file)
 {
     char magic[5] = {0};
     _file.read(magic, 4);

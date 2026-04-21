@@ -15,15 +15,15 @@ current_path = os.path.dirname(os.path.abspath(__file__))
 
 # if windows, load the DLL
 if os.name == "nt":
-    dll_path = os.path.join(current_path, "ApeCore.dll")
+    dll_path = os.path.join(current_path, "ZtaCore.dll")
 elif os.name == "posix":
-    dll_path = os.path.join(current_path, "ApeCore.so")
+    dll_path = os.path.join(current_path, "ZtaCore.so")
 else:
     raise OSError("Unsupported operating system.")
 
 # Load the DLL
 if not os.path.exists(dll_path):
-    raise OSError("Could not find ApeCore.dll or ApeCore.so.")
+    raise OSError("Could not find ZtaCore.dll or ZtaCore.so.")
 ape = ctypes.CDLL(dll_path)
 
 # --------------------------- Define the structures ---------------------------

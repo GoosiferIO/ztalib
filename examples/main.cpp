@@ -4,7 +4,7 @@
 #include <iostream>
 // #include <chrono>
 // #include <omp.h>
-#include "../src/parsers/ApeF.h"
+#include "../src/parsers/ZtaF.h"
 
 int main(int argc, char const *argv[])
 {
@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    ApeF apef;
+    ZtaF apef;
     std::string input_file = argv[1];
     std::string palette_file = argv[2];
     int num_threads = 1;

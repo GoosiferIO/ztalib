@@ -1,6 +1,6 @@
-#include "ApeFrameBuffer.h"
+#include "ZtaFrameBuffer.h"
 
-ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
+ZtaFrameBuffer::ZtaFrameBuffer(const ZtaData& data)
     : _data(data),
       _colorModel(0)
 {
@@ -8,17 +8,17 @@ ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     createBuffer();
 }
 
-ApeFrameBuffer::~ApeFrameBuffer()
+ZtaFrameBuffer::~ZtaFrameBuffer()
 {
     _buffer.clear();
 }
 
-const std::vector<ApeFrameBuffer::BufferObject>& ApeFrameBuffer::getBuffer()
+const std::vector<ZtaFrameBuffer::BufferObject>& ZtaFrameBuffer::getBuffer()
 {
     return _buffer;
 }
 
-int ApeFrameBuffer::createBuffer()
+int ZtaFrameBuffer::createBuffer()
 {
     if (_data.frames.empty())
     {
@@ -27,10 +27,10 @@ int ApeFrameBuffer::createBuffer()
 
     int numBuffers = _data.info.frameCount;
 
-    for (const ApeFrame &frame : _data.frames)
+    for (const ZtaFrame &frame : _data.frames)
     {
         int index = &frame - &_data.frames[0];
-        ApeFrameBuffer::BufferObject bufferObject;
+        ZtaFrameBuffer::BufferObject bufferObject;
 
         // Set dimensions and format
         bufferObject.width = static_cast<int>(frame.width);
@@ -57,15 +57,15 @@ int ApeFrameBuffer::createBuffer()
         {
             if (row >= frame.pixelSets.size())
             {
-                std::cerr << "ERROR: Row " << row << " exceeds ApePixelSet count!" << std::endl;
+                std::cerr << "ERROR: Row " << row << " exceeds ZtaPixelSet count!" << std::endl;
                 continue;
             }
 
-            ApePixelSet pixelSet = frame.pixelSets[row];
+            ZtaPixelSet pixelSet = frame.pixelSets[row];
             int xPos = 0; // Reset horizontal position for each new row
 
             // Process each block in the row
-            for (const ApePixelBlock &block : pixelSet.blocks)
+            for (const ZtaPixelBlock &block : pixelSet.blocks)
             {
                 // Apply offset from current position
                 xPos += block.offset;
@@ -104,7 +104,7 @@ int ApeFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ApeColor color = _data.palette->getColor(colorIndex);
+                    ZtaColor color = _data.palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
                     if (_colorModel == 1)

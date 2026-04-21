@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    ZtaF apef;
+    ZtaF ztaf;
     std::string input_file = argv[1];
     std::string palette_file = argv[2];
     int num_threads = 1;
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
     // double total_time = 0.0;
     // auto start = std::chrono::high_resolution_clock::now();
 
-    if (!apef.load(input_file, 0, palette_file)) {
+    if (!ztaf.load(input_file, 0, palette_file)) {
         std::cerr << "Failed to load file: " << input_file << std::endl;
         return 1;
     }
@@ -54,15 +54,15 @@ int main(int argc, char const *argv[])
 
     // std::chrono::duration<double> runtime = end - start;
     // total_time += runtime.count();
-    // std::cout << "Time taken to decode " << apef.getFrameCount() << " frames: " << total_time << " seconds" << std::endl;
-    // std::cout << "Average time per frame: " << total_time / apef.getFrameCount() << " seconds" << std::endl;
+    // std::cout << "Time taken to decode " << ztaf.getFrameCount() << " frames: " << total_time << " seconds" << std::endl;
+    // std::cout << "Average time per frame: " << total_time / ztaf.getFrameCount() << " seconds" << std::endl;
 
     // NOTE: UNCOMMENT THIS TO WRITE PNGs
-    int numBuffers = apef.getFrameCount();
+    int numBuffers = ztaf.getFrameCount();
     std::cout << "Writing PNGs" << std::endl;
     int successCount = 0;
     for (int i = 0; i < numBuffers; i++) {
-        int error = apef.exportToPng(output_name + std::to_string(i) + ".png", apef.getFrameBuffer()[i]);
+        int error = ztaf.exportToPng(output_name + std::to_string(i) + ".png", ztaf.getFrameBuffer()[i]);
         if (error < 0) {
             std::cout << "Failed to write frame " << i << " to png" << std::endl;
         } else {

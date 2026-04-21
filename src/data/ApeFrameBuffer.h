@@ -9,7 +9,7 @@ class ApeFrameBuffer
 public:
     struct BufferObject
     {
-        uint8_t *pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
+        std::vector<uint8_t> pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
         int width;
         int height;
         int offsetX;
@@ -66,7 +66,7 @@ int ApeFrameBuffer::createBuffer()
         size_t bufferSize = bufferObject.width 
             * bufferObject.height 
             * bufferObject.channels;
-        bufferObject.pixels = new uint8_t[bufferSize];
+        bufferObject.pixels = std::vector<uint8_t>(bufferSize);
         for (size_t i = 0; i < bufferSize; i += 4)
         {
             bufferObject.pixels[i] = 0;     // R

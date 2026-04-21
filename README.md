@@ -26,42 +26,4 @@ Because the library makes use of `stb_image_write.h`, you will need the includes
 g++ main.cpp ../src/parsers/ZtaF.cpp ../src/parsers/PalF.cpp ../src/data/ZtaData.cpp ../src/data/ZtaFrameBuffer.cpp ../src/other/ZtaUtils.cpp -o output
 ```
 
-## Bindings Available
-
-### Compile Extern C
-
-In order for the libary to work in other languages, we need to compile the library as an extern C library. 
-
-#### Windows
-
-It makes use of a few MinGW libraries, so you might need the following dependencies to link against:
-
-- libstdc++-6.dll
-- libgcc_s_seh-1.dll
-- libwinpthread-1.dll
-
-Compile:
-
-```bash
-g++ -shared -o ZtaCore.dll ZtaExp.cpp ../ZtaPng.cpp "-Wl,--out-implib,libapecore.a" -static-libgcc -static-libstdc++ -static -lpthread 
-```
-
-#### Linux
-
-The libraries should be available by default on most Linux distributions. 
-
-Compile:
-
-```bash
-g++ -shared -o ZtaCore.so ZtaExp.cpp ../ZtaPng.cpp -lpthread -fPIC
-```
-
-### Python
-
-Experimental Python bindings are available.
-
-All you need are the compiled shared libraries and the pyape.py module available under bindings. Keeping the directory structure as is, you can import the module and use the functions. 
-
-Check out the APE.KritaTools project for a working example of the Python bindings.
-
-https://github.com/openztcc/APE.KritaTools
+Note: This will be updated with CMake support soon.

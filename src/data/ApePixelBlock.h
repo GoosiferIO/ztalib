@@ -2,6 +2,7 @@
 #define APEPIXELBLOCK_H
 
 #include <vector>
+#include <cstdint>
 
 struct ApePixelBlock 
 {

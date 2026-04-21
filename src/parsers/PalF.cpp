@@ -1,5 +1,28 @@
 #include "PalF.h"
 
+PalF::PalF()
+{
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
+        std::ifstream::failbit | std::ifstream::badbit));
+    colors = std::vector<ApeColor>();
+    nameSize = 0;
+    name = std::vector<char>();
+    location = "";
+    colorModel = 0;
+    numColors = 0;
+}
+
+PalF::~PalF()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+    colors.clear();
+    name.clear();
+}
+
 int PalF::read(std::string fileName)
 {
     std::cout << "Reading palette: " << fileName << std::endl;
@@ -66,17 +89,18 @@ int PalF::read(std::string fileName)
         colors.push_back({0, 0, 0, 255}); // Fill with black (fully opaque)
     }
 
+    numColors = static_cast<int>(colors.size());
     return 1;
 }
 
-std::unique_ptr<ApeColor> PalF::getColor(int index)
+ApeColor PalF::getColor(int index)
 {
     if (index < 0 || index >= numColors)
     {
         std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
-        return nullptr;
+        return {0, 0, 0, 255}; // Return black (fully opaque) as default
     }
-    return std::make_unique<ApeColor>(colors[index]);
+    return colors[index];
 }
 
 // Does a simple validation to see if file is valid APE palette

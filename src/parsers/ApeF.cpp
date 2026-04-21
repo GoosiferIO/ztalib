@@ -133,7 +133,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         }
 
         // store frame
-        _data->frames.append(frame);
+        _data->frames[i] = std::move(frame);
 
         // print frame
         std::cout << "ApeFrame " << i << std::endl;

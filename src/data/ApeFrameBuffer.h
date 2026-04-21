@@ -22,13 +22,13 @@ public:
 
 private:
     int createBuffer();
-    std::unique_ptr<ApeData> _data;
+    const ApeData& _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<BufferObject> _buffer;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
-    : _data(std::move(data)),
+    : _data(data),
       _colorModel(0)
 {
     _buffer = std::vector<BufferObject>();

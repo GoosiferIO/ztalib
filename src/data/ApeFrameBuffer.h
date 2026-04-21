@@ -56,10 +56,10 @@ int ApeFrameBuffer::createBuffer()
         = ApeFrameBuffer::BufferObject();
 
         // Set dimensions and format
-        bufferObject.width = static_cast<int>(frame->width);
-        bufferObject.height = static_cast<int>(frame->height);
-        bufferObject.offsetX = static_cast<int>(frame->x);
-        bufferObject.offsetY = static_cast<int>(frame->y);
+        bufferObject.width = static_cast<int>(frame.width);
+        bufferObject.height = static_cast<int>(frame.height);
+        bufferObject.offsetX = static_cast<int>(frame.x);
+        bufferObject.offsetY = static_cast<int>(frame.y);
         bufferObject.channels = 4; // RGBA/BGRA
 
         // Calculate _buffer size and initialize with transparent pixels
@@ -76,7 +76,7 @@ int ApeFrameBuffer::createBuffer()
         }
 
         // Process each row
-        for (int row = 0; row < frame->height; row++)
+        for (int row = 0; row < frame.height; row++)
         {
             if (row >= frame.pixelSets.size())
             {

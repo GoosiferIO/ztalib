@@ -1,4 +1,6 @@
-#pragma once
+#ifndef APE_FRAME_H
+#define APE_FRAME_H
+
 #include <vector>
 #include "ApePixelSet.h"
 
@@ -13,3 +15,5 @@ struct ApeFrame
     uint8_t unk2; // unknown bytes
     std::vector<std::unique_ptr<ApePixelSet>> pixelSets; // The pixel sets  
 };
+
+#endif // APE_FRAME_H

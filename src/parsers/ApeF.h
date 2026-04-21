@@ -46,7 +46,7 @@ public:
     int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
     int exportToPng(std::string fileName,
-                    ApeFrameBuffer::BufferObject output);
+                    const ApeFrameBuffer::BufferObject& output);
     int getFrameCount();
     std::vector<ApeFrameBuffer::BufferObject> getFrameBuffer();
     std::string getPalLocation();

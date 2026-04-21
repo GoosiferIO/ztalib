@@ -188,10 +188,10 @@ int ApeF::save(std::string fileName)
     }
 
     // -------------------------------------- write header
-    output.write((char*)&_data->info->speed, 4); // speed in ms
+    output.write((char*)&_data->info.speed, 4); // speed in ms
     output.write((char*)&_data->palette->nameSize, 4); // size of palette name
     output.write(_data->palette->name.data(), _data->palette->nameSize); // palette name
-    output.write((char*)&_data->info->frameCount, 4); // frame count
+    output.write((char*)&_data->info.frameCount, 4); // frame count
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
@@ -232,8 +232,8 @@ int ApeF::validateGraphicFile(std::string fileName)
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
-    std::unique_ptr<PalF> pal = std::make_unique<PalF>(new PalF());
-    std::unique_ptr<ApeInfo> info = std::make_unique<ApeInfo>(new ApeInfo());
+    PalF pal = PalF();
+    ApeInfo info = ApeInfo();
     
     // if _file is not open, return false
     if (!graphic.is_open()) {

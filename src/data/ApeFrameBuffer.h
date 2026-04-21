@@ -42,16 +42,16 @@ std::vector<BufferObject> ApeFrameBuffer::getBuffer()
 
 int ApeFrameBuffer::createBuffer()
 {
-    if (_data->frames.empty())
+    if (_date.frames.empty())
     {
         return 0;
     }
 
-    int numBuffers = _data->info.frameCount;
+    int numBuffers = _date.info.frameCount;
 
-    for (const ApeFrame &frame : _data->frames)
+    for (const ApeFrame &frame : _date.frames)
     {
-        int index = &frame - &_data->frames[0];
+        int index = &frame - &_date.frames[0];
         ApeFrameBuffer::BufferObject bufferObject 
         = ApeFrameBuffer::BufferObject();
 

@@ -5,7 +5,7 @@
 ApeF::ApeF()
 {
     // init ApeData
-    _data = std::make_unique<ApeData>(new ApeData());
+    _data = std::make_unique<ApeData>();
 
     // init other members
     _file = std::ifstream();

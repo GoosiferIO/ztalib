@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PALF_H
+#define PALF_H
+
 #include <fstream>
 #include <vector>
 #include <iostream>
@@ -36,3 +38,5 @@ PalF::PalF()
     colorModel = 0;
     numColors = 0;
 }
+
+#endif // PALF_H

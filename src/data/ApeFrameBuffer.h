@@ -25,7 +25,6 @@ private:
     std::unique_ptr<ApeData> _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<std::unique_ptr<BufferObject>> _buffer;
-    std::vector<std::unique_ptr<ApeFrame>> _frames;
 };
 
 ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
@@ -33,7 +32,6 @@ ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
       _colorModel(0)
 {
     _buffer = std::vector<std::unique_ptr<BufferObject>>();
-    _frames = std::vector<std::unique_ptr<ApeFrame>>();
     createBuffer();
 }
 
@@ -44,16 +42,16 @@ std::vector<std::unique_ptr<ApeFrameBuffer::BufferObject>> ApeFrameBuffer::getBu
 
 int ApeFrameBuffer::createBuffer()
 {
-    if (_frames.empty())
+    if (_data->frames.empty())
     {
         return 0;
     }
 
     int numBuffers = _data->info->frameCount;
 
-    for (const std::unique_ptr<ApeFrame> &frame : _frames)
+    for (const std::unique_ptr<ApeFrame> &frame : _data->frames)
     {
-        int index = &frame - &_frames[0];
+        int index = &frame - &_data->frames[0];
         std::unique_ptr<ApeFrameBuffer::BufferObject> bufferObject 
         = std::make_unique<ApeFrameBuffer::BufferObject>();
 

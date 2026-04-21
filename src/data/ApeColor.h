@@ -1,4 +1,6 @@
-#pragma once
+#ifndef APECOLOR_H
+#define APECOLOR_H
+
 #include <vector>
 #include "ApePixelBlock.h"
 
@@ -13,3 +15,5 @@ struct ApeColor
     uint8_t b;
     uint8_t a;
 };
+
+#endif // APECOLOR_H

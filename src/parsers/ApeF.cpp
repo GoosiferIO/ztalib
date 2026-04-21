@@ -37,7 +37,7 @@ std::vector<ApeFrameBuffer::BufferObject> ApeF::getFrameBuffer()
 
 int ApeF::getFrameCount() 
 {
-    return _data->info->frameCount;
+    return _data->info.frameCount;
 }
 
 std::string ApeF::getPalLocation() 

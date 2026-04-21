@@ -47,7 +47,7 @@ int ApeFrameBuffer::createBuffer()
         return 0;
     }
 
-    int numBuffers = _data->info->frameCount;
+    int numBuffers = _data->info.frameCount;
 
     for (const ApeFrame &frame : _data->frames)
     {

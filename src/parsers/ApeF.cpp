@@ -255,19 +255,19 @@ int ApeF::validateGraphicFile(std::string fileName)
     // - HAS BACKGROUND - 1 byte
     // does not mean _file is invalid, just not a FATZ _file or ZTAF (reverse FATZ)
 
-    graphic.read((char*)&info->speed, 4); // speed in ms
-    graphic.read((char*)&pal->nameSize, 4); // size of palette name
-    pal->name.resize(pal->nameSize); // resize to size
-    graphic.read(pal->name.data(), pal->nameSize); // read palette name
-    graphic.read((char*)&info->frameCount, 4); // frame count
+    graphic.read((char*)&info.speed, 4); // speed in ms
+    graphic.read((char*)&pal.nameSize, 4); // size of palette name
+    pal.name.resize(pal.nameSize); // resize to size
+    graphic.read(pal.name.data(), pal.nameSize); // read palette name
+    graphic.read((char*)&info.frameCount, 4); // frame count
 
     // if pal name is empty, return false
-    if (pal->name.empty() || pal->nameSize == 0 || pal->nameSize < 0) {
+    if (pal.name.empty() || pal.nameSize == 0 || pal.nameSize < 0) {
         // if no palette exists then immediately return false
         return 0;
     }
 
-    std::string palette(pal->name.data());
+    std::string palette(pal.name.data());
 
     // if pal name has '.pal' extension, return true
     if (palette.find(".pal") != std::string::npos) {
@@ -304,5 +304,5 @@ int ApeF::exportToPng(
 
 ApeInfo ApeF::getHeader(std::string fileName) 
 {
-    return _data->info ? *_data->info : ApeInfo();
+    return _data.info ? _data.info : ApeInfo();
 }

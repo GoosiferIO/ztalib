@@ -10,17 +10,11 @@ The following functions are available:
 
 | Function | Description |
 | --- | --- |
-| `int ZtaCore::loadImage(const char* path, int colorModel, const char* palettePath)` | Load an image from a file |
-| path: path to the image file |
-| colorModel: 0 for RGBA or 1 for BGRA |
-| palettePath: path to the palette file |
-| returns 0 on success, -1 on failure |
-| `int ZtaCore::getFrameCount(std::string path, OutputBuffer* buffer)` | Get the number of frames in the image |
-| path: path to the image file |
-| buffer: pixel buffer that contains frame data |
-| `ZtaCore::exportToPNG(const char* path, int frame)` | Save a frame to a PNG file |
-| `std::string ZtaCore::getPalLocation()` | Get the location of the palette file |
-| `OutputBuffer** ZtaCore::apeBuffer()` | Get all the frame buffers in the image as an array of OutputBuffer pointers |
+| `load(std::string fileName, int colorProfile = 0, std::string ioPal = "")` | Load an image file with an optional color profile and palette file |
+| `getFrameCount(std::string path, OutputBuffer* buffer)` | Get the number of frames in the image |
+| `exportToPNG(const char* path, int frame)` | Save a frame to a PNG file |
+| `getPalLocation()` | Get the location of the palette file |
+| `getFrameBuffer()` | Get all the frame buffers in the image as an array of OutputBuffer pointers |
 
 See `main.cpp` in examples/ for an example of how to use the library.
 
@@ -29,7 +23,7 @@ See `main.cpp` in examples/ for an example of how to use the library.
 Because the library makes use of `stb_image_write.h`, you will need the includes folder in your project directory. A successful compilation would look something like this:
 
 ```bash
-g++ -o my_program my_program.cpp ZtaCore.h ZtaPng.cpp -o my_program
+g++ main.cpp ../src/parsers/ZtaF.cpp ../src/parsers/PalF.cpp ../src/data/ZtaData.cpp ../src/data/ZtaFrameBuffer.cpp ../src/other/ZtaUtils.cpp -o output
 ```
 
 ## Bindings Available

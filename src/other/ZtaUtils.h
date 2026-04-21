@@ -6,7 +6,7 @@
 
 #define MAGIC "FATZ"
 
-class ApeUtils
+class ZtaUtils
 {
 public:
     static int hasMagic(std::ifstream &);

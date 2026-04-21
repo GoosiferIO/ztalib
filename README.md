@@ -4,23 +4,23 @@ This is an image parsing library for Zoo Tycoon 1 graphics. It's designed to be 
 
 ## Usage
 
-For most use cases, you can simply include the ApeCore.h header file in your project and link against the ApeCore library. The library is header-only and does not require any additional linking. 
+For most use cases, you can simply include the ZtaCore.h header file in your project and link against the ZtaCore library. The library is header-only and does not require any additional linking. 
 
 The following functions are available:
 
 | Function | Description |
 | --- | --- |
-| `int ApeCore::loadImage(const char* path, int colorModel, const char* palettePath)` | Load an image from a file |
+| `int ZtaCore::loadImage(const char* path, int colorModel, const char* palettePath)` | Load an image from a file |
 | path: path to the image file |
 | colorModel: 0 for RGBA or 1 for BGRA |
 | palettePath: path to the palette file |
 | returns 0 on success, -1 on failure |
-| `int ApeCore::getFrameCount(std::string path, OutputBuffer* buffer)` | Get the number of frames in the image |
+| `int ZtaCore::getFrameCount(std::string path, OutputBuffer* buffer)` | Get the number of frames in the image |
 | path: path to the image file |
 | buffer: pixel buffer that contains frame data |
-| `ApeCore::exportToPNG(const char* path, int frame)` | Save a frame to a PNG file |
-| `std::string ApeCore::getPalLocation()` | Get the location of the palette file |
-| `OutputBuffer** ApeCore::apeBuffer()` | Get all the frame buffers in the image as an array of OutputBuffer pointers |
+| `ZtaCore::exportToPNG(const char* path, int frame)` | Save a frame to a PNG file |
+| `std::string ZtaCore::getPalLocation()` | Get the location of the palette file |
+| `OutputBuffer** ZtaCore::apeBuffer()` | Get all the frame buffers in the image as an array of OutputBuffer pointers |
 
 See `main.cpp` in examples/ for an example of how to use the library.
 
@@ -29,7 +29,7 @@ See `main.cpp` in examples/ for an example of how to use the library.
 Because the library makes use of `stb_image_write.h`, you will need the includes folder in your project directory. A successful compilation would look something like this:
 
 ```bash
-g++ -o my_program my_program.cpp ApeCore.h ApePng.cpp -o my_program
+g++ -o my_program my_program.cpp ZtaCore.h ZtaPng.cpp -o my_program
 ```
 
 ## Bindings Available
@@ -49,7 +49,7 @@ It makes use of a few MinGW libraries, so you might need the following dependenc
 Compile:
 
 ```bash
-g++ -shared -o ApeCore.dll ApeExp.cpp ../ApePng.cpp "-Wl,--out-implib,libapecore.a" -static-libgcc -static-libstdc++ -static -lpthread 
+g++ -shared -o ZtaCore.dll ZtaExp.cpp ../ZtaPng.cpp "-Wl,--out-implib,libapecore.a" -static-libgcc -static-libstdc++ -static -lpthread 
 ```
 
 #### Linux
@@ -59,7 +59,7 @@ The libraries should be available by default on most Linux distributions.
 Compile:
 
 ```bash
-g++ -shared -o ApeCore.so ApeExp.cpp ../ApePng.cpp -lpthread -fPIC
+g++ -shared -o ZtaCore.so ZtaExp.cpp ../ZtaPng.cpp -lpthread -fPIC
 ```
 
 ### Python

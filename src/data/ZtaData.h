@@ -5,20 +5,20 @@
 #include <memory>
 
 // structs
-#include "ApeFrame.h"
-#include "ApeInfo.h"
+#include "ZtaFrame.h"
+#include "ZtaInfo.h"
 
 // parsers
 #include "../parsers/PalF.h"
 
-class ApeData {
+class ZtaData {
     public:
-        ApeInfo info;
-        std::vector<ApeFrame> frames;
+        ZtaInfo info;
+        std::vector<ZtaFrame> frames;
         std::unique_ptr<PalF> palette;
         bool hasBackground = false;
 
-        ApeData();
+        ZtaData();
 };
 
 #endif // APEDATA_H

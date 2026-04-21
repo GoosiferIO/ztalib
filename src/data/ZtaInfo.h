@@ -3,7 +3,7 @@
 
 #include <vector>
 
-struct ApeInfo
+struct ZtaInfo
 {
     uint32_t speed; // animation speed in ms
     uint32_t frameCount;

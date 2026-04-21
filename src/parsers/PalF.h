@@ -4,7 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include "../data/ApeColor.h"
+#include "../data/ZtaColor.h"
 
 class PalF
 {
@@ -18,12 +18,12 @@ public:
     std::vector<char> name;
     int colorModel;
     int numColors;
-    ApeColor getColor(int index);
+    ZtaColor getColor(int index);
     int read(std::string fileName);
 
 private:
     std::ifstream file;
-    std::vector<ApeColor> colors;
+    std::vector<ZtaColor> colors;
 };
 
 #endif // PALF_H

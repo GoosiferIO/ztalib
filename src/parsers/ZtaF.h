@@ -25,9 +25,9 @@
 #include <memory>
 
 #include "../../libs/stb_image_write.h"
-#include "../data/ApeData.h"
-#include "../data/ApeFrameBuffer.h"
-#include "../other/ApeUtils.h"
+#include "../data/ZtaData.h"
+#include "../data/ZtaFrameBuffer.h"
+#include "../other/ZtaUtils.h"
 
 #define APE_CORE_VERSION "0.6.4"
 
@@ -37,31 +37,31 @@
 
 // -------------------------------- Standard Pixel Output
 
-class ApeF
+class ZtaF
 {
 public:
-    ApeF();
-    virtual ~ApeF();
+    ZtaF();
+    virtual ~ZtaF();
 
     int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
     int exportToPng(std::string fileName,
-                    const ApeFrameBuffer::BufferObject& output);
+                    const ZtaFrameBuffer::BufferObject& output);
     int getFrameCount();
-    std::vector<ApeFrameBuffer::BufferObject> getFrameBuffer();
+    std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
     std::string getPalLocation();
     static int validateGraphicFile(std::string fileName);
     int hasBackgroundFrame();
     // return header info
-    ApeInfo getHeader(std::string fileName);
+    ZtaInfo getHeader(std::string fileName);
 
 private:
     // binary input
     std::ifstream _file;
     // output buffers
-    std::vector<ApeFrameBuffer::BufferObject> _frameBuffer;
+    std::vector<ZtaFrameBuffer::BufferObject> _frameBuffer;
     // data
-    std::unique_ptr<ApeData> _data;
+    std::unique_ptr<ZtaData> _data;
     // other
     int colorModel;
 };

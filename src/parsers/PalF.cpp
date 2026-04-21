@@ -5,7 +5,7 @@ PalF::PalF()
     file = std::ifstream();
     file.exceptions(static_cast<std::ios_base::iostate>(
         std::ifstream::failbit | std::ifstream::badbit));
-    colors = std::vector<ApeColor>();
+    colors = std::vector<ZtaColor>();
     nameSize = 0;
     name = std::vector<char>();
     location = "";
@@ -61,7 +61,7 @@ int PalF::read(std::string fileName)
         // uint32_t abgr;
         // palFile.read(reinterpret_cast<char*>(&abgr), 4);
 
-        ApeColor color;
+        ZtaColor color;
         file.read(reinterpret_cast<char *>(&color), 4);
 
         // Convert RGBA to BGRA if necessary
@@ -93,7 +93,7 @@ int PalF::read(std::string fileName)
     return 1;
 }
 
-ApeColor PalF::getColor(int index)
+ZtaColor PalF::getColor(int index)
 {
     if (index < 0 || index >= numColors)
     {
@@ -115,7 +115,7 @@ int PalF::validatePaletteFile(std::string fileName)
     // }
 
     // // Get header info
-    // ApeHeader hdr = getHeader(fileName);
+    // ZtaHeader hdr = getHeader(fileName);
 
     // // if pal name is empty, return false
     // if (hdr.palName.empty() || hdr.palNameSize == 0 || hdr.palNameSize < 0) {

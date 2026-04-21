@@ -1,10 +1,10 @@
-#include "ApeF.h"
+#include "ZtaF.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 
-ApeF::ApeF()
+ZtaF::ZtaF()
 {
-    // init ApeData
-    _data = std::make_unique<ApeData>();
+    // init ZtaData
+    _data = std::make_unique<ZtaData>();
 
     // init other members
     _file = std::ifstream();
@@ -12,10 +12,10 @@ ApeF::ApeF()
         std::ifstream::failbit | std::ifstream::badbit));
     colorModel = 0;
 
-    _frameBuffer = std::vector<ApeFrameBuffer::BufferObject>();
+    _frameBuffer = std::vector<ZtaFrameBuffer::BufferObject>();
 }
 
-ApeF::~ApeF()
+ZtaF::~ZtaF()
 { 
     if (_file.is_open()) 
     {
@@ -29,24 +29,24 @@ ApeF::~ApeF()
     _data->palette->name.clear();    
 }
 
-std::vector<ApeFrameBuffer::BufferObject> ApeF::getFrameBuffer()
+std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
 {
     return _frameBuffer;
 }
 
-int ApeF::getFrameCount() 
+int ZtaF::getFrameCount() 
 {
     return _data->info.frameCount;
 }
 
-std::string ApeF::getPalLocation() 
+std::string ZtaF::getPalLocation() 
 {
     return _data->palette->location;
 }
 
-// ApeColor model 0 = RGBA
-// ApeColor model 1 = BGRA
-int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
+// ZtaColor model 0 = RGBA
+// ZtaColor model 1 = BGRA
+int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
@@ -60,7 +60,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     std::cout << "Header" << std::endl;
 
     // check if fatz
-    if (ApeUtils::hasMagic(_file)) {
+    if (ZtaUtils::hasMagic(_file)) {
         // skip 8 bytes
         _file.seekg(8, std::ios::cur);
         // read 9th byte
@@ -100,7 +100,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read frames
     for (int i = 0; i < _data->info.frameCount; i++) {
-        ApeFrame frame = ApeFrame();
+        ZtaFrame frame = ZtaFrame();
         _file.read((char*)&frame.frameSize, 4);
         _file.read((char*)&frame.height, 2);
         _file.read((char*)&frame.width, 2);
@@ -111,11 +111,11 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
 
         // read pixel sets
         for (int j = 0; j < frame.height; j++) {
-            ApePixelSet pixelSet = ApePixelSet();
+            ZtaPixelSet pixelSet = ZtaPixelSet();
             _file.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
             pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
             for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
-                ApePixelBlock block = ApePixelBlock();
+                ZtaPixelBlock block = ZtaPixelBlock();
                 _file.read((char*)&block.offset, 1); // offset
                 _file.read((char*)&block.colorCount, 1); // color count
                 block.colors.resize(block.colorCount); // resize to color count
@@ -126,7 +126,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
             // // TODO: test issues that might arise from this
             // // Possible issue: skips some pixels and leaves them blank
             // if (pixelSet->blockCount == 0) {
-            //     pixelSet->blocks.push_back(std::make_unique<ApePixelBlock>(0, 0, std::vector<uint8_t>()));
+            //     pixelSet->blocks.push_back(std::make_unique<ZtaPixelBlock>(0, 0, std::vector<uint8_t>()));
             // }
             frame.pixelSets.push_back(pixelSet); // store pixel set
         }
@@ -135,7 +135,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         _data->frames[i] = std::move(frame);
 
         // print frame
-        std::cout << "ApeFrame " << i << std::endl;
+        std::cout << "ZtaFrame " << i << std::endl;
         std::cout << "\tframeSize: " << _data->frames[i].frameSize << " bytes" << std::endl;
         std::cout << "\theight: " << (int)_data->frames[i].height << " px" << std::endl;
         std::cout << "\twidth: " << (int)_data->frames[i].width << " px" << std::endl;
@@ -143,9 +143,9 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
         std::cout << "\tx: " << (int)_data->frames[i].x << std::endl;
         std::cout << "\tunk1: " << (int)_data->frames[i].unk1 << std::endl;
         std::cout << "\tunk2: " << (int)_data->frames[i].unk2 << std::endl;
-        std::cout << "\tApePixelSets: " << _data->frames[i].pixelSets.size() << std::endl;
+        std::cout << "\tZtaPixelSets: " << _data->frames[i].pixelSets.size() << std::endl;
         for (int j = 0; j < _data->frames[i].pixelSets.size(); j++) {
-            std::cout << "\t\tApePixelSet " << j << std::endl;
+            std::cout << "\t\tZtaPixelSet " << j << std::endl;
             std::cout << "\t\t\tblockCount: " << (int)_data->frames[i].pixelSets[j].blockCount << std::endl;
             for (int k = 0; k < _data->frames[i].pixelSets[j].blocks.size(); k++) {
                 std::cout << "\t\t\tblock " << k << std::endl;
@@ -163,7 +163,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     _file.close();
 
     // write output buffer
-    ApeFrameBuffer apeFrameBuffer(*_data);
+    ZtaFrameBuffer apeFrameBuffer(*_data);
     _frameBuffer = apeFrameBuffer.getBuffer();
     
     if (_frameBuffer.empty()) 
@@ -173,7 +173,7 @@ int ApeF::load(std::string fileName, int colorModel, std::string ioPal)
     return 1;
 }
 
-int ApeF::save(std::string fileName)
+int ZtaF::save(std::string fileName)
 {
     std::ofstream output(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
     if (!output.is_open()) {
@@ -194,7 +194,7 @@ int ApeF::save(std::string fileName)
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (const ApeFrame& frame : _data->frames) {
+    for (const ZtaFrame& frame : _data->frames) {
         output.write((char*)&frame.frameSize, 4);
         output.write((char*)&frame.height, 2);
         output.write((char*)&frame.width, 2);
@@ -204,9 +204,9 @@ int ApeF::save(std::string fileName)
         output.write((char*)&frame.unk2, 1);
 
         // write pixel sets
-        for (const ApePixelSet& pixelSet : frame.pixelSets) {
+        for (const ZtaPixelSet& pixelSet : frame.pixelSets) {
             output.write((char*)&pixelSet.blockCount, 1);
-            for (const ApePixelBlock& block : pixelSet.blocks) {
+            for (const ZtaPixelBlock& block : pixelSet.blocks) {
                 output.write((char*)&block.offset, 1);
                 output.write((char*)&block.colorCount, 1);
                 output.write((char*)block.colors.data(), block.colorCount);
@@ -217,7 +217,7 @@ int ApeF::save(std::string fileName)
     output.close();
 
     // write palette
-    // ApeF::writePal(_data->palette->location);
+    // ZtaF::writePal(_data->palette->location);
 
     return 1;
 }
@@ -227,12 +227,12 @@ int ApeF::save(std::string fileName)
 // 2. Checks if first 4 bytes are FATZ = Valid
 // 3. Checks if palette name is empty = Not valid
 // 4. Checks if palette name has '.pal' extension = Valid
-int ApeF::validateGraphicFile(std::string fileName) 
+int ZtaF::validateGraphicFile(std::string fileName) 
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
     PalF pal = PalF();
-    ApeInfo info = ApeInfo();
+    ZtaInfo info = ZtaInfo();
     
     // if _file is not open, return false
     if (!graphic.is_open()) {
@@ -241,7 +241,7 @@ int ApeF::validateGraphicFile(std::string fileName)
     }
 
     // if has magic bytes FATZ
-    if (ApeUtils::hasMagic(graphic)) {
+    if (ZtaUtils::hasMagic(graphic)) {
         isValid = 1;
 
         // skip 9 bytes
@@ -277,14 +277,14 @@ int ApeF::validateGraphicFile(std::string fileName)
     return isValid;
 }
 
-int ApeF::hasBackgroundFrame() 
+int ZtaF::hasBackgroundFrame() 
 {
     return _data->hasBackground;
 }
 
-int ApeF::exportToPng(
+int ZtaF::exportToPng(
     std::string fileName, 
-    const ApeFrameBuffer::BufferObject& output)
+    const ZtaFrameBuffer::BufferObject& output)
 {
     if (output.pixels.empty()) {
         std::cerr << "No pixels to write" << std::endl;
@@ -301,7 +301,7 @@ int ApeF::exportToPng(
     return 1;
 }
 
-ApeInfo ApeF::getHeader(std::string fileName) 
+ZtaInfo ZtaF::getHeader(std::string fileName) 
 {
-    return _data ? _data->info : ApeInfo();
+    return _data ? _data->info : ZtaInfo();
 }

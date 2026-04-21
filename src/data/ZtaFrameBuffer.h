@@ -2,9 +2,9 @@
 #define APEFRAMEBUFFER_H
 #include <cstdint>
 #include <memory>
-#include "ApeData.h"
+#include "ZtaData.h"
 
-class ApeFrameBuffer
+class ZtaFrameBuffer
 {
 public:
     struct BufferObject
@@ -16,13 +16,13 @@ public:
         int offsetY;
         int channels;
     };
-    ApeFrameBuffer(const ApeData& data);
-    ~ApeFrameBuffer();
+    ZtaFrameBuffer(const ZtaData& data);
+    ~ZtaFrameBuffer();
     const std::vector<BufferObject>& getBuffer();
 
 private:
     int createBuffer();
-    const ApeData& _data;
+    const ZtaData& _data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<BufferObject> _buffer;
 };

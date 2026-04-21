@@ -26,17 +26,4 @@ private:
     std::vector<ApeColor> colors;
 };
 
-PalF::PalF()
-{
-    file = std::ifstream();
-    file.exceptions(static_cast<std::ios_base::iostate>(
-        std::ifstream::failbit | std::ifstream::badbit));
-    colors = std::vector<ApeColor>();
-    nameSize = 0;
-    name = std::vector<char>();
-    location = "";
-    colorModel = 0;
-    numColors = 0;
-}
-
 #endif // PALF_H

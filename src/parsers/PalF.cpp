@@ -1,5 +1,19 @@
 #include "PalF.h"
 
+PalF::PalF()
+{
+    file = std::ifstream();
+    file.exceptions(static_cast<std::ios_base::iostate>(
+        std::ifstream::failbit | std::ifstream::badbit));
+    colors = std::vector<ApeColor>();
+    nameSize = 0;
+    name = std::vector<char>();
+    location = "";
+    colorModel = 0;
+    numColors = 0;
+}
+
+
 int PalF::read(std::string fileName)
 {
     std::cout << "Reading palette: " << fileName << std::endl;
@@ -66,6 +80,7 @@ int PalF::read(std::string fileName)
         colors.push_back({0, 0, 0, 255}); // Fill with black (fully opaque)
     }
 
+    numColors = static_cast<int>(colors.size());
     return 1;
 }
 

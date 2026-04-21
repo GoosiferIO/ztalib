@@ -13,6 +13,15 @@ PalF::PalF()
     numColors = 0;
 }
 
+PalF::~PalF()
+{
+    if (file.is_open())
+    {
+        file.close();
+    }
+    colors.clear();
+    name.clear();
+}
 
 int PalF::read(std::string fileName)
 {

@@ -8,6 +8,11 @@ ApeFrameBuffer::ApeFrameBuffer(const ApeData& data)
     createBuffer();
 }
 
+ApeFrameBuffer::~ApeFrameBuffer()
+{
+    _buffer.clear();
+}
+
 const std::vector<ApeFrameBuffer::BufferObject>& ApeFrameBuffer::getBuffer()
 {
     return _buffer;
@@ -25,8 +30,7 @@ int ApeFrameBuffer::createBuffer()
     for (const ApeFrame &frame : _data.frames)
     {
         int index = &frame - &_data.frames[0];
-        ApeFrameBuffer::BufferObject bufferObject 
-        = ApeFrameBuffer::BufferObject();
+        ApeFrameBuffer::BufferObject bufferObject;
 
         // Set dimensions and format
         bufferObject.width = static_cast<int>(frame.width);

@@ -5,8 +5,6 @@ int ZtaUtils::hasMagic(std::ifstream &_file)
     char magic[5] = {0};
     _file.read(magic, 4);
 
-    // std::cout << "\tMagic Bytes: " << magic << std::endl;
-
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
     if (_file.gcount() < 4)

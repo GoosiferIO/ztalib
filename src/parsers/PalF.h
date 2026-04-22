@@ -12,7 +12,6 @@ public:
     PalF();
     int load(std::string fileName);
     virtual ~PalF();
-    static int validatePaletteFile(std::string fileName);
     std::string location;
     uint32_t nameSize;
     std::vector<char> name;

@@ -75,7 +75,7 @@ private:
 /*
     MIT License
 
-    Copyright (c) 2025 Goosifer.IO
+    Copyright (c) 2025 Eric Galvan (GoosiferIO)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal

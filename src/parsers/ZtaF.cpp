@@ -16,8 +16,8 @@ ZtaF::ZtaF()
 }
 
 ZtaF::~ZtaF()
-{ 
-    if (_file.is_open()) 
+{
+    if (_file.is_open())
     {
         _file.close();
     }
@@ -26,7 +26,7 @@ ZtaF::~ZtaF()
     _data->frames.clear();
 
     // free header
-    _data->palette->name.clear();    
+    _data->palette->name.clear();
 }
 
 std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
@@ -34,12 +34,12 @@ std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
     return _frameBuffer;
 }
 
-int ZtaF::getFrameCount() 
+int ZtaF::getFrameCount()
 {
     return _data->info.frameCount;
 }
 
-std::string ZtaF::getPalLocation() 
+std::string ZtaF::getPalLocation()
 {
     return _data->palette->location;
 }
@@ -51,33 +51,36 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
     this->colorModel = colorModel;
 
     _file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
-    if (!_file.is_open()) {
+    if (!_file.is_open())
+    {
         return -1;
     }
 
     // ------------------------------- read header
     // Note: if bg frame exists, not counted in frameCount
     // check if fatz
-    if (ZtaUtils::hasMagic(_file)) {
+    if (ZtaUtils::hasMagic(_file))
+    {
         // skip 8 bytes
         _file.seekg(8, std::ios::cur);
         // read 9th byte
-        _file.read((char*)&_data->hasBackground, 1);
+        _file.read((char *)&_data->hasBackground, 1);
     } // else, not fatz (ztaf)
 
-    _file.read((char*)&_data->info.speed, 4); // animation speed in ms
-    _file.read((char*)&_data->palette->nameSize, 4); // size of palette name
-    _data->palette->name.resize(_data->palette->nameSize); // resize to size
+    _file.read((char *)&_data->info.speed, 4);                         // animation speed in ms
+    _file.read((char *)&_data->palette->nameSize, 4);                  // size of palette name
+    _data->palette->name.resize(_data->palette->nameSize);             // resize to size
     _file.read(_data->palette->name.data(), _data->palette->nameSize); // read palette name
-    _file.read((char*)&_data->info.frameCount, 4); // number of frames
-    _data->frames.resize(_data->info.frameCount); // resize frames to frame count
+    _file.read((char *)&_data->info.frameCount, 4);                    // number of frames
+    _data->frames.resize(_data->info.frameCount);                      // resize frames to frame count
 
-    if (ioPal.empty()) 
+    if (ioPal.empty())
         _data->palette->location = std::string(_data->palette->name.data());
     else
         _data->palette->location = ioPal;
 
-    if (_data->hasBackground) {
+    if (_data->hasBackground)
+    {
         _data->info.frameCount += 1;
         _data->frames.resize(_data->info.frameCount);
     }
@@ -86,28 +89,31 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
     _data->palette->read(_data->palette->location);
 
     // ------------------------------- read frames
-    for (int i = 0; i < _data->info.frameCount; i++) {
+    for (int i = 0; i < _data->info.frameCount; i++)
+    {
         ZtaFrame frame = ZtaFrame();
-        _file.read((char*)&frame.frameSize, 4);
-        _file.read((char*)&frame.height, 2);
-        _file.read((char*)&frame.width, 2);
-        _file.read((char*)&frame.y, 2);
-        _file.read((char*)&frame.x, 2);
-        _file.read((char*)&frame.unk1, 1); // always 0?
-        _file.read((char*)&frame.unk2, 1); // always 0?
+        _file.read((char *)&frame.frameSize, 4);
+        _file.read((char *)&frame.height, 2);
+        _file.read((char *)&frame.width, 2);
+        _file.read((char *)&frame.y, 2);
+        _file.read((char *)&frame.x, 2);
+        _file.read((char *)&frame.unk1, 1); // always 0?
+        _file.read((char *)&frame.unk2, 1); // always 0?
 
         // read pixel sets
-        for (int j = 0; j < frame.height; j++) {
+        for (int j = 0; j < frame.height; j++)
+        {
             ZtaPixelSet pixelSet = ZtaPixelSet();
-            _file.read((char*)&pixelSet.blockCount, 1); // how many pixel blocks
+            _file.read((char *)&pixelSet.blockCount, 1); // how many pixel blocks
             pixelSet.blocks.resize(pixelSet.blockCount); // resize to block count
-            for (int k = 0; k < pixelSet.blockCount; k++) { // read each block
+            for (int k = 0; k < pixelSet.blockCount; k++)
+            { // read each block
                 ZtaPixelBlock block = ZtaPixelBlock();
-                _file.read((char*)&block.offset, 1); // offset
-                _file.read((char*)&block.colorCount, 1); // color count
-                block.colors.resize(block.colorCount); // resize to color count
-                _file.read((char*)block.colors.data(), block.colorCount); // colors
-                pixelSet.blocks[k] = std::move(block); // store block
+                _file.read((char *)&block.offset, 1);                      // offset
+                _file.read((char *)&block.colorCount, 1);                  // color count
+                block.colors.resize(block.colorCount);                     // resize to color count
+                _file.read((char *)block.colors.data(), block.colorCount); // colors
+                pixelSet.blocks[k] = std::move(block);                     // store block
             }
 
             // // TODO: test issues that might arise from this
@@ -127,8 +133,8 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
     // write output buffer
     ZtaFrameBuffer apeFrameBuffer(*_data);
     _frameBuffer = apeFrameBuffer.getBuffer();
-    
-    if (_frameBuffer.empty()) 
+
+    if (_frameBuffer.empty())
     {
         return -2;
     }
@@ -138,40 +144,44 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 int ZtaF::save(std::string fileName)
 {
     std::ofstream output(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
-    if (!output.is_open()) {
+    if (!output.is_open())
+    {
         return -1;
     }
 
-    if (_data->hasBackground) 
+    if (_data->hasBackground)
     {
         // WRITE: FATZ
         output.write(MAGIC, 4);
     }
 
     // -------------------------------------- write header
-    output.write((char*)&_data->info.speed, 4); // speed in ms
-    output.write((char*)&_data->palette->nameSize, 4); // size of palette name
+    output.write((char *)&_data->info.speed, 4);                         // speed in ms
+    output.write((char *)&_data->palette->nameSize, 4);                  // size of palette name
     output.write(_data->palette->name.data(), _data->palette->nameSize); // palette name
-    output.write((char*)&_data->info.frameCount, 4); // frame count
+    output.write((char *)&_data->info.frameCount, 4);                    // frame count
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (const ZtaFrame& frame : _data->frames) {
-        output.write((char*)&frame.frameSize, 4);
-        output.write((char*)&frame.height, 2);
-        output.write((char*)&frame.width, 2);
-        output.write((char*)&frame.x, 2);
-        output.write((char*)&frame.y, 2);
-        output.write((char*)&frame.unk1, 1);
-        output.write((char*)&frame.unk2, 1);
+    for (const ZtaFrame &frame : _data->frames)
+    {
+        output.write((char *)&frame.frameSize, 4);
+        output.write((char *)&frame.height, 2);
+        output.write((char *)&frame.width, 2);
+        output.write((char *)&frame.x, 2);
+        output.write((char *)&frame.y, 2);
+        output.write((char *)&frame.unk1, 1);
+        output.write((char *)&frame.unk2, 1);
 
         // write pixel sets
-        for (const ZtaPixelSet& pixelSet : frame.pixelSets) {
-            output.write((char*)&pixelSet.blockCount, 1);
-            for (const ZtaPixelBlock& block : pixelSet.blocks) {
-                output.write((char*)&block.offset, 1);
-                output.write((char*)&block.colorCount, 1);
-                output.write((char*)block.colors.data(), block.colorCount);
+        for (const ZtaPixelSet &pixelSet : frame.pixelSets)
+        {
+            output.write((char *)&pixelSet.blockCount, 1);
+            for (const ZtaPixelBlock &block : pixelSet.blocks)
+            {
+                output.write((char *)&block.offset, 1);
+                output.write((char *)&block.colorCount, 1);
+                output.write((char *)block.colors.data(), block.colorCount);
             }
         }
     }
@@ -189,21 +199,23 @@ int ZtaF::save(std::string fileName)
 // 2. Checks if first 4 bytes are FATZ = Valid
 // 3. Checks if palette name is empty = Not valid
 // 4. Checks if palette name has '.pal' extension = Valid
-int ZtaF::validateGraphicFile(std::string fileName) 
+int ZtaF::validateGraphicFile(std::string fileName)
 {
     std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     int isValid = 0;
     PalF pal = PalF();
     ZtaInfo info = ZtaInfo();
-    
+
     // if _file is not open, return false
-    if (!graphic.is_open()) {
+    if (!graphic.is_open())
+    {
         // immediately return false if _file is not open
         return 0;
     }
 
     // if has magic bytes FATZ
-    if (ZtaUtils::hasMagic(graphic)) {
+    if (ZtaUtils::hasMagic(graphic))
+    {
         isValid = 1;
 
         // skip 9 bytes
@@ -216,14 +228,15 @@ int ZtaF::validateGraphicFile(std::string fileName)
     // - HAS BACKGROUND - 1 byte
     // does not mean _file is invalid, just not a FATZ _file or ZTAF (reverse FATZ)
 
-    graphic.read((char*)&info.speed, 4); // speed in ms
-    graphic.read((char*)&pal.nameSize, 4); // size of palette name
-    pal.name.resize(pal.nameSize); // resize to size
+    graphic.read((char *)&info.speed, 4);        // speed in ms
+    graphic.read((char *)&pal.nameSize, 4);      // size of palette name
+    pal.name.resize(pal.nameSize);               // resize to size
     graphic.read(pal.name.data(), pal.nameSize); // read palette name
-    graphic.read((char*)&info.frameCount, 4); // frame count
+    graphic.read((char *)&info.frameCount, 4);   // frame count
 
     // if pal name is empty, return false
-    if (pal.name.empty() || pal.nameSize == 0 || pal.nameSize < 0) {
+    if (pal.name.empty() || pal.nameSize == 0 || pal.nameSize < 0)
+    {
         // if no palette exists then immediately return false
         return 0;
     }
@@ -231,7 +244,8 @@ int ZtaF::validateGraphicFile(std::string fileName)
     std::string palette(pal.name.data());
 
     // if pal name has '.pal' extension, return true
-    if (palette.find(".pal") != std::string::npos) {
+    if (palette.find(".pal") != std::string::npos)
+    {
         isValid = 1;
     }
 
@@ -239,21 +253,23 @@ int ZtaF::validateGraphicFile(std::string fileName)
     return isValid;
 }
 
-int ZtaF::hasBackgroundFrame() 
+int ZtaF::hasBackgroundFrame()
 {
     return _data->hasBackground;
 }
 
 int ZtaF::exportToPng(
-    std::string fileName, 
-    const ZtaFrameBuffer::BufferObject& output)
+    std::string fileName,
+    const ZtaFrameBuffer::BufferObject &output)
 {
-    if (output.pixels.empty()) {
+    if (output.pixels.empty())
+    {
         std::cerr << "No pixels to write" << std::endl;
         return -1;
     }
 
-    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels.data(), 0)) {
+    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels.data(), 0))
+    {
         std::cerr << "Failed to write image" << std::endl;
         return -2;
     }
@@ -261,7 +277,7 @@ int ZtaF::exportToPng(
     return 1;
 }
 
-ZtaInfo ZtaF::getHeader(std::string fileName) 
+ZtaInfo ZtaF::getHeader(std::string fileName)
 {
     return _data ? _data->info : ZtaInfo();
 }

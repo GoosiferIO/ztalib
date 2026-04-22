@@ -1,5 +1,5 @@
-#ifndef APEDATA_H
-#define APEDATA_H
+#ifndef ZTADATA_H
+#define ZTADATA_H
 
 #include <vector>
 #include <memory>
@@ -21,4 +21,4 @@ class ZtaData {
         ZtaData();
 };
 
-#endif // APEDATA_H
+#endif // ZTADATA_H

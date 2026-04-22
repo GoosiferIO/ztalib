@@ -1,5 +1,5 @@
-#ifndef APEPIXELBLOCK_H
-#define APEPIXELBLOCK_H
+#ifndef ZTAPIXELBLOCK_H
+#define ZTAPIXELBLOCK_H
 
 #include <vector>
 #include <cstdint>
@@ -11,4 +11,4 @@ struct ZtaPixelBlock
     std::vector<uint8_t> colors; // Color indexes in pal
 };
 
-#endif // APEPIXELBLOCK_H
+#endif // ZTAPIXELBLOCK_H

@@ -1,5 +1,5 @@
-#ifndef APEFRAMEBUFFER_H
-#define APEFRAMEBUFFER_H
+#ifndef ZTAFRAMEBUFFER_H
+#define ZTAFRAMEBUFFER_H
 #include <cstdint>
 #include <memory>
 #include "ZtaData.h"
@@ -27,4 +27,4 @@ private:
     std::vector<BufferObject> _buffer;
 };
 
-#endif // APEFRAMEBUFFER_H
+#endif // ZTAFRAMEBUFFER_H

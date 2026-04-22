@@ -1,5 +1,5 @@
-#ifndef APEPIXELSET_H
-#define APEPIXELSET_H
+#ifndef ZTAPIXELSET_H
+#define ZTAPIXELSET_H
 
 #include "ZtaPixelBlock.h"
 
@@ -9,4 +9,4 @@ struct ZtaPixelSet
     std::vector<ZtaPixelBlock> blocks; // The pixel blocks
 };
 
-#endif // APEPIXELSET_H
+#endif // ZTAPIXELSET_H

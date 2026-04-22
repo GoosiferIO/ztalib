@@ -194,7 +194,7 @@ int ZtaF::save(std::string fileName)
     return 1;
 }
 
-// Does a simple validation to see if _file is valid APE graphic
+// Does a simple validation to see if _file is valid ZTA graphic
 // 1. Checks if _file is open = Not valid
 // 2. Checks if first 4 bytes are FATZ = Valid
 // 3. Checks if palette name is empty = Not valid

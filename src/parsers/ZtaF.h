@@ -1,9 +1,9 @@
-#ifndef APEF_H
-#define APEF_H
+#ifndef ZTAF_H
+#define ZTAF_H
 
 // ape-graphics-parser - ZT1 Graphics Parser
 // by Eric Galvan (Goosifer.IO)
-// https://github.com/openztcc/APE.Core
+// https://github.com/openztcc/ZTA.Core
 // Licensed under MIT (see LICENSE)
 //
 // This library parses ZT1 game sprites and animations. Please feel
@@ -29,7 +29,7 @@
 #include "../data/ZtaFrameBuffer.h"
 #include "../other/ZtaUtils.h"
 
-#define APE_CORE_VERSION "0.6.4"
+#define ZTA_CORE_VERSION "0.6.4"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
 // The ninth byte is a boolean value that specifies if there is an
@@ -66,4 +66,4 @@ private:
     int colorModel;
 };
 
-#endif // APEF_H
+#endif // ZTAF_H

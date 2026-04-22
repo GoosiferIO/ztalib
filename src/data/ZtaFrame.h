@@ -1,5 +1,5 @@
-#ifndef APEFRAME_H
-#define APEFRAME_H
+#ifndef ZTAFRAME_H
+#define ZTAFRAME_H
 
 #include <vector>
 #include "ZtaPixelSet.h"
@@ -16,4 +16,4 @@ struct ZtaFrame
     std::vector<ZtaPixelSet> pixelSets; // The pixel sets  
 };
 
-#endif // APE_FRAME_H
+#endif // ZTA_FRAME_H

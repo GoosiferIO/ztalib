@@ -1,5 +1,5 @@
-#ifndef APEINFO_H
-#define APEINFO_H
+#ifndef ZTAINFO_H
+#define ZTAINFO_H
 
 #include <vector>
 
@@ -9,4 +9,4 @@ struct ZtaInfo
     uint32_t frameCount;
 };
 
-#endif // APEINFO_H
+#endif // ZTAINFO_H

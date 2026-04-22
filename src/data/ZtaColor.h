@@ -1,5 +1,5 @@
-#ifndef APECOLOR_H
-#define APECOLOR_H
+#ifndef ZTACOLOR_H
+#define ZTACOLOR_H
 
 #include <vector>
 #include "ZtaPixelBlock.h"
@@ -17,4 +17,4 @@ struct ZtaColor
     uint8_t a;
 };
 
-#endif // APECOLOR_H
+#endif // ZTACOLOR_H

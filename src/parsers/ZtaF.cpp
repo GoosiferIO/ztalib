@@ -57,19 +57,13 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 
     // ------------------------------- read header
     // Note: if bg frame exists, not counted in frameCount
-    std::cout << "Header" << std::endl;
-
     // check if fatz
     if (ZtaUtils::hasMagic(_file)) {
         // skip 8 bytes
         _file.seekg(8, std::ios::cur);
         // read 9th byte
         _file.read((char*)&_data->hasBackground, 1);
-        std::cout << "\tType: is fatz" << std::endl;
-        std::cout << "\thasBackground: " << _data->hasBackground << std::endl;
-    } else {
-        std::cout << "\tType: not fatz" << std::endl;
-    }
+    } // else, not fatz (ztaf)
 
     _file.read((char*)&_data->info.speed, 4); // animation speed in ms
     _file.read((char*)&_data->palette->nameSize, 4); // size of palette name
@@ -87,13 +81,6 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
         _data->info.frameCount += 1;
         _data->frames.resize(_data->info.frameCount);
     }
-
-    // print header
-    std::cout << "\tspeed: " << _data->info.speed << " ms" << std::endl;
-    std::cout << "\tpalNameSize: " << _data->palette->nameSize << " bytes" << std::endl;
-    std::cout << "\tpalName: " << _data->palette->name.data() << std::endl;
-    std::cout << "\tframeCount: " << _data->info.frameCount << std::endl;
-    std::cout << "\tframes: " << _data->frames.size() << std::endl;
 
     // ------------------------------- read palette
     _data->palette->read(_data->palette->location);
@@ -133,31 +120,6 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 
         // store frame
         _data->frames[i] = std::move(frame);
-
-        // print frame
-        std::cout << "ZtaFrame " << i << std::endl;
-        std::cout << "\tframeSize: " << _data->frames[i].frameSize << " bytes" << std::endl;
-        std::cout << "\theight: " << (int)_data->frames[i].height << " px" << std::endl;
-        std::cout << "\twidth: " << (int)_data->frames[i].width << " px" << std::endl;
-        std::cout << "\ty: " << (int)_data->frames[i].y << std::endl;
-        std::cout << "\tx: " << (int)_data->frames[i].x << std::endl;
-        std::cout << "\tunk1: " << (int)_data->frames[i].unk1 << std::endl;
-        std::cout << "\tunk2: " << (int)_data->frames[i].unk2 << std::endl;
-        std::cout << "\tZtaPixelSets: " << _data->frames[i].pixelSets.size() << std::endl;
-        for (int j = 0; j < _data->frames[i].pixelSets.size(); j++) {
-            std::cout << "\t\tZtaPixelSet " << j << std::endl;
-            std::cout << "\t\t\tblockCount: " << (int)_data->frames[i].pixelSets[j].blockCount << std::endl;
-            for (int k = 0; k < _data->frames[i].pixelSets[j].blocks.size(); k++) {
-                std::cout << "\t\t\tblock " << k << std::endl;
-                std::cout << "\t\t\t\toffset: " << (int)_data->frames[i].pixelSets[j].blocks[k].offset << std::endl;
-                std::cout << "\t\t\t\tcolorCount: " << (int)_data->frames[i].pixelSets[j].blocks[k].colorCount << std::endl;
-                std::cout << "\t\t\t\tcolors: ";
-                for (int l = 0; l < _data->frames[i].pixelSets[j].blocks[k].colorCount; l++) {
-                    std::cout << (int)_data->frames[i].pixelSets[j].blocks[k].colors[l] << " ";
-                }
-                std::cout << std::endl;
-            }
-        }
     }
 
     _file.close();
@@ -294,8 +256,6 @@ int ZtaF::exportToPng(
     if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels.data(), 0)) {
         std::cerr << "Failed to write image" << std::endl;
         return -2;
-    } else {
-        std::cout << "Wrote image" << std::endl;
     }
 
     return 1;

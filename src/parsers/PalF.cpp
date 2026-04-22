@@ -25,8 +25,6 @@ PalF::~PalF()
 
 int PalF::read(std::string fileName)
 {
-    std::cout << "Reading palette: " << fileName << std::endl;
-
     file.open(fileName, std::ios::binary);
     if (!file.is_open())
     {
@@ -40,8 +38,6 @@ int PalF::read(std::string fileName)
 
     // Skip 2
     file.seekg(2, std::ios::cur);
-
-    std::cout << "\tColor count: " << colorCount << std::endl;
 
     // Validate color count
     if (colorCount == 0 || colorCount > 256)
@@ -71,14 +67,6 @@ int PalF::read(std::string fileName)
         }
 
         colors.push_back(color);
-
-        // Debug output
-        std::cout << "\tColor " << i << ": R=" << static_cast<int>(color.r)
-                  << " G=" << static_cast<int>(color.g)
-                  << " B=" << static_cast<int>(color.b)
-                  << " A=" << static_cast<int>(color.a)
-                  //   << " (Raw ARGB: " << std::hex << color.a << color.r << color.g << color.b << std::dec << ")"
-                  << std::endl;
     }
 
     file.close();

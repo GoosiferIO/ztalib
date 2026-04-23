@@ -94,6 +94,31 @@ int PalF::read(std::string fileName)
     return 1;
 }
 
+std::string PalF::location()
+{
+    return m_location;
+}
+
+uint32_t PalF::nameSize()
+{
+    return m_nameSize;
+}
+
+std::vector<char> PalF::name()
+{
+    return m_name;
+}
+
+int PalF::colorModel()
+{
+    return m_colorModel;
+}
+
+int PalF::numColors()
+{
+    return m_numColors;
+}
+
 ZtaColor PalF::getColor(int index)
 {
     if (index < 0 || index >= m_numColors)

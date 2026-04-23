@@ -31,11 +31,11 @@ class PalF
 public:
     PalF();
     virtual ~PalF();
-    std::string location;
-    uint32_t nameSize;
-    std::vector<char> name;
-    int colorModel;
-    int numColors;
+    std::string location();
+    uint32_t nameSize();
+    std::vector<char> name();
+    int colorModel();
+    int numColors();
     ZtaColor getColor(int index);
     int read(std::string fileName);
 

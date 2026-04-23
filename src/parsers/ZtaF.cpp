@@ -58,11 +58,6 @@ int ZtaF::getFrameCount()
     return _data->info.frameCount;
 }
 
-std::string ZtaF::getPalLocation()
-{
-    return _data->palette->location;
-}
-
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
 int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)

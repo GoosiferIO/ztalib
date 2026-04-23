@@ -23,30 +23,30 @@
 ZtaF::ZtaF()
 {
     // init ZtaData
-    _data = std::make_shared<ZtaData>();
-    colorModel = 0;
-    _frameBuffer = std::vector<ZtaFrameBuffer::BufferObject>();
+    m_data = std::make_shared<ZtaData>();
+    m_colorModel = 0;
+    m_frameBuffer = std::vector<ZtaFrameBuffer::BufferObject>();
 }
 
 ZtaF::~ZtaF()
 {
     // free frames
-    _data->frames.clear();
+    m_data->frames.clear();
 
     // free header
-    _data->palette->name.clear();
+    m_data->palette->name.clear();
 }
 
 std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
 {
-    return _frameBuffer;
+    return m_frameBuffer;
 }
 
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
-std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
+std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std::string ioPal)
 {
-    this->colorModel = colorModel;
+    this->m_colorModel = m_colorModel;
     std::ifstream file;
     file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     if (!file.is_open())
@@ -62,32 +62,32 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         // skip 8 bytes
         file.seekg(8, std::ios::cur);
         // read 9th byte
-        file.read((char *)&_data->hasBackground, 1);
+        file.read((char *)&m_data->hasBackground, 1);
     } // else, not fatz (ztaf)
 
-    file.read((char *)&_data->info.speed, 4);                         // animation speed in ms
-    file.read((char *)&_data->palette->nameSize, 4);                  // size of palette name
-    _data->palette->name.resize(_data->palette->nameSize);             // resize to size
-    file.read(_data->palette->name.data(), _data->palette->nameSize); // read palette name
-    file.read((char *)&_data->info.frameCount, 4);                    // number of frames
-    _data->frames.resize(_data->info.frameCount);                      // resize frames to frame count
+    file.read((char *)&m_data->info.speed, 4);                         // animation speed in ms
+    file.read((char *)&m_data->palette->nameSize, 4);                  // size of palette name
+    m_data->palette->name.resize(m_data->palette->nameSize);             // resize to size
+    file.read(m_data->palette->name.data(), m_data->palette->nameSize); // read palette name
+    file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
+    m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
 
     if (ioPal.empty())
-        _data->palette->location = std::string(_data->palette->name.data());
+        m_data->palette->location = std::string(m_data->palette->name.data());
     else
-        _data->palette->location = ioPal;
+        m_data->palette->location = ioPal;
 
-    if (_data->hasBackground)
+    if (m_data->hasBackground)
     {
-        _data->info.frameCount += 1;
-        _data->frames.resize(_data->info.frameCount);
+        m_data->info.frameCount += 1;
+        m_data->frames.resize(m_data->info.frameCount);
     }
 
     // ------------------------------- read palette
-    _data->palette->read(_data->palette->location);
+    m_data->palette->read(m_data->palette->location);
 
     // ------------------------------- read frames
-    for (int i = 0; i < _data->info.frameCount; i++)
+    for (int i = 0; i < m_data->info.frameCount; i++)
     {
         ZtaFrame frame = ZtaFrame();
         file.read((char *)&frame.frameSize, 4);
@@ -123,21 +123,21 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         }
 
         // store frame
-        _data->frames[i] = std::move(frame);
+        m_data->frames[i] = std::move(frame);
     }
 
     file.close();
 
     // write output buffer
-    ZtaFrameBuffer apeFrameBuffer(*_data);
-    _frameBuffer = apeFrameBuffer.getBuffer();
+    ZtaFrameBuffer apeFrameBuffer(*m_data);
+    m_frameBuffer = apeFrameBuffer.getBuffer();
 
-    if (_frameBuffer.empty())
+    if (m_frameBuffer.empty())
     {
         return nullptr;
     }
 
-    return _data;
+    return m_data;
 }
 
 int ZtaF::save(std::string fileName)
@@ -148,21 +148,21 @@ int ZtaF::save(std::string fileName)
         return -1;
     }
 
-    if (_data->hasBackground)
+    if (m_data->hasBackground)
     {
         // WRITE: FATZ
         output.write(MAGIC, 4);
     }
 
     // -------------------------------------- write header
-    output.write((char *)&_data->info.speed, 4);                         // speed in ms
-    output.write((char *)&_data->palette->nameSize, 4);                  // size of palette name
-    output.write(_data->palette->name.data(), _data->palette->nameSize); // palette name
-    output.write((char *)&_data->info.frameCount, 4);                    // frame count
+    output.write((char *)&m_data->info.speed, 4);                         // speed in ms
+    output.write((char *)&m_data->palette->nameSize, 4);                  // size of palette name
+    output.write(m_data->palette->name.data(), m_data->palette->nameSize); // palette name
+    output.write((char *)&m_data->info.frameCount, 4);                    // frame count
 
     // write frames
     // TODO: write a Buffer reader and convert to frames and pal
-    for (const ZtaFrame &frame : _data->frames)
+    for (const ZtaFrame &frame : m_data->frames)
     {
         output.write((char *)&frame.frameSize, 4);
         output.write((char *)&frame.height, 2);
@@ -188,14 +188,14 @@ int ZtaF::save(std::string fileName)
     output.close();
 
     // write palette
-    // ZtaF::writePal(_data->palette->location);
+    // ZtaF::writePal(m_data->palette->location);
 
     return 1;
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()
 {
-    return _data;
+    return m_data;
 }
 
 /*

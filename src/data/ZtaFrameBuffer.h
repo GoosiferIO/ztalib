@@ -43,7 +43,7 @@ public:
 
 private:
     int createBuffer();
-    const ZtaData& _data;
+    const ZtaData& m_data;
     int _colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<BufferObject> _buffer;
 };

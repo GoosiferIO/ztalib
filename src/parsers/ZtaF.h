@@ -52,9 +52,9 @@ public:
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
 
 private:
-    std::vector<ZtaFrameBuffer::BufferObject> _frameBuffer;
-    std::shared_ptr<ZtaData> _data;
-    int colorModel;
+    std::vector<ZtaFrameBuffer::BufferObject> m_frameBuffer;
+    std::shared_ptr<ZtaData> m_data;
+    int m_colorModel;
 };
 
 #endif // ZTAF_H

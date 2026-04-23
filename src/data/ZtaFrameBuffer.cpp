@@ -21,7 +21,7 @@
 */
 
 ZtaFrameBuffer::ZtaFrameBuffer(const ZtaData& data)
-    : _data(data),
+    : m_data(data),
       _colorModel(0)
 {
     _buffer = std::vector<BufferObject>();
@@ -40,16 +40,16 @@ const std::vector<ZtaFrameBuffer::BufferObject>& ZtaFrameBuffer::getBuffer()
 
 int ZtaFrameBuffer::createBuffer()
 {
-    if (_data.frames.empty())
+    if (m_data.frames.empty())
     {
         return 0;
     }
 
-    int numBuffers = _data.info.frameCount;
+    int numBuffers = m_data.info.frameCount;
 
-    for (const ZtaFrame &frame : _data.frames)
+    for (const ZtaFrame &frame : m_data.frames)
     {
-        int index = &frame - &_data.frames[0];
+        int index = &frame - &m_data.frames[0];
         ZtaFrameBuffer::BufferObject bufferObject;
 
         // Set dimensions and format
@@ -106,7 +106,7 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Validate color index
-                    if (colorIndex >= _data.palette->numColors)
+                    if (colorIndex >= m_data.palette->numColors)
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
                         continue;
@@ -124,7 +124,7 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ZtaColor color = _data.palette->getColor(colorIndex);
+                    ZtaColor color = m_data.palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
                     if (_colorModel == 1)

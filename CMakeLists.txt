@@ -7,7 +7,7 @@ project(ztalib
 )
 
 # add all source files to library
-add_library(ztalib shared 
+add_library(ztalib SHARED 
     # data
     src/ZtaColor.h
     data/ZtaData.cpp src/ZtaData.h

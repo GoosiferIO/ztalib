@@ -46,19 +46,15 @@ public:
     ZtaF();
     virtual ~ZtaF();
 
-    std::unique_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
+    std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
-    std::unique_ptr<ZtaData> data();
+    std::shared_ptr<ZtaData> data();
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
 
 private:
-    // binary input
     std::ifstream _file;
-    // output buffers
     std::vector<ZtaFrameBuffer::BufferObject> _frameBuffer;
-    // data
-    std::unique_ptr<ZtaData> _data;
-    // other
+    std::shared_ptr<ZtaData> _data;
     int colorModel;
 };
 

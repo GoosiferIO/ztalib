@@ -23,7 +23,7 @@
 ZtaF::ZtaF()
 {
     // init ZtaData
-    _data = std::make_unique<ZtaData>();
+    _data = std::make_shared<ZtaData>();
 
     // init other members
     _file = std::ifstream();
@@ -55,7 +55,7 @@ std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
 
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
-std::unique_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
+std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
@@ -148,7 +148,7 @@ std::unique_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         return nullptr;
     }
 
-    return std::move(_data);
+    return _data;
 }
 
 int ZtaF::save(std::string fileName)
@@ -204,9 +204,9 @@ int ZtaF::save(std::string fileName)
     return 1;
 }
 
-std::unique_ptr<ZtaData> ZtaF::data()
+std::shared_ptr<ZtaData> ZtaF::data()
 {
-    return std::move(_data);
+    return _data;
 }
 
 /*

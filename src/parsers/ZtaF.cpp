@@ -32,9 +32,6 @@ ZtaF::~ZtaF()
 {
     // free frames
     m_data->frames.clear();
-
-    // free header
-    m_data->palette->name.clear();
 }
 
 std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()

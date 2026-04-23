@@ -20,10 +20,20 @@ See `main.cpp` in examples/ for an example of how to use the library.
 
 ### Compiling
 
-Because the library makes use of `stb_image_write.h`, you will need the includes folder in your project directory. A successful compilation would look something like this:
+This project uses CMake for building and MinGW toolchain on Windows
+
+#### Windows
 
 ```bash
-g++ main.cpp ../src/parsers/ZtaF.cpp ../src/parsers/PalF.cpp ../src/data/ZtaData.cpp ../src/data/ZtaFrameBuffer.cpp ../src/other/ZtaUtils.cpp -o output
+cmake -S . -B build
+cmake --build build
+```
+
+#### Linux
+
+```bash
+cmake -S . -B build
+cmake --build build
 ```
 
 Note: This will be updated with CMake support soon.

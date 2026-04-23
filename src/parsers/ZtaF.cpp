@@ -203,65 +203,6 @@ int ZtaF::save(std::string fileName)
     return 1;
 }
 
-// Does a simple validation to see if _file is valid ZTA graphic
-// 1. Checks if _file is open = Not valid
-// 2. Checks if first 4 bytes are FATZ = Valid
-// 3. Checks if palette name is empty = Not valid
-// 4. Checks if palette name has '.pal' extension = Valid
-int ZtaF::validateGraphicFile(std::string fileName)
-{
-    std::ifstream graphic(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
-    int isValid = 0;
-    PalF pal = PalF();
-    ZtaInfo info = ZtaInfo();
-
-    // if _file is not open, return false
-    if (!graphic.is_open())
-    {
-        // immediately return false if _file is not open
-        return 0;
-    }
-
-    // if has magic bytes FATZ
-    if (ZtaUtils::hasMagic(graphic))
-    {
-        isValid = 1;
-
-        // skip 9 bytes
-        graphic.seekg(9, std::ios::cur);
-    }
-    // if no magic bytes, it means first 9 bytes don't exist
-    // following checks are not necessary:
-    // - MAGIC BYTES - 4 bytes
-    // - UNKNOWN NULL BYTES - 4 bytes
-    // - HAS BACKGROUND - 1 byte
-    // does not mean _file is invalid, just not a FATZ _file or ZTAF (reverse FATZ)
-
-    graphic.read((char *)&info.speed, 4);        // speed in ms
-    graphic.read((char *)&pal.nameSize, 4);      // size of palette name
-    pal.name.resize(pal.nameSize);               // resize to size
-    graphic.read(pal.name.data(), pal.nameSize); // read palette name
-    graphic.read((char *)&info.frameCount, 4);   // frame count
-
-    // if pal name is empty, return false
-    if (pal.name.empty() || pal.nameSize == 0 || pal.nameSize < 0)
-    {
-        // if no palette exists then immediately return false
-        return 0;
-    }
-
-    std::string palette(pal.name.data());
-
-    // if pal name has '.pal' extension, return true
-    if (palette.find(".pal") != std::string::npos)
-    {
-        isValid = 1;
-    }
-
-    graphic.close();
-    return isValid;
-}
-
 /*
     MIT License
 

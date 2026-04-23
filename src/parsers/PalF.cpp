@@ -119,6 +119,31 @@ int PalF::numColors()
     return m_numColors;
 }
 
+void PalF::location(std::string loc)
+{
+    m_location = loc;
+}
+
+void PalF::nameSize(uint32_t size)
+{
+    m_nameSize = size;
+}
+
+void PalF::name(std::vector<char> name)
+{
+    m_name = name;
+}
+
+void PalF::colorModel(int model)
+{
+    m_colorModel = model;
+}
+
+void PalF::numColors(int count)
+{
+    m_numColors = count;
+}
+
 ZtaColor PalF::getColor(int index)
 {
     if (index < 0 || index >= m_numColors)

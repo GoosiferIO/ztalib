@@ -36,7 +36,7 @@ PalF::~PalF()
     m_name.clear();
 }
 
-int PalF::read(std::string fileName)
+int PalF::load(std::string fileName)
 {
     std::ifstream file(fileName, std::ios::binary);
     if (!file.is_open())

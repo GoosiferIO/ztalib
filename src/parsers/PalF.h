@@ -46,9 +46,9 @@ public:
 
     int numColors();
     void numColors(int count);
-    
+
     ZtaColor getColor(int index);
-    int read(std::string fileName);
+    int load(std::string fileName);
 
 private:
     std::vector<ZtaColor> m_colors;

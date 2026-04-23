@@ -262,11 +262,6 @@ int ZtaF::validateGraphicFile(std::string fileName)
     return isValid;
 }
 
-ZtaInfo ZtaF::getHeader(std::string fileName)
-{
-    return _data ? _data->info : ZtaInfo();
-}
-
 /*
     MIT License
 

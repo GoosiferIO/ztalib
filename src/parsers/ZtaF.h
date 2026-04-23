@@ -50,8 +50,6 @@ public:
     int save(std::string fileName);
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
     static int validateGraphicFile(std::string fileName);
-    // return header info
-    ZtaInfo getHeader(std::string fileName);
 
 private:
     // binary input

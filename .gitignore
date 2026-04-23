@@ -8,6 +8,8 @@
 # directories
 /.venv
 /.vscode
+/CMakeFiles
+/build
 
 # extensions
 *.dll
@@ -19,3 +21,6 @@
 *.gif
 *.pal
 *.zip
+
+# Files
+CMakeCache.txt

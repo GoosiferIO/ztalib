@@ -55,14 +55,14 @@ std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
 
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
-int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
+std::unique_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 {
     this->colorModel = colorModel;
 
     _file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     if (!_file.is_open())
     {
-        return -1;
+        return nullptr;
     }
 
     // ------------------------------- read header
@@ -145,9 +145,10 @@ int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 
     if (_frameBuffer.empty())
     {
-        return -2;
+        return nullptr;
     }
-    return 1;
+
+    return std::move(_data);
 }
 
 int ZtaF::save(std::string fileName)
@@ -201,6 +202,11 @@ int ZtaF::save(std::string fileName)
     // ZtaF::writePal(_data->palette->location);
 
     return 1;
+}
+
+std::unique_ptr<ZtaData> ZtaF::data()
+{
+    return std::move(_data);
 }
 
 /*

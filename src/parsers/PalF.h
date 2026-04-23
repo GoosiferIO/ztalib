@@ -41,7 +41,6 @@ public:
     int read(std::string fileName);
 
 private:
-    std::ifstream file;
     std::vector<ZtaColor> colors;
 };
 

@@ -22,9 +22,6 @@
 
 PalF::PalF()
 {
-    file = std::ifstream();
-    file.exceptions(static_cast<std::ios_base::iostate>(
-        std::ifstream::failbit | std::ifstream::badbit));
     colors = std::vector<ZtaColor>();
     nameSize = 0;
     name = std::vector<char>();
@@ -35,17 +32,13 @@ PalF::PalF()
 
 PalF::~PalF()
 {
-    if (file.is_open())
-    {
-        file.close();
-    }
     colors.clear();
     name.clear();
 }
 
 int PalF::read(std::string fileName)
 {
-    file.open(fileName, std::ios::binary);
+    std::ifstream file(fileName, std::ios::binary);
     if (!file.is_open())
     {
         std::cerr << "ERROR: Could not open palette file: " << fileName << std::endl;

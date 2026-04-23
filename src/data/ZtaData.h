@@ -35,7 +35,7 @@ class ZtaData {
     public:
         ZtaInfo info;
         std::vector<ZtaFrame> frames;
-        std::unique_ptr<PalF> palette;
+        std::shared_ptr<PalF> palette;
         bool hasBackground = false;
 
         ZtaData();

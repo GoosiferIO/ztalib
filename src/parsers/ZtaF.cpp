@@ -267,11 +267,6 @@ int ZtaF::validateGraphicFile(std::string fileName)
     return isValid;
 }
 
-int ZtaF::hasBackgroundFrame()
-{
-    return _data->hasBackground;
-}
-
 ZtaInfo ZtaF::getHeader(std::string fileName)
 {
     return _data ? _data->info : ZtaInfo();

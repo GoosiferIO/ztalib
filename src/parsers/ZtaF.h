@@ -50,9 +50,7 @@ public:
     int save(std::string fileName);
     int getFrameCount();
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
-    std::string getPalLocation();
     static int validateGraphicFile(std::string fileName);
-    int hasBackgroundFrame();
     // return header info
     ZtaInfo getHeader(std::string fileName);
 

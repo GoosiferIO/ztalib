@@ -48,6 +48,7 @@ public:
 
     std::unique_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
+    std::unique_ptr<ZtaData> data();
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
 
 private:

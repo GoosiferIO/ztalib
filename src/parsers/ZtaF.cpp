@@ -204,6 +204,11 @@ int ZtaF::save(std::string fileName)
     return 1;
 }
 
+std::unique_ptr<ZtaData> ZtaF::data()
+{
+    return std::move(_data);
+}
+
 /*
     MIT License
 

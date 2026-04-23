@@ -1,4 +1,3 @@
-#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "ZtaF.h"
 
 /* ZtaF.cpp -- parser for zt1 animation files

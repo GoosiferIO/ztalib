@@ -28,7 +28,6 @@
 #include <cstring>
 #include <memory>
 
-#include "../../libs/stb_image_write.h"
 #include "../data/ZtaData.h"
 #include "../data/ZtaFrameBuffer.h"
 #include "../other/ZtaUtils.h"

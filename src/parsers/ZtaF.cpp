@@ -277,25 +277,6 @@ int ZtaF::hasBackgroundFrame()
     return _data->hasBackground;
 }
 
-int ZtaF::exportToPng(
-    std::string fileName,
-    const ZtaFrameBuffer::BufferObject &output)
-{
-    if (output.pixels.empty())
-    {
-        std::cerr << "No pixels to write" << std::endl;
-        return -1;
-    }
-
-    if (!stbi_write_png(fileName.c_str(), output.width, output.height, output.channels, output.pixels.data(), 0))
-    {
-        std::cerr << "Failed to write image" << std::endl;
-        return -2;
-    }
-
-    return 1;
-}
-
 ZtaInfo ZtaF::getHeader(std::string fileName)
 {
     return _data ? _data->info : ZtaInfo();

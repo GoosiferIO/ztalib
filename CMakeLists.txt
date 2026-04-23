@@ -6,8 +6,6 @@ project(ztalib
     LANGUAGES CXX
 )
 
-file(GLOB SOURCE_FILES "src/*.cpp" "src/*.h")
-
 # add all source files to library
 add_library(ztalib SHARED 
     # data

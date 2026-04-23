@@ -53,11 +53,6 @@ std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
     return _frameBuffer;
 }
 
-int ZtaF::getFrameCount()
-{
-    return _data->info.frameCount;
-}
-
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
 int ZtaF::load(std::string fileName, int colorModel, std::string ioPal)

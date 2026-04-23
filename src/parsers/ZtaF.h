@@ -48,7 +48,6 @@ public:
 
     int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
-    int getFrameCount();
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
     static int validateGraphicFile(std::string fileName);
     // return header info

@@ -30,7 +30,6 @@ class PalF
 {
 public:
     PalF();
-    int load(std::string fileName);
     virtual ~PalF();
     std::string location;
     uint32_t nameSize;

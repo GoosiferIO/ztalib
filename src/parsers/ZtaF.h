@@ -52,7 +52,6 @@ public:
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
 
 private:
-    std::ifstream _file;
     std::vector<ZtaFrameBuffer::BufferObject> _frameBuffer;
     std::shared_ptr<ZtaData> _data;
     int colorModel;

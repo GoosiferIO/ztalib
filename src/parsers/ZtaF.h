@@ -28,7 +28,6 @@
 #include <cstring>
 #include <memory>
 
-#include "../../libs/stb_image_write.h"
 #include "../data/ZtaData.h"
 #include "../data/ZtaFrameBuffer.h"
 #include "../other/ZtaUtils.h"
@@ -49,15 +48,7 @@ public:
 
     int load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     int save(std::string fileName);
-    int exportToPng(std::string fileName,
-                    const ZtaFrameBuffer::BufferObject& output);
-    int getFrameCount();
     std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
-    std::string getPalLocation();
-    static int validateGraphicFile(std::string fileName);
-    int hasBackgroundFrame();
-    // return header info
-    ZtaInfo getHeader(std::string fileName);
 
 private:
     // binary input

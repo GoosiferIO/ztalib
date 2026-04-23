@@ -1,29 +1,18 @@
 # ztalib
 
-This is an image parsing library for Zoo Tycoon 1 animation graphics. It's designed to be general enough to be used in any project as long as supported bindings are available. Otherwise it should work out-of-the-box in a given C++ project.
+This is an image parsing library for Zoo Tycoon 1 animation graphics.
 
 ## Usage
 
-For most use cases, you can simply include the ZtaCore.h header file in your project and link against the ZtaCore library. The library is header-only and does not require any additional linking. 
+Clone the repository into your project and include `#include "ztalib/ZtaF.h"` in your code.
 
-The following functions are available:
+## Compiling
 
-| Function | Description |
-| --- | --- |
-| `load(std::string fileName, int colorProfile = 0, std::string ioPal = "")` | Load an image file with an optional color profile and palette file |
-| `getFrameCount(std::string path, OutputBuffer* buffer)` | Get the number of frames in the image |
-| `exportToPNG(const char* path, int frame)` | Save a frame to a PNG file |
-| `getPalLocation()` | Get the location of the palette file |
-| `getFrameBuffer()` | Get all the frame buffers in the image as an array of OutputBuffer pointers |
+### C++ Library
 
-See `main.cpp` in examples/ for an example of how to use the library.
-
-### Compiling
-
-This project uses CMake for building.
+To compile as a DLL, you can use CMake.
 
 ```bash
-cmake -S . -B build
-cmake --build build
+cmake -S . -B build && cmake --build build
 ```
 

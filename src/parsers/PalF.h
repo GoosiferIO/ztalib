@@ -30,7 +30,6 @@ class PalF
 {
 public:
     PalF();
-    int load(std::string fileName);
     virtual ~PalF();
     std::string location;
     uint32_t nameSize;
@@ -48,7 +47,7 @@ private:
 
 /*
     MIT License
-
+ 
     Copyright (c) 2025 Eric Galvan (GoosiferIO)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy

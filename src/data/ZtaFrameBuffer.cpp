@@ -22,20 +22,20 @@
 
 ZtaFrameBuffer::ZtaFrameBuffer(const ZtaData& data)
     : m_data(data),
-      _colorModel(0)
+      m_colorModel(0)
 {
-    _buffer = std::vector<BufferObject>();
+    m_buffer = std::vector<BufferObject>();
     createBuffer();
 }
 
 ZtaFrameBuffer::~ZtaFrameBuffer()
 {
-    _buffer.clear();
+    m_buffer.clear();
 }
 
 const std::vector<ZtaFrameBuffer::BufferObject>& ZtaFrameBuffer::getBuffer()
 {
-    return _buffer;
+    return m_buffer;
 }
 
 int ZtaFrameBuffer::createBuffer()
@@ -59,7 +59,7 @@ int ZtaFrameBuffer::createBuffer()
         bufferObject.offsetY = static_cast<int>(frame.y);
         bufferObject.channels = 4; // RGBA/BGRA
 
-        // Calculate _buffer size and initialize with transparent pixels
+        // Calculate m_buffer size and initialize with transparent pixels
         size_t bufferSize = bufferObject.width 
             * bufferObject.height 
             * bufferObject.channels;
@@ -106,16 +106,16 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Validate color index
-                    if (colorIndex >= m_data.palette->numColors)
+                    if (colorIndex >= m_data.palette->numColors())
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
                         continue;
                     }
 
-                    // Calculate pixel position in _buffer
+                    // Calculate pixel position in m_buffer
                     size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
 
-                    // Ensure we don't write outside the _buffer
+                    // Ensure we don't write outside the m_buffer
                     if (pixelIndex + 3 >= bufferSize)
                     {
                         std::cerr << "ERROR: Buffer overflow prevented at position "
@@ -127,7 +127,7 @@ int ZtaFrameBuffer::createBuffer()
                     ZtaColor color = m_data.palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
-                    if (_colorModel == 1)
+                    if (m_colorModel == 1)
                     { // BGRA mode
                         bufferObject.pixels[pixelIndex] = color.b;
                         bufferObject.pixels[pixelIndex + 1] = color.g;
@@ -147,8 +147,8 @@ int ZtaFrameBuffer::createBuffer()
             }
         }
 
-        // Store the completed _buffer
-        _buffer.push_back(bufferObject);
+        // Store the completed m_buffer
+        m_buffer.push_back(bufferObject);
     }
 
     return 1;

@@ -29,7 +29,7 @@ PalF::PalF()
     colorModel = 0;
     numColors = 0;
 }
-
+ 
 PalF::~PalF()
 {
     colors.clear();

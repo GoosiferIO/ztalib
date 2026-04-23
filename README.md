@@ -20,20 +20,10 @@ See `main.cpp` in examples/ for an example of how to use the library.
 
 ### Compiling
 
-This project uses CMake for building and MinGW toolchain on Windows
-
-#### Windows
+This project uses CMake for building.
 
 ```bash
 cmake -S . -B build
 cmake --build build
 ```
 
-#### Linux
-
-```bash
-cmake -S . -B build
-cmake --build build
-```
-
-Note: This will be updated with CMake support soon.

@@ -40,7 +40,12 @@ public:
     int read(std::string fileName);
 
 private:
-    std::vector<ZtaColor> colors;
+    std::vector<ZtaColor> m_colors;
+    std::string m_location;
+    uint32_t m_nameSize;
+    std::vector<char> m_name;
+    int m_colorModel;
+    int m_numColors;
 };
 
 #endif // PALF_H

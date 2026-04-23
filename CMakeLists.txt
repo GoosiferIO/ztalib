@@ -6,25 +6,27 @@ project(ztalib
     LANGUAGES CXX
 )
 
+file(GLOB SOURCE_FILES "src/*.cpp" "src/*.h")
+
 # add all source files to library
 add_library(ztalib SHARED 
     # data
-    src/ZtaColor.h
-    data/ZtaData.cpp src/ZtaData.h
-    data/ZtaFrame.h 
-    data/ZtaFrameBuffer.cpp src/ZtaFrameBuffer.h
-    data/ZtaInfo.h 
-    data/ZtaPixelBlock.h
-    data/ZtaPixelSet.h 
+    src/data/ZtaColor.h
+    src/data/ZtaData.cpp src/data/ZtaData.h
+    src/data/ZtaFrame.h 
+    src/data/ZtaFrameBuffer.cpp src/data/ZtaFrameBuffer.h
+    src/data/ZtaInfo.h 
+    src/data/ZtaPixelBlock.h
+    src/data/ZtaPixelSet.h 
     # other
-    other/ZtaUtils.cpp src/ZtaUtils.h
+    src/other/ZtaUtils.cpp src/other/ZtaUtils.h
     # parsers
-    parsers/ZtaF.cpp src/parsers/ZtaF.h
-    parsers/PalF.cpp src/parsers/PalF.h
+    src/parsers/ZtaF.cpp src/parsers/ZtaF.h
+    src/parsers/PalF.cpp src/parsers/PalF.h
 )
 
 # add include dirs
-target_include_directories(stb_image_lib PUBLIC 
+target_include_directories(ztalib PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/libs 
 )
 

@@ -1,11 +1,6 @@
 #ifndef PALF_H
 #define PALF_H
 
-#include <fstream>
-#include <vector>
-#include <iostream>
-#include "../data/ZtaColor.h"
-
 /* PalF.h -- parser for zt1 palette files
 
     ztalib - ZT1 graphics parser
@@ -25,6 +20,11 @@
         Thank you to Jeff Bostoen for his documentation on the ZT1 file formats:
         https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained
 */
+
+#include <fstream>
+#include <vector>
+#include <iostream>
+#include "../data/ZtaColor.h"
 
 class PalF
 {

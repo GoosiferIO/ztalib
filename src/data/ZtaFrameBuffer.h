@@ -28,15 +28,6 @@
 class ZtaFrameBuffer
 {
 public:
-    struct BufferObject
-    {
-        std::vector<uint8_t> pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
-        int width;
-        int height;
-        int offsetX;
-        int offsetY;
-        int channels;
-    };
     ZtaFrameBuffer(const ZtaData& data);
     ~ZtaFrameBuffer();
     const std::vector<BufferObject>& getBuffer();

@@ -28,7 +28,6 @@
 #include <cstring>
 #include <memory>
 
-#include "data/ZtaData.h"
 #include "data/ZtaFrameBuffer.h"
 #include "data/ZtaFrameBufferObject.h"
 
@@ -40,6 +39,7 @@
 
 // -------------------------------- Standard Pixel Output
 
+class ZtaData;
 class ZtaF
 {
 public:

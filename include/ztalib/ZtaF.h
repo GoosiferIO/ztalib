@@ -28,7 +28,7 @@
 #include <cstring>
 #include <memory>
 
-#include "parsers/ZtaData.h"
+#include "data/ZtaData.h"
 #include "data/ZtaFrameBuffer.h"
 
 #define ZTA_VERSION "0.7.0"

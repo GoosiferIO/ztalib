@@ -29,7 +29,7 @@
 #include "ZtaInfo.h"
 
 // parsers
-#include "../parsers/PalF.h"
+#include "ztalib/PalF.h"
 
 struct ZtaData {
     ZtaInfo info = {0, 0};

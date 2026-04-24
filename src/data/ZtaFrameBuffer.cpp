@@ -45,6 +45,12 @@ int ZtaFrameBuffer::createBuffer()
         return 0;
     }
 
+    if (m_data.palette == nullptr || m_data.palette->numColors() == 0)
+    {
+        std::cerr << "ERROR: No palette data available!" << std::endl;
+        return -1;
+    }
+
     int numBuffers = m_data.info.frameCount;
 
     for (const ZtaFrame &frame : m_data.frames)
@@ -109,7 +115,7 @@ int ZtaFrameBuffer::createBuffer()
                     if (colorIndex >= m_data.palette->numColors())
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
-                        continue;
+                        break;
                     }
 
                     // Calculate pixel position in m_buffer

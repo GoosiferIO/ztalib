@@ -12,9 +12,7 @@ add_library(ztalib SHARED
     src/parsers/PalF.cpp
 )
 
-add_subdirectory(src/data)
-add_subdirectory(src/parsers)
-
 target_include_directories(ztalib 
     PUBLIC 
-        $include/ztalib)
+        ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib
+)

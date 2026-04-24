@@ -54,7 +54,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     // ------------------------------- read header
     // Note: if bg frame exists, not counted in frameCount
     // check if fatz
-    if (ZtaUtils::hasMagic(file))
+    if (hasMagic(file))
     {
         // skip 8 bytes
         file.seekg(8, std::ios::cur);
@@ -150,6 +150,34 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
 std::shared_ptr<ZtaData> ZtaF::data()
 {
     return m_data;
+}
+
+int ZtaF::hasMagic(std::ifstream &_file)
+{
+    char magic[5] = {0};
+    _file.read(magic, 4);
+
+    // read at least 4 bytes
+    // if less than 4 bytes, not FATZ
+    if (_file.gcount() < 4)
+    {
+        _file.clear();
+        _file.seekg(0, std::ios::beg);
+        return 0;
+    }
+
+    // test for FATZ
+    if (strcmp(magic, MAGIC) != 0)
+    {
+        _file.clear();
+        _file.seekg(0, std::ios::beg);
+        return 0;
+    }
+
+    // FATZ found
+    _file.clear();
+    _file.seekg(0, std::ios::beg);
+    return 1;
 }
 
 /*

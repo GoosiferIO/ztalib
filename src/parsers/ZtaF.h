@@ -54,6 +54,7 @@ private:
     std::vector<ZtaFrameBuffer::BufferObject> m_frameBuffer;
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
+    int hasMagic(std::ifstream &);
 };
 
 #endif // ZTAF_H

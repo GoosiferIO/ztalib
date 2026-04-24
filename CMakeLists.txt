@@ -11,8 +11,6 @@ add_library(ztalib SHARED
     # data
     src/data/ZtaData.cpp
     src/data/ZtaFrameBuffer.cpp
-    # other
-    src/other/ZtaUtils.cpp
     # parsers
     src/parsers/ZtaF.cpp
     src/parsers/PalF.cpp

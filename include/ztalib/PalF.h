@@ -29,6 +29,13 @@
 class PalF
 {
 public:
+    struct Color 
+    {
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t a;
+    };
     PalF();
     virtual ~PalF();
     
@@ -47,11 +54,11 @@ public:
     int numColors();
     void numColors(int count);
 
-    ZtaColor getColor(int index);
+    Color getColor(int index);
     int load(std::string fileName);
 
 private:
-    std::vector<ZtaColor> m_colors;
+    std::vector<Color> m_colors;
     std::string m_location;
     uint32_t m_nameSize;
     std::vector<char> m_name;

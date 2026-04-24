@@ -30,7 +30,6 @@
 
 #include "../data/ZtaData.h"
 #include "../data/ZtaFrameBuffer.h"
-#include "../other/ZtaUtils.h"
 
 #define ZTA_CORE_VERSION "0.6.4"
 

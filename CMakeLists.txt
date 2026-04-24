@@ -6,7 +6,6 @@ project(ztalib
 )
 
 add_library(ztalib SHARED 
-    src/data/ZtaData.cpp
     src/data/ZtaFrameBuffer.cpp
     src/parsers/ZtaF.cpp
     src/parsers/PalF.cpp
@@ -14,5 +13,30 @@ add_library(ztalib SHARED
 
 target_include_directories(ztalib 
     PUBLIC 
-        ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:include>
+    PRIVATE 
+        src
+)
+
+set_target_properties(ztalib PROPERTIES 
+    WINDOWS_EXPORT_ALL_SYMBOLS ON
+)
+
+include(GNUInstallDirs)
+
+install(TARGETS ztalib
+    EXPORT ztalibTargets
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+install(DIRECTORY include/ztalib
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+)
+
+install (EXPORT ztalibTargets
+    FILE ztalibTargets.cmake
+    NAMESPACE ztalib::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
 )

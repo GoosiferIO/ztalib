@@ -1,4 +1,4 @@
-#include "PalF.h"
+#include "ztalib/PalF.h"
 
 /* PalF.cpp -- parser for zt1 palette files
 

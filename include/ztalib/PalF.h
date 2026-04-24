@@ -24,7 +24,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include "../data/ZtaColor.h"
+#include "ZtaColor.h"
 
 class PalF
 {

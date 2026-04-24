@@ -1,4 +1,5 @@
 #include "ztalib/ZtaF.h"
+#include "data/ZtaData.h"
 
 /* ZtaF.cpp -- parser for zt1 animation files
 

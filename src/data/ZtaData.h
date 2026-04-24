@@ -31,14 +31,11 @@
 // parsers
 #include "../parsers/PalF.h"
 
-class ZtaData {
-    public:
-        ZtaInfo info;
-        std::vector<ZtaFrame> frames;
-        std::shared_ptr<PalF> palette;
-        bool hasBackground = false;
-
-        ZtaData();
+struct ZtaData {
+    ZtaInfo info = {0, 0};
+    std::vector<ZtaFrame> frames = std::vector<ZtaFrame>();
+    std::shared_ptr<PalF> palette = nullptr;
+    bool hasBackground = false;
 };
 
 #endif // ZTADATA_H

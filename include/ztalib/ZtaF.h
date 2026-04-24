@@ -38,7 +38,7 @@
 
 class ZtaData;
 class ZtaFrameBuffer;
-class ZtaFrameBuffer::BufferObject;
+class ZtaFrameBufferObject;
 class ZtaF
 {
 public:
@@ -47,10 +47,10 @@ public:
 
     std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     std::shared_ptr<ZtaData> data();
-    std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
+    std::vector<ZtaFrameBufferObject> getFrameBuffer();
 
 private:
-    std::vector<ZtaFrameBuffer::BufferObject> m_frameBuffer;
+    std::vector<ZtaFrameBufferObject> m_frameBuffer;
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
     int hasMagic(std::ifstream &);

@@ -24,19 +24,20 @@
 #include <cstdint>
 #include <memory>
 #include "ZtaData.h"
+#include "ZtaFrameBufferObject.h"
 
 class ZtaFrameBuffer
 {
 public:
     ZtaFrameBuffer(const ZtaData& data);
     ~ZtaFrameBuffer();
-    const std::vector<BufferObject>& getBuffer();
+    const std::vector<ZtaFrameBufferObject>& getBuffer();
 
 private:
     int createBuffer();
     const ZtaData& m_data;
     int m_colorModel = 0; // 0 = RGBA, 1 = BGRA
-    std::vector<BufferObject> m_buffer;
+    std::vector<ZtaFrameBufferObject> m_buffer;
 };
 
 #endif // ZTAFRAMEBUFFER_H

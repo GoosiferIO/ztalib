@@ -24,7 +24,7 @@ ZtaFrameBuffer::ZtaFrameBuffer(const ZtaData& data)
     : m_data(data),
       m_colorModel(0)
 {
-    m_buffer = std::vector<BufferObject>();
+    m_buffer = std::vector<ZtaFrameBufferObject>();
     createBuffer();
 }
 
@@ -33,7 +33,7 @@ ZtaFrameBuffer::~ZtaFrameBuffer()
     m_buffer.clear();
 }
 
-const std::vector<ZtaFrameBuffer::BufferObject>& ZtaFrameBuffer::getBuffer()
+const std::vector<ZtaFrameBufferObject>& ZtaFrameBuffer::getBuffer()
 {
     return m_buffer;
 }
@@ -50,7 +50,7 @@ int ZtaFrameBuffer::createBuffer()
     for (const ZtaFrame &frame : m_data.frames)
     {
         int index = &frame - &m_data.frames[0];
-        ZtaFrameBuffer::BufferObject bufferObject;
+        ZtaFrameBufferObject bufferObject;
 
         // Set dimensions and format
         bufferObject.width = static_cast<int>(frame.width);

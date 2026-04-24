@@ -41,7 +41,7 @@
 
 class ZtaData;
 class ZtaFrameBuffer;
-class ZtaFrameBuffer::BufferObject;
+class ZtaFrameBufferObject;
 class ZtaF
 {
 public:

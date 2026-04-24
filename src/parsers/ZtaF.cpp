@@ -25,7 +25,7 @@ ZtaF::ZtaF()
     // init ZtaData
     m_data = std::make_shared<ZtaData>();
     m_colorModel = 0;
-    m_frameBuffer = std::vector<ZtaFrameBuffer::BufferObject>();
+    m_frameBuffer = std::vector<ZtaFrameBufferObject>();
 }
 
 ZtaF::~ZtaF()
@@ -34,7 +34,7 @@ ZtaF::~ZtaF()
     m_data->frames.clear();
 }
 
-std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
+std::vector<ZtaFrameBufferObject> ZtaF::getFrameBuffer()
 {
     return m_frameBuffer;
 }
@@ -66,18 +66,18 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
 
     uint32_t paletteNameSize = 0;
     file.read((char *)&paletteNameSize, 4);                  // size of palette name
-    m_data->palette->nameSize(paletteNameSize);             // set palette name size
+    m_data->palette->locationSize(paletteNameSize);             // set palette location size
 
-    std::vector<char> paletteName;
-    file.read(paletteName.data(), m_data->palette->nameSize()); // read palette name
-    m_data->palette->name(paletteName);
+    std::string paletteName(paletteNameSize, '\0');
+    file.read(paletteName.data(), m_data->palette->locationSize()); // read palette name
+    m_data->palette->location(paletteName);
 
     file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
     m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
 
     std::string paletteLocation;
     if (ioPal.empty()) {
-        paletteLocation = std::string(m_data->palette->name().data());
+        paletteLocation = std::string(m_data->palette->location().data());
     } 
     else {
         paletteLocation = ioPal;

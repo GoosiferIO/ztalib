@@ -24,22 +24,25 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include "data/ZtaColor.h"
 
 class PalF
 {
 public:
+    struct Color 
+    {
+        uint8_t r;
+        uint8_t g;
+        uint8_t b;
+        uint8_t a;
+    };
     PalF();
     virtual ~PalF();
     
     std::string location();
     void location(std::string loc);
 
-    uint32_t nameSize();
-    void nameSize(uint32_t size);
-
-    std::vector<char> name();
-    void name(std::vector<char> name);
+    uint32_t locationSize();
+    void locationSize(uint32_t size);
 
     int colorModel();
     void colorModel(int model);
@@ -47,14 +50,13 @@ public:
     int numColors();
     void numColors(int count);
 
-    ZtaColor getColor(int index);
+    Color getColor(int index);
     int load(std::string fileName);
 
 private:
-    std::vector<ZtaColor> m_colors;
+    std::vector<Color> m_colors;
     std::string m_location;
-    uint32_t m_nameSize;
-    std::vector<char> m_name;
+    uint32_t m_locationSize;
     int m_colorModel;
     int m_numColors;
 };

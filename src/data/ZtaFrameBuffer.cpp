@@ -1,4 +1,4 @@
-#include "ZtaFrameBuffer.h"
+#include "ztalib/data/ZtaFrameBuffer.h"
 
 /* ZtaFrameBuffer.cpp -- buffer with several frames
 
@@ -24,7 +24,7 @@ ZtaFrameBuffer::ZtaFrameBuffer(const ZtaData& data)
     : m_data(data),
       m_colorModel(0)
 {
-    m_buffer = std::vector<BufferObject>();
+    m_buffer = std::vector<ZtaFrameBufferObject>();
     createBuffer();
 }
 
@@ -33,7 +33,7 @@ ZtaFrameBuffer::~ZtaFrameBuffer()
     m_buffer.clear();
 }
 
-const std::vector<ZtaFrameBuffer::BufferObject>& ZtaFrameBuffer::getBuffer()
+const std::vector<ZtaFrameBufferObject>& ZtaFrameBuffer::getBuffer()
 {
     return m_buffer;
 }
@@ -45,12 +45,18 @@ int ZtaFrameBuffer::createBuffer()
         return 0;
     }
 
+    if (m_data.palette == nullptr || m_data.palette->numColors() == 0)
+    {
+        std::cerr << "ERROR: No palette data available!" << std::endl;
+        return -1;
+    }
+
     int numBuffers = m_data.info.frameCount;
 
     for (const ZtaFrame &frame : m_data.frames)
     {
         int index = &frame - &m_data.frames[0];
-        ZtaFrameBuffer::BufferObject bufferObject;
+        ZtaFrameBufferObject bufferObject;
 
         // Set dimensions and format
         bufferObject.width = static_cast<int>(frame.width);
@@ -109,7 +115,7 @@ int ZtaFrameBuffer::createBuffer()
                     if (colorIndex >= m_data.palette->numColors())
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
-                        continue;
+                        break;
                     }
 
                     // Calculate pixel position in m_buffer
@@ -124,7 +130,16 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ZtaColor color = m_data.palette->getColor(colorIndex);
+                    PalF::Color color;
+
+                    try {
+                        color = m_data.palette->getColor(colorIndex);
+                    }
+                    catch (const std::out_of_range &e)
+                    {
+                        std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
+                        break;
+                    }
 
                     // Write pixel data according to color model
                     if (m_colorModel == 1)

@@ -10,6 +10,7 @@
 /.vscode
 /CMakeFiles
 /build
+/dist
 
 # extensions
 *.dll

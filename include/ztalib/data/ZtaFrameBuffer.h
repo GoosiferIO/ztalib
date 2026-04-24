@@ -1,7 +1,7 @@
-#ifndef ZTADATA_H
-#define ZTADATA_H
+#ifndef ZTAFRAMEBUFFER_H
+#define ZTAFRAMEBUFFER_H
 
-/* ZtaData.h -- struct for storing ZT1 data
+/* ZtaFrameBuffer.cpp -- buffer with several frames
 
     ztalib - ZT1 graphics parser
     https://goosifer.io/
@@ -21,24 +21,26 @@
         https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained
 */
 
-#include <vector>
+#include <cstdint>
 #include <memory>
+#include "ZtaData.h"
+#include "ZtaFrameBufferObject.h"
 
-// structs
-#include "ZtaFrame.h"
-#include "ZtaInfo.h"
+class ZtaFrameBuffer
+{
+public:
+    ZtaFrameBuffer(const ZtaData& data);
+    ~ZtaFrameBuffer();
+    const std::vector<ZtaFrameBufferObject>& getBuffer();
 
-// parsers
-#include "ztalib/PalF.h"
-
-struct ZtaData {
-    ZtaInfo info = {0, 0};
-    std::vector<ZtaFrame> frames = std::vector<ZtaFrame>();
-    std::shared_ptr<PalF> palette = nullptr;
-    bool hasBackground = false;
+private:
+    int createBuffer();
+    const ZtaData& m_data;
+    int m_colorModel = 0; // 0 = RGBA, 1 = BGRA
+    std::vector<ZtaFrameBufferObject> m_buffer;
 };
 
-#endif // ZTADATA_H
+#endif // ZTAFRAMEBUFFER_H
 
 /*
     MIT License

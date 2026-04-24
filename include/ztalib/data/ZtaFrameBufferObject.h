@@ -1,11 +1,7 @@
-#ifndef ZTACOLOR_H
-#define ZTACOLOR_H
+#ifndef ZTAFRAMEBUFFEROBJECT_H
+#define ZTAFRAMEBUFFEROBJECT_H
 
-#include <vector>
-#include "ZtaPixelBlock.h"
-#include <cstdint>
-
-/* ZtaColor.h -- struct for color information in ZT1 palette files
+/* ZtaFrameBufferObject.h -- object for storing frame data
 
     ztalib - ZT1 graphics parser
     https://goosifer.io/
@@ -25,15 +21,19 @@
         https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained
 */
 
-struct ZtaColor 
+#include <vector>
+
+struct ZtaFrameBufferObject
 {
-    uint8_t r;
-    uint8_t g;
-    uint8_t b;
-    uint8_t a;
+    std::vector<uint8_t> pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
+    int width;
+    int height;
+    int offsetX;
+    int offsetY;
+    int channels;
 };
 
-#endif // ZTACOLOR_H
+#endif // ZTAFRAMEBUFFEROBJECT_H
 
 /*
     MIT License

@@ -23,8 +23,7 @@
 PalF::PalF()
 {
     m_colors = std::vector<PalF::Color>();
-    m_nameSize = 0;
-    m_name = std::vector<char>();
+    m_locationSize = 0;
     m_location = "";
     m_colorModel = 0;
     m_numColors = 0;
@@ -33,7 +32,7 @@ PalF::PalF()
 PalF::~PalF()
 {
     m_colors.clear();
-    m_name.clear();
+    m_location.clear();
 }
 
 int PalF::load(std::string fileName)
@@ -99,14 +98,9 @@ std::string PalF::location()
     return m_location;
 }
 
-uint32_t PalF::nameSize()
+uint32_t PalF::locationSize()
 {
-    return m_nameSize;
-}
-
-std::vector<char> PalF::name()
-{
-    return m_name;
+    return m_locationSize;
 }
 
 int PalF::colorModel()
@@ -124,14 +118,9 @@ void PalF::location(std::string loc)
     m_location = loc;
 }
 
-void PalF::nameSize(uint32_t size)
+void PalF::locationSize(uint32_t size)
 {
-    m_nameSize = size;
-}
-
-void PalF::name(std::vector<char> name)
-{
-    m_name = name;
+    m_locationSize = size;
 }
 
 void PalF::colorModel(int model)
@@ -149,7 +138,7 @@ PalF::Color PalF::getColor(int index)
     if (index < 0 || index >= m_numColors)
     {
         std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
-        return {0, 0, 0, 255}; // Return black (fully opaque) as default
+        throw std::out_of_range("Color index out of bounds");
     }
     return m_colors[index];
 }

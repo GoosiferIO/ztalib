@@ -124,7 +124,16 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    PalF::Color color = m_data.palette->getColor(colorIndex);
+                    PalF::Color color;
+
+                    try {
+                        color = m_data.palette->getColor(colorIndex);
+                    }
+                    catch (const std::out_of_range &e)
+                    {
+                        std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
+                        break;
+                    }
 
                     // Write pixel data according to color model
                     if (m_colorModel == 1)

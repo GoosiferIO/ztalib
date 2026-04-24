@@ -68,7 +68,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     file.read((char *)&paletteNameSize, 4);                  // size of palette name
     m_data->palette->nameSize(paletteNameSize);             // set palette name size
 
-    std::vector<char> paletteName;
+    std::vector<char> paletteName(paletteNameSize + 1, '\0');
     file.read(paletteName.data(), m_data->palette->nameSize()); // read palette name
     m_data->palette->name(paletteName);
 

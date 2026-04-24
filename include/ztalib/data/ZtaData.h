@@ -34,7 +34,7 @@
 struct ZtaData {
     ZtaInfo info = {0, 0};
     std::vector<ZtaFrame> frames = std::vector<ZtaFrame>();
-    std::shared_ptr<PalF> palette = nullptr;
+    std::shared_ptr<PalF> palette = std::make_shared<PalF>();
     bool hasBackground = false;
 };
 

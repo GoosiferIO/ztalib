@@ -1,7 +1,7 @@
-#ifndef ZTAF_H
-#define ZTAF_H
+#ifndef PALF_H
+#define PALF_H
 
-/* ZtaF.h -- parser for zt1 animation files
+/* PalF.h -- parser for zt1 palette files
 
     ztalib - ZT1 graphics parser
     https://goosifer.io/
@@ -24,49 +24,46 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
-#include <cstdint>
-#include <cstring>
-#include <memory>
+#include "data/ZtaColor.h"
 
-#include "../data/ZtaData.h"
-#include "../data/ZtaFrameBuffer.h"
-#include "../other/ZtaUtils.h"
-
-#define ZTA_CORE_VERSION "0.6.4"
-
-// if FATZ is first 4 bytes, additional 5 bytes ahead
-// The ninth byte is a boolean value that specifies if there is an
-// a background frame
-
-// -------------------------------- Standard Pixel Output
-
-class ZtaF
+class PalF
 {
 public:
-    ZtaF();
-    virtual ~ZtaF();
+    PalF();
+    virtual ~PalF();
+    
+    std::string location();
+    void location(std::string loc);
 
-    std::unique_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
-    int save(std::string fileName);
-    std::unique_ptr<ZtaData> data();
-    std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
+    uint32_t nameSize();
+    void nameSize(uint32_t size);
+
+    std::vector<char> name();
+    void name(std::vector<char> name);
+
+    int colorModel();
+    void colorModel(int model);
+
+    int numColors();
+    void numColors(int count);
+
+    ZtaColor getColor(int index);
+    int load(std::string fileName);
 
 private:
-    // binary input
-    std::ifstream _file;
-    // output buffers
-    std::vector<ZtaFrameBuffer::BufferObject> _frameBuffer;
-    // data
-    std::unique_ptr<ZtaData> _data;
-    // other
-    int colorModel;
+    std::vector<ZtaColor> m_colors;
+    std::string m_location;
+    uint32_t m_nameSize;
+    std::vector<char> m_name;
+    int m_colorModel;
+    int m_numColors;
 };
 
-#endif // ZTAF_H
+#endif // PALF_H
 
 /*
     MIT License
-
+ 
     Copyright (c) 2025 Eric Galvan (GoosiferIO)
 
     Permission is hereby granted, free of charge, to any person obtaining a copy

@@ -43,9 +43,9 @@ public:
 
 private:
     int createBuffer();
-    const ZtaData& _data;
-    int _colorModel = 0; // 0 = RGBA, 1 = BGRA
-    std::vector<BufferObject> _buffer;
+    const ZtaData& m_data;
+    int m_colorModel = 0; // 0 = RGBA, 1 = BGRA
+    std::vector<BufferObject> m_buffer;
 };
 
 #endif // ZTAFRAMEBUFFER_H

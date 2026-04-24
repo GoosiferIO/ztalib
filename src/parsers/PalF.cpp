@@ -1,4 +1,4 @@
-#include "PalF.h"
+#include "ztalib/PalF.h"
 
 /* PalF.cpp -- parser for zt1 palette files
 
@@ -22,21 +22,21 @@
 
 PalF::PalF()
 {
-    colors = std::vector<ZtaColor>();
-    nameSize = 0;
-    name = std::vector<char>();
-    location = "";
-    colorModel = 0;
-    numColors = 0;
+    m_colors = std::vector<ZtaColor>();
+    m_nameSize = 0;
+    m_name = std::vector<char>();
+    m_location = "";
+    m_colorModel = 0;
+    m_numColors = 0;
 }
  
 PalF::~PalF()
 {
-    colors.clear();
-    name.clear();
+    m_colors.clear();
+    m_name.clear();
 }
 
-int PalF::read(std::string fileName)
+int PalF::load(std::string fileName)
 {
     std::ifstream file(fileName, std::ios::binary);
     if (!file.is_open())
@@ -61,8 +61,8 @@ int PalF::read(std::string fileName)
     }
 
     // Clear and prepare colors vector
-    colors.clear();
-    colors.reserve(256); // Always ensure 256 colors
+    m_colors.clear();
+    m_colors.reserve(256); // Always ensure 256 colors
 
     // Read each color (ABGR format, 4 bytes per color)
     for (uint32_t i = 0; i < colorCount; i++)
@@ -74,34 +74,84 @@ int PalF::read(std::string fileName)
         file.read(reinterpret_cast<char *>(&color), 4);
 
         // Convert RGBA to BGRA if necessary
-        if (colorModel == 1)
+        if (m_colorModel == 1)
         {
             std::swap(color.r, color.b);
         }
 
-        colors.push_back(color);
+        m_colors.push_back(color);
     }
 
     file.close();
 
     // Fill remaining colors if necessary
-    while (colors.size() < 256)
+    while (m_colors.size() < 256)
     {
-        colors.push_back({0, 0, 0, 255}); // Fill with black (fully opaque)
+        m_colors.push_back({0, 0, 0, 255}); // Fill with black (fully opaque)
     }
 
-    numColors = static_cast<int>(colors.size());
+    m_numColors = static_cast<int>(m_colors.size());
     return 1;
+}
+
+std::string PalF::location()
+{
+    return m_location;
+}
+
+uint32_t PalF::nameSize()
+{
+    return m_nameSize;
+}
+
+std::vector<char> PalF::name()
+{
+    return m_name;
+}
+
+int PalF::colorModel()
+{
+    return m_colorModel;
+}
+
+int PalF::numColors()
+{
+    return m_numColors;
+}
+
+void PalF::location(std::string loc)
+{
+    m_location = loc;
+}
+
+void PalF::nameSize(uint32_t size)
+{
+    m_nameSize = size;
+}
+
+void PalF::name(std::vector<char> name)
+{
+    m_name = name;
+}
+
+void PalF::colorModel(int model)
+{
+    m_colorModel = model;
+}
+
+void PalF::numColors(int count)
+{
+    m_numColors = count;
 }
 
 ZtaColor PalF::getColor(int index)
 {
-    if (index < 0 || index >= numColors)
+    if (index < 0 || index >= m_numColors)
     {
         std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
         return {0, 0, 0, 255}; // Return black (fully opaque) as default
     }
-    return colors[index];
+    return m_colors[index];
 }
 
 /*

@@ -1,6 +1,7 @@
-#include "ZtaUtils.h"
+#ifndef ZTAF_H
+#define ZTAF_H
 
-/* ZtaUtils.cpp -- utility functions for ZT1 file parsing
+/* ZtaF.h -- parser for zt1 animation files
 
     ztalib - ZT1 graphics parser
     https://goosifer.io/
@@ -20,33 +21,42 @@
         https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained
 */
 
-int ZtaUtils::hasMagic(std::ifstream &_file)
+#include <fstream>
+#include <vector>
+#include <iostream>
+#include <cstdint>
+#include <cstring>
+#include <memory>
+
+#include "data/ZtaData.h"
+#include "data/ZtaFrameBuffer.h"
+
+#define ZTA_VERSION "0.7.0"
+
+// if FATZ is first 4 bytes, additional 5 bytes ahead
+// The ninth byte is a boolean value that specifies if there is an
+// a background frame
+
+// -------------------------------- Standard Pixel Output
+
+class ZtaF
 {
-    char magic[5] = {0};
-    _file.read(magic, 4);
+public:
+    ZtaF();
+    virtual ~ZtaF();
 
-    // read at least 4 bytes
-    // if less than 4 bytes, not FATZ
-    if (_file.gcount() < 4)
-    {
-        _file.clear();
-        _file.seekg(0, std::ios::beg);
-        return 0;
-    }
+    std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
+    std::shared_ptr<ZtaData> data();
+    std::vector<ZtaFrameBuffer::BufferObject> getFrameBuffer();
 
-    // test for FATZ
-    if (strcmp(magic, MAGIC) != 0)
-    {
-        _file.clear();
-        _file.seekg(0, std::ios::beg);
-        return 0;
-    }
+private:
+    std::vector<ZtaFrameBuffer::BufferObject> m_frameBuffer;
+    std::shared_ptr<ZtaData> m_data;
+    int m_colorModel;
+    int hasMagic(std::ifstream &);
+};
 
-    // FATZ found
-    _file.clear();
-    _file.seekg(0, std::ios::beg);
-    return 1;
-}
+#endif // ZTAF_H
 
 /*
     MIT License

@@ -1,7 +1,7 @@
-#ifndef ZTAF_H
-#define ZTAF_H
+#ifndef ZTAFRAMEBUFFEROBJECT_H
+#define ZTAFRAMEBUFFEROBJECT_H
 
-/* ZtaF.h -- parser for zt1 animation files
+/* ZtaFrameBufferObject.h -- object for storing frame data
 
     ztalib - ZT1 graphics parser
     https://goosifer.io/
@@ -21,45 +21,19 @@
         https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained
 */
 
-#include <fstream>
 #include <vector>
-#include <iostream>
-#include <cstdint>
-#include <cstring>
-#include <memory>
 
-#include "data/ZtaFrameBuffer.h"
-#include "data/ZtaFrameBufferObject.h"
-
-#define ZTA_VERSION "0.7.0"
-
-// if FATZ is first 4 bytes, additional 5 bytes ahead
-// The ninth byte is a boolean value that specifies if there is an
-// a background frame
-
-// -------------------------------- Standard Pixel Output
-
-class ZtaData;
-class ZtaFrameBuffer;
-class ZtaFrameBuffer::BufferObject;
-class ZtaF
+struct ZtaFrameBufferObject
 {
-public:
-    ZtaF();
-    virtual ~ZtaF();
-
-    std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
-    std::shared_ptr<ZtaData> data();
-    std::vector<ZtaFrameBufferObject> getFrameBuffer();
-
-private:
-    std::vector<ZtaFrameBufferObject> m_frameBuffer;
-    std::shared_ptr<ZtaData> m_data;
-    int m_colorModel;
-    int hasMagic(std::ifstream &);
+    std::vector<uint8_t> pixels; // continuous array of pixels: i.e. {0,0,0,255,255,255,255,...}
+    int width;
+    int height;
+    int offsetX;
+    int offsetY;
+    int channels;
 };
 
-#endif // ZTAF_H
+#endif // ZTAFRAMEBUFFEROBJECT_H
 
 /*
     MIT License

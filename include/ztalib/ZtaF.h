@@ -28,10 +28,10 @@
 #include <cstring>
 #include <memory>
 
-#include "../data/ZtaData.h"
-#include "../data/ZtaFrameBuffer.h"
+#include "ZtaData.h"
+#include "data/ZtaFrameBuffer.h"
 
-#define ZTA_CORE_VERSION "0.6.4"
+#define ZTA_VERSION "0.7.0"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
 // The ninth byte is a boolean value that specifies if there is an

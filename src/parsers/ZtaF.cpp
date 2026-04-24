@@ -167,7 +167,7 @@ int ZtaF::hasMagic(std::ifstream &_file)
     }
 
     // test for FATZ
-    if (strcmp(magic, MAGIC) != 0)
+    if (strcmp(magic, "FATZ") != 0)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);

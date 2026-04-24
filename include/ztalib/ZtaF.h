@@ -28,6 +28,10 @@
 #include <cstring>
 #include <memory>
 
+#include "data/ZtaData.h"
+#include "data/ZtaFrameBuffer.h"
+#include "data/ZtaFrameBufferObject.h"
+
 #define ZTA_VERSION "0.7.0"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
@@ -36,9 +40,6 @@
 
 // -------------------------------- Standard Pixel Output
 
-class ZtaData;
-class ZtaFrameBuffer;
-class ZtaFrameBufferObject;
 class ZtaF
 {
 public:

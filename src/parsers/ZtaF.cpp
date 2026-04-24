@@ -1,5 +1,4 @@
 #include "ztalib/ZtaF.h"
-#include "data/ZtaData.h"
 
 /* ZtaF.cpp -- parser for zt1 animation files
 
@@ -26,7 +25,7 @@ ZtaF::ZtaF()
     // init ZtaData
     m_data = std::make_shared<ZtaData>();
     m_colorModel = 0;
-    m_frameBuffer = std::vector<ZtaFrameBuffer::BufferObject>();
+    m_frameBuffer = std::vector<ZtaFrameBufferObject>();
 }
 
 ZtaF::~ZtaF()
@@ -35,7 +34,7 @@ ZtaF::~ZtaF()
     m_data->frames.clear();
 }
 
-std::vector<ZtaFrameBuffer::BufferObject> ZtaF::getFrameBuffer()
+std::vector<ZtaFrameBufferObject> ZtaF::getFrameBuffer()
 {
     return m_frameBuffer;
 }

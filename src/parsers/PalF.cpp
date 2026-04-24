@@ -22,7 +22,7 @@
 
 PalF::PalF()
 {
-    m_colors = std::vector<ZtaColor>();
+    m_colors = std::vector<PalF::Color>();
     m_nameSize = 0;
     m_name = std::vector<char>();
     m_location = "";
@@ -70,7 +70,7 @@ int PalF::load(std::string fileName)
         // uint32_t abgr;
         // palFile.read(reinterpret_cast<char*>(&abgr), 4);
 
-        ZtaColor color;
+        PalF::Color color;
         file.read(reinterpret_cast<char *>(&color), 4);
 
         // Convert RGBA to BGRA if necessary
@@ -144,7 +144,7 @@ void PalF::numColors(int count)
     m_numColors = count;
 }
 
-ZtaColor PalF::getColor(int index)
+PalF::Color PalF::getColor(int index)
 {
     if (index < 0 || index >= m_numColors)
     {

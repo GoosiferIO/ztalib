@@ -1,4 +1,4 @@
-#include "ZtaFrameBuffer.h"
+#include "ztalib/data/ZtaFrameBuffer.h"
 
 /* ZtaFrameBuffer.cpp -- buffer with several frames
 
@@ -124,7 +124,7 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Get color from palette
-                    ZtaColor color = m_data.palette->getColor(colorIndex);
+                    PalF::Color color = m_data.palette->getColor(colorIndex);
 
                     // Write pixel data according to color model
                     if (m_colorModel == 1)

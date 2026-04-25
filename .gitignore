@@ -6,7 +6,8 @@
 !*.*
 
 # directories
-/.venv
+**/venv
+**/site
 /.vscode
 /CMakeFiles
 /build

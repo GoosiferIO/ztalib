@@ -1,6 +1,8 @@
 # Example - ZTA File to PNG Exporter
 
-ztalib is only designed to parse Zoo Tycoon 1 animation graphics and palette files in-memory. However, you can use the parsed data to export the frames as PNG images. By taking advantage of the buffer data extracted from the ZTA files, you can use popular libraries like stb_image_write to save the frames as PNG files. Below is a working example of how to achieve this.
+ztalib is only designed to parse Zoo Tycoon 1 animation graphics and palette files in-memory. However, you can use the parsed data to export the frames as PNG images. By taking advantage of the buffer data extracted from the ZTA files, you can use popular libraries like `stb_image_write` to save the frames as PNG files. Below is a working example of how to achieve this.
+
+Download `stb_image_write.h` from https://github.com/nothings/stb
 
 ```c++
 #define STB_IMAGE_WRITE_IMPLEMENTATION

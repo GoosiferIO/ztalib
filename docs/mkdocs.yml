@@ -7,4 +7,12 @@ nav:
       - ztalib.palette: ztalib.palette.md
   - Examples: examples.md
   - Contributing: contributing.md
-  
+theme:
+  name: material
+  palette:
+    - scheme: slate
+      primary: teal
+      accent: teal
+    - scheme: slate
+      primary: teal
+      accent: teal

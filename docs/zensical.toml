@@ -34,7 +34,7 @@ site_author = "GoosiferIO"
 #
 # Read more: https://zensical.org/docs/setup/basics/#copyright
 copyright = """
-Copyright &copy; 2026 The authors
+Copyright &copy; 2026 Eric Galvan (Goosifer.IO)
 """
 
 # Zensical supports both implicit navigation and explicitly defined navigation.
@@ -48,7 +48,7 @@ nav = [
   { "Get started" = "index.md" },
   { "Reference" = [
     { "ZtaF Class" = "reference/ztaf.md" },
-    { "Palf Class" = "reference/palf.md" }
+    { "PalF Class" = "reference/palf.md" }
   ]},
   { "Example" = [
     { "ZTA File to PNG Exporter" = "example/pngexporter.md" }

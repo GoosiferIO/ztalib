@@ -2,6 +2,8 @@
 
 This is an image parsing library for Zoo Tycoon 1 animation graphics.
 
+For complete documentation: https://ztalib.goosifer.io
+
 ## Compiling
 
 ### C++ Library

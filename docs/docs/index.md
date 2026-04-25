@@ -1,6 +1,6 @@
-# Welcome to MkDocs
+# ztalib Documentation
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+ztalib is a parsing library for Zoo Tycoon 1 animation graphics and palette files.
 
 ## Commands
 

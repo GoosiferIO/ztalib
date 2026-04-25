@@ -1,1 +1,10 @@
 site_name: ztalib Documentation
+nav:
+  - Getting Started: index.md
+  - Reference:
+      - ztalib: ztalib.md
+      - ztalib.graphics: ztalib.graphics.md
+      - ztalib.palette: ztalib.palette.md
+  - Examples: examples.md
+  - Contributing: contributing.md
+  

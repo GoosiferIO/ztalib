@@ -1,17 +1,23 @@
-# ztalib Documentation
+# ztalib
 
 ztalib is a parsing library for Zoo Tycoon 1 animation graphics and palette files.
 
-## Commands
+## Features
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- Read Zoo Tycoon 1 animation graphics and palette files in-memory
+- Supports most animated graphics in the game
+- CMake build system for easy integration into C++ projects
 
-## Project layout
+## Compile
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+### C++ Library
+
+Easiest way to start using ztalib is to install it as a C++ library. In the root of the repository, run:
+
+```bash
+cmake -S . -B build
+cmake --build build --config Release
+cmake --install build --config Release --prefix dist
+```
+
+This will install the library in a `/dist` folder. Copy the contents of `/dist` to your project and link against the library.

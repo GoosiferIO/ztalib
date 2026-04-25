@@ -1,4 +1,4 @@
-site_name: ztalib Documentation
+site_name: ztalib
 nav:
   - Getting Started: index.md
   - Reference:

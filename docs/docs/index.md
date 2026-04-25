@@ -55,7 +55,7 @@ int main()
 {
     ZtaF zta;
 
-    auto animation = zta.load("path/to/animation.zta");
+    auto animation = zta.load("path/to/animation");
     auto buffer = zta.getFrameBuffer();
 
     std::cout << "Animation loaded with " << buffer.size() << " frames!" << std::endl;

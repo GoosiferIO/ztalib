@@ -2,9 +2,8 @@ site_name: ztalib
 nav:
   - Getting Started: index.md
   - Reference:
-      - ztalib: ztalib.md
-      - ztalib.graphics: ztalib.graphics.md
-      - ztalib.palette: ztalib.palette.md
+      - reference/ztaf.md
+      - reference/palf.md
   - Examples: examples.md
   - Contributing: contributing.md
 theme:
@@ -12,7 +11,4 @@ theme:
   palette:
     - scheme: slate
       primary: teal
-      accent: teal
-    - scheme: slate
-      primary: teal
-      accent: teal
+      accent: amber

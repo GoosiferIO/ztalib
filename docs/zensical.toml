@@ -50,6 +50,9 @@ nav = [
     { "ZtaF Class" = "reference/ztaf.md" },
     { "Palf Class" = "reference/palf.md" }
   ]},
+  { "Example" = [
+    { "ZTA File to PNG Exporter" = "example/pngexporter.md" }
+  ]},
 ]
 
 # With the "extra_css" option you can add your own CSS styling to customize

@@ -60,4 +60,8 @@ option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
 
 if(BUILD_PY_BINDINGS)
     add_subdirectory(bindings)
+    find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    install(TARGETS pyzta
+        DESTINATION ${Python3_SITELIB}
+    )
 endif()

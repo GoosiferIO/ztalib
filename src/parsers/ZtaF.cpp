@@ -111,7 +111,8 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     {
         ZtaFrame frame = ZtaFrame();
         file.read((char *)&frame.frameSize, 4);
-        file.read((char *)&frame.height, 2);
+        file.read((char *)&frame.height, 1);
+        file.read((char *)&frame.isShadow, 1);
         file.read((char *)&frame.width, 2);
         file.read((char *)&frame.y, 2);
         file.read((char *)&frame.x, 2);

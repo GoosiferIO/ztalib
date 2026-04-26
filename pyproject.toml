@@ -4,7 +4,7 @@ build-backend = "scikit_build_core.build"
 
 [project]
 name = "pyzta"
-dynamic = ["version"]
+version = "0.8.0"
 authors = [
     { name = "Eric Galvan", email = "contact@goosifer.io" }
 ]
@@ -30,4 +30,3 @@ Discord = "https://discord.gg/g5FvNrRQGC"
 cmake.build-type = "Release"
 cmake.args = ["-DBUILD_PY_BINDINGS=ON", "-DBUILD_CPP_LIB=OFF"]
 wheel.packages = []
-metadata.version.provider = "scikit_build_core.metadata.cmake"

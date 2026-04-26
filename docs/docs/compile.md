@@ -2,7 +2,7 @@
 
 ## C++ Library
 
-Easiest way to start using ztalib is to install it as a C++ library. In the root of the repository, run:
+To compile ztalib as a shared C++ library, go to the root of the repository and run:
 
 === "Windows/MSVC"
     ```bash
@@ -29,10 +29,21 @@ This will install the library in a `/dist` folder. Copy the contents of `/dist` 
 
 For Python projects that want to use ztalib, bindings are also supported. First, make sure you have a virtual environment activated if you do not want to install the ztalib bindings system-wide:
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-```
+=== "Windows/PowerShell"
+    ```ps
+    python -m venv venv
+    venv/Scripts/Activate.ps1
+    ```
+=== "Windows/Command Prompt"
+    ```
+    python -m venv venv
+    venv\Scripts\activate.bat
+    ```
+=== "Linux/macOS"
+    ```
+    python -m venv venv
+    source venv/bin/activate
+    ```
 
 Then, in the root of the repository, run:
 

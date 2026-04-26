@@ -49,6 +49,7 @@ repo_name = "GoosiferIO/ztalib"
 # Read more: https://zensical.org/docs/setup/navigation/
 nav = [
   { "Get started" = "index.md" },
+  { "Compile" = "compile.md" },
   { "Reference" = [
     { "ZtaF Class" = "reference/ztaf.md" },
     { "PalF Class" = "reference/palf.md" }

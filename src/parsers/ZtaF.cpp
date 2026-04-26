@@ -181,6 +181,8 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
         relPalettePath = std::filesystem::relative(palPath, projRootPath);
     } else {
         relPalettePath = palPath;   
+        // combine projRootPath with palette path to get absolute path
+        palPath = std::filesystem::absolute(projRootPath / palPath);
     }
 
     m_ztaPath = fileName; // store path for future saves

@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # -------- save back to zta ---------
     os.makedirs("out/zta", exist_ok=True)
     try:
-        zta.save("example/objects/fdskajsd/NE/SE_copy.zta")
+        zta.save("example/objects/fdskajsd/NE/SE_copy.zta", project_root="example/", palette_path="objects/fdskajsd/NE/stgeend.pal")
     except Exception as e:
         print(f"Error saving ZTA file: {e}")
         exit(1)

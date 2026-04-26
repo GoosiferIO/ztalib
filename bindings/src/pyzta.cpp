@@ -80,8 +80,8 @@ PYBIND11_MODULE(pyzta, m) {
             py::arg("io_pal") = "")
         .def("save", &ZtaF::save, 
             py::arg("file_name"), 
-            py::arg("project_root") = "", 
-            py::arg("palette_path") = "")
+            py::arg("project_root"), 
+            py::arg("palette_path"))
         .def("data", &ZtaF::data)
         .def("get_frame_buffer", &ZtaF::getFrameBuffer);
 } 

@@ -1,5 +1,5 @@
 [build-system]
-requires = ["scikit-build-core>=0.9"]
+requires = ["scikit-build-core>=0.12"]
 build-backend = "scikit_build_core.build"
 
 [project]
@@ -18,7 +18,7 @@ classifiers = [
     "Programming Language :: C++",
     "Operating System :: OS Independent",
 ]
-
+ 
 [project.urls]
 Homepage = "https://ztalib.goosifer.io/"
 Repository = "https://github.com/GoosiferIO/ztalib"

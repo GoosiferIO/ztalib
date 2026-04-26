@@ -184,13 +184,14 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
 
     // -------------------------------- write header
     // if more than one frame, write FATZ magic and header
-    if (m_data->info.frameCount > 1)
-    {
-        file.write("FATZ", 4); // magic
-        file.write("\0\0\0\0", 4); // reserved
-        file.write((char *)&m_data->hasBackground, 1); // background frame flag
-    }
+    // if (false) // m_data->info.frameCount > 1)
+    // {
+    //     file.write("ZTAF", 4); // magic
+    // } else {
+    file.write("\0\0\0\0", 4); // no magic, just write 4 null bytes
 
+    file.write("\0\0\0\0", 4); // reserved
+    file.write((char *)&m_data->hasBackground, 1); // background frame flag
     file.write((char *)&m_data->info.speed, 4); // animation speed in ms
 
     uint32_t paletteNameSize = static_cast<uint32_t>(relPalettePath.string().size());
@@ -243,12 +244,15 @@ int ZtaF::hasMagic(std::ifstream &_file)
     char magic[5] = {0};
     _file.read(magic, 4);
 
+    std::cout << "Magic read from file: " << magic << std::endl;
+
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
     if (_file.gcount() < 4)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
+        std::cerr << "ERROR: No magic bytes found" << std::endl;
         return 0;
     }
 
@@ -257,6 +261,7 @@ int ZtaF::hasMagic(std::ifstream &_file)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
+        std::cerr << "ERROR: Invalid magic bytes" << std::endl;
         return 0;
     }
 

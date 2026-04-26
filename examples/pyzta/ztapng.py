@@ -81,7 +81,7 @@ if __name__ == "__main__":
     # check if the file was saved correctly by loading it again
     zta_copy = ZtaF()
     try:
-        zta_copy.load(f"{TEST_PATH}/NE/SE_copy.zta")
+        zta_copy.load(f"{TEST_PATH}/IDLE/SE")
         print("ZTA file saved and loaded successfully!")
     except Exception as e:
         print(f"Error loading saved ZTA file: {e}")

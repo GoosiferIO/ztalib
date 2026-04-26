@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15...4.1)
 
 project(ztalib 
-    VERSION 0.8.0
+    VERSION 0.8.1
     LANGUAGES CXX
 )
 
@@ -42,6 +42,10 @@ target_include_directories(ztalib
 )
 
 target_compile_features(ztalib PUBLIC cxx_std_17)
+target_compile_options(ztalib PRIVATE 
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wall>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+)
 
 # ------------- Do not mangle --------------
 

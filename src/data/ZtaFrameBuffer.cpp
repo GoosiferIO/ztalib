@@ -51,11 +51,8 @@ int ZtaFrameBuffer::createBuffer()
         return -1;
     }
 
-    int numBuffers = m_data.info.frameCount;
-
     for (const ZtaFrame &frame : m_data.frames)
     {
-        int index = &frame - &m_data.frames[0];
         ZtaFrameBufferObject bufferObject;
 
         // Set dimensions and format
@@ -81,7 +78,7 @@ int ZtaFrameBuffer::createBuffer()
         // Process each row
         for (int row = 0; row < frame.height; row++)
         {
-            if (row >= frame.pixelSets.size())
+            if (row >= (int)frame.pixelSets.size())
             {
                 std::cerr << "ERROR: Row " << row << " exceeds ZtaPixelSet count!" << std::endl;
                 continue;

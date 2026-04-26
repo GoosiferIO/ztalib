@@ -24,6 +24,7 @@
 #include <fstream>
 #include <vector>
 #include <iostream>
+#include <cstdint>
 
 class PalF
 {

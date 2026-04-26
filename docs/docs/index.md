@@ -14,7 +14,7 @@ https://github.com/GoosiferIO/ztalib
 
 # Install
 
-The easiest way to start using ztalib is to use the Python bindings, which are available on PyPI:
+The easiest way to start using ztalib is to use the Python bindings, which are available on PyPI as `pyzta`:
 
 ```bash
 pip install pyzta

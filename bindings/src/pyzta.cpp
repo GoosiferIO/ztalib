@@ -45,6 +45,12 @@ PYBIND11_MODULE(pyzta, m) {
         .def(py::init<const ZtaData&>())
         .def("get_buffer", &ZtaFrameBuffer::getBuffer);
 
+    py::class_<PalF::Color>(m, "PalFColor")
+        .def_readonly("r", &PalF::Color::r)
+        .def_readonly("g", &PalF::Color::g)
+        .def_readonly("b", &PalF::Color::b)
+        .def_readonly("a", &PalF::Color::a);
+
     py::class_<PalF, std::shared_ptr<PalF>>(m, "PalF")
         .def(py::init<>())
         .def("location", &PalF::location)

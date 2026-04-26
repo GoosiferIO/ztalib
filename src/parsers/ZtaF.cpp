@@ -184,18 +184,18 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     m_ztaPath = fileName; // store path for future saves
 
     // -------------------------------- write header
-    // if more than one frame, write FATZ magic and header
-    // if (false) // m_data->info.frameCount > 1)
-    // {
-    //     file.write("ZTAF", 4); // magic
-    //     file.write("\0\0\0\0", 4); // reserved
-    // file.write((char *)&m_data->hasBackground, 1); // background frame flag
-
+    // if hasBackground is true, write FATZ magic and background frame flag
+    if (m_data->hasBackground) // m_data->info.frameCount > 1)
+    {
+        file.write("ZTAF", 4); // magic
+        file.write("\0\0\0\0", 4); // reserved
+        file.write((char *)&m_data->hasBackground, 1); // background frame flag
+    }
     // } else {
     file.write((char *)&m_data->info.speed, 4); // animation speed in ms
 
     std::string paletteLocation = relPalettePath.generic_string();
-    uint32_t paletteNameSize = static_cast<uint32_t>(paletteLocation.size());
+    uint32_t paletteNameSize = static_cast<uint32_t>(paletteLocation.size() + 1); // +1 for null terminator
     file.write((char *)&paletteNameSize, 4); // size of palette name
     file.write(paletteLocation.c_str(), paletteNameSize); // palette name
 
@@ -215,6 +215,9 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
         file.write((char *)&frame.width, 2);
         file.write((char *)&frame.y, 2);
         file.write((char *)&frame.x, 2);
+
+        frame.unk1 = 0; // set unknown byte 1 to 00
+        frame.unk2 = 1; // set unknown byte 2 to 01
         file.write((char *)&frame.unk1, 1); // unknown byte 1
         file.write((char *)&frame.unk2, 1); // unknown byte 2
 

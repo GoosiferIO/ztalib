@@ -50,11 +50,24 @@ source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
 
 Then, in the root of the repository, run:
 
-```bash
-cmake -S . -B build -DBUILD_PY_BINDINGS=ON
-cmake --build build --config Release
-cmake --install build --config Release
-```
+=== "Windows/MSVC"
+    ```bash
+    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
+    cmake --build build --config Release
+    cmake --install build --config Release
+    ```
+=== "Windows/MinGW"
+    ```bash
+    cmake -G "MinGW Makefiles" -S . -B build -DBUILD_PY_BINDINGS=ON
+    cmake --build build --config Release
+    cmake --install build --config Release
+    ```
+=== "Linux/macOS"
+    ```bash
+    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
+    cmake --build build --config Release
+    cmake --install build --config Release
+    ```
 
 This will install the Python bindings to the currently-active Python environment. You can then import the `pyzta` module in your Python code:
 

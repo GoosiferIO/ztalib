@@ -99,7 +99,10 @@ Load a ZtaF file from disk. Returns a `std::shared_ptr` to a `ZtaData` object co
 ### `meth` `save`
 
 ```c++
-    void save(std::string fileName);
+    void save(std::string fileName,
+        std::string projectRoot,
+        std::string palettePath
+    );
 ```
 
 Save the current data to a ZtaF file on disk.
@@ -114,16 +117,28 @@ Save the current data to a ZtaF file on disk.
     {
         ZtaF zta;
         // Assume data is loaded and modified
-        zta.save("path/to/new_file");
+        zta.save("path/to/new_file", "path/to/project", "path/to/palette");
     }
     ```
+
+    | Parameter | Description |
+    |--- | --- |
+    | `fileName` | The path to the ZtaF file to save. |
+    | `projectRoot` | The root directory of the project. |
+    | `palettePath` | The path to the palette file to reference in the ZtaF file. This should be a relative path from the project root. |
 === "Python"
     ```python
     from pyzta import ZtaF
     zta = ZtaF()
     # Assume data is loaded and modified
-    zta.save("path/to/new_file")
+    zta.save("path/to/new_file", "path/to/project", "path/to/palette")
     ```
+
+    | Parameter | Description |
+    |--- | --- |
+    | `file_name` | The path to the ZtaF file to save. |
+    | `project_root` | The root directory of the project. |
+    | `palette_path` | The path to the palette file to reference in the ZtaF file. This should be a relative path from the project root. |
 
 ### `meth` `data`
 

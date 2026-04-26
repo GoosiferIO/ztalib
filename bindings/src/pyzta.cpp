@@ -69,7 +69,8 @@ PYBIND11_MODULE(pyzta, m) {
         .def("colors", py::overload_cast<const std::vector<PalF::Color>&>(&PalF::colors))
         .def("colors", static_cast<std::vector<PalF::Color>(PalF::*)() const>(&PalF::colors))
         .def("get_color", &PalF::getColor)
-        .def("load", &PalF::load);
+        .def("load", &PalF::load)
+        .def("save", &PalF::save);
 
     py::class_<ZtaF>(m, "ZtaF")
         .def(py::init<>())
@@ -77,6 +78,7 @@ PYBIND11_MODULE(pyzta, m) {
             py::arg("file_name"), 
             py::arg("color_profile") = 0, 
             py::arg("io_pal") = "")
+        .def("save", &ZtaF::save)
         .def("data", &ZtaF::data)
         .def("get_frame_buffer", &ZtaF::getFrameBuffer);
 } 

@@ -96,13 +96,14 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         std::filesystem::path ztaPath(fileName);
         std::filesystem::path palettePath(m_data->palette->location());
         std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
-        if (resolvedPalettePath.empty()) {
-            std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
-            return nullptr;
-        }
         m_data->palette->load(resolvedPalettePath.string());
     } else {
-        m_data->palette->location(ioPal);
+        std::filesystem::path palettePath(ioPal);
+        // if relative path, add current working directory        
+        if (palettePath.is_relative()) {
+            palettePath = std::filesystem::current_path() / palettePath;
+        }
+        m_data->palette->load(palettePath.string());
     }
 
     // ------------------------------- read frames
@@ -177,6 +178,8 @@ void ZtaF::save(std::string fileName)
     {
         return;
     }
+
+    m_ztaPath = fileName; // store path for future saves
 
     // -------------------------------- write header
     // if more than one frame, write FATZ magic and header

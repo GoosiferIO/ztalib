@@ -51,8 +51,6 @@ int ZtaFrameBuffer::createBuffer()
         return -1;
     }
 
-    int numBuffers = m_data.info.frameCount;
-
     for (const ZtaFrame &frame : m_data.frames)
     {
         ZtaFrameBufferObject bufferObject;

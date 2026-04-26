@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15...4.1)
 
 project(ztalib 
-    VERSION 0.7.0
+    VERSION 0.8.0
     LANGUAGES CXX
 )
 
@@ -13,10 +13,18 @@ add_library(ztalib SHARED
     src/parsers/PalF.cpp
 )
 
+# ------------- Export config (version) -------------
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib/version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ztalib/version.h
+)
+
 #------------ Include and def public vs private headers ------------
 
 target_include_directories(ztalib 
     PUBLIC 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     PRIVATE 

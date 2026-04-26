@@ -5,11 +5,18 @@ from PIL import Image
 def output_frames_as_pngs(zta, dir_name="out"):
     buffer = zta.get_frame_buffer()
 
+    if not buffer:
+        print("No frame buffer found, cannot output frames as pngs.")
+        return
+
     # create out dir
     os.makedirs(dir_name, exist_ok=True)
 
     # output frames as pngs
     for i, frame in enumerate(buffer):
+        if not frame.pixels:
+            print(f"Frame {i} has no pixel data, skipping.")
+            continue
         img = Image.frombytes("RGBA", (frame.width, frame.height), frame.pixels)
         img.save(f"{dir_name}/frame_{i}.png")
 
@@ -42,7 +49,7 @@ def print_frame_info(zta, frame_range):
         print(f"  unk2: {i.unk2}")
         print(f"  pixelSet count: {len(i.pixel_sets)}")
 
-ATL_PATH = "example/objects/gsatlftn"
+ATL_PATH = "example/objects/pterhous"
 TEST_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example\\objects\\fdskajsd"
 TEST_ROOT_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example"
 
@@ -71,7 +78,7 @@ if __name__ == "__main__":
     # -------- save back to zta ---------
     os.makedirs("out/zta", exist_ok=True)
     try:
-        zta.save(f"{TEST_PATH}/IDLE/SE", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/IDLE/SE.pal")
+        zta.save(f"{TEST_PATH}/IDLE/SE.zta", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/IDLE/SE.pal")
     except Exception as e:
         print(f"Error saving ZTA file: {e}")
         exit(1)
@@ -79,7 +86,7 @@ if __name__ == "__main__":
     # check if the file was saved correctly by loading it again
     zta_copy = ZtaF()
     try:
-        zta_copy.load(f"{TEST_PATH}/IDLE/SE")
+        zta_copy.load(f"{TEST_PATH}/IDLE/SE.zta")
         print("ZTA file saved and loaded successfully!")
     except Exception as e:
         print(f"Error loading saved ZTA file: {e}")

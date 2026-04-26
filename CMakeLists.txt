@@ -7,11 +7,21 @@ project(ztalib
 
 # ------------- Sources -------------
 
-add_library(ztalib SHARED 
-    src/data/ZtaFrameBuffer.cpp
-    src/parsers/ZtaF.cpp
-    src/parsers/PalF.cpp
-)
+if(BUILD_PY_BINDINGS)
+    add_library(ztalib STATIC # static for python bindings
+        src/data/ZtaFrameBuffer.cpp
+        src/parsers/ZtaF.cpp
+        src/parsers/PalF.cpp
+    )
+    set_target_properties(ztalib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+else() # c++ can be shared
+    add_library(ztalib SHARED
+        src/data/ZtaFrameBuffer.cpp
+        src/parsers/ZtaF.cpp
+        src/parsers/PalF.cpp
+    )
+    set_target_properties(ztalib PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS ON)
+endif()
 
 # ------------- Export config (version) -------------
 

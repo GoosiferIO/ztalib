@@ -26,7 +26,6 @@ PalF::PalF()
     m_locationSize = 0;
     m_location = "";
     m_colorModel = 0;
-    m_numColors = 0;
 }
  
 PalF::~PalF()
@@ -89,7 +88,6 @@ int PalF::load(std::string fileName)
         m_colors.push_back({0, 0, 0, 255}); // Fill with black (fully opaque)
     }
 
-    m_numColors = static_cast<int>(m_colors.size());
     return 1;
 }
 
@@ -108,11 +106,6 @@ int PalF::colorModel()
     return m_colorModel;
 }
 
-int PalF::numColors()
-{
-    return m_numColors;
-}
-
 void PalF::location(std::string loc)
 {
     m_location = loc;
@@ -128,14 +121,9 @@ void PalF::colorModel(int model)
     m_colorModel = model;
 }
 
-void PalF::numColors(int count)
-{
-    m_numColors = count;
-}
-
 PalF::Color PalF::getColor(int index)
 {
-    if (index < 0 || index >= m_numColors)
+    if (index < 0 || index >= static_cast<int>(m_colors.size()))
     {
         std::cerr << "ERROR: Color index out of bounds: " << index << std::endl;
         throw std::out_of_range("Color index out of bounds");

@@ -47,9 +47,6 @@ public:
     int colorModel();
     void colorModel(int model);
 
-    int numColors();
-    void numColors(int count);
-
     Color getColor(int index);
     int load(std::string fileName);
 
@@ -58,7 +55,6 @@ private:
     std::string m_location;
     uint32_t m_locationSize;
     int m_colorModel;
-    int m_numColors;
 };
 
 #endif // PALF_H

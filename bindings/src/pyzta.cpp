@@ -15,6 +15,10 @@ namespace py = pybind11;
 PYBIND11_MODULE(pyzta, m) {
     m.doc() = "ZT1 animation graphics parser for Python";
 
+    py::class_<ZtaInfo>(m, "ZtaInfo")
+        .def("speed", &ZtaInfo::speed)
+        .def("frame_count", &ZtaInfo::frameCount);
+
     py::class_<ZtaData, std::shared_ptr<ZtaData>>(m, "ZtaData")
         .def_readonly("info", &ZtaData::info)
         .def_readonly("frames", &ZtaData::frames)
@@ -28,10 +32,6 @@ PYBIND11_MODULE(pyzta, m) {
         .def("y_offset", &ZtaFrame::y)
         .def("x_offset", &ZtaFrame::x)
         .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
-
-    py::class_<ZtaInfo>(m, "ZtaInfo")
-        .def("speed", &ZtaInfo::speed)
-        .def("frame_count", &ZtaInfo::frameCount);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
         .def_readonly("pixels", &ZtaFrameBufferObject::pixels)
@@ -56,7 +56,7 @@ PYBIND11_MODULE(pyzta, m) {
         .def("location", py::overload_cast<std::string>(&PalF::location))
         .def("location", py::overload_cast<>(&PalF::location))
         .def("location_size", py::overload_cast<uint32_t>(&PalF::locationSize))
-        .def("location_size", py::overload_cast<>(&PalF::locationSize
+        .def("location_size", py::overload_cast<>(&PalF::locationSize))
         .def("color_model", py::overload_cast<int>(&PalF::colorModel))
         .def("color_model", py::overload_cast<>(&PalF::colorModel))
         .def("get_color", &PalF::getColor)

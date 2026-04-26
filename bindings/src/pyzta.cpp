@@ -42,7 +42,8 @@ PYBIND11_MODULE(pyzta, m) {
         .def("channels", &ZtaFrameBufferObject::channels);
 
     py::class_<ZtaFrameBuffer>(m, "ZtaFrameBuffer")
-        .def_readonly("frames", &ZtaFrameBuffer::frames);
+        .def(py::init<const ZtaData&>())
+        .def("get_buffer", &ZtaFrameBuffer::getBuffer);
 
     py::class_<PalF, std::shared_ptr<PalF>>(m, "PalF")
         .def(py::init<>())

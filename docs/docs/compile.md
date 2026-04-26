@@ -108,4 +108,4 @@ int main()
 }
 ```
 
-See [the example project](./docs/example.md) to see it in action.
+See [the example project](./example/pngexporter.md) to see it in action.

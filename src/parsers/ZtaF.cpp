@@ -170,6 +170,16 @@ void ZtaF::save(std::string fileName)
     uint32_t paletteNameSize = m_data->palette->locationSize();
     file.write((char *)&paletteNameSize, 4); // size of palette name
     file.write(m_data->palette->location().data(), m_data->palette->locationSize()); // palette name
+
+    uint32_t frameCount = m_data->info.frameCount;
+    if (m_data->hasBackground)
+    {
+        frameCount -= 1; // if background frame exists, not counted in frameCount
+    }
+    file.write((char *)&frameCount, 4); // number of frames
+
+    // -------------------------------- write palette
+
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()

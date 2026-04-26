@@ -48,6 +48,7 @@ include(GNUInstallDirs)
 # ------------- Options -------------
 
 option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
+option(BUILD_PY_CMAKE "Build Python bindings manually with CMake" ON)
 option(BUILD_CPP_LIB "Build C++ library, headers, and CMake targets" ON)
 
 if(BUILD_PY_BINDINGS) # python bindings only

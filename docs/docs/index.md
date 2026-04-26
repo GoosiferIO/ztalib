@@ -26,6 +26,16 @@ cmake --install build --config Release --prefix dist
 
 This will install the library in a `/dist` folder. Copy the contents of `/dist` to your project and link against the library.
 
+### Python Bindings
+
+Python bindings are available as an option. To build the Python bindings, run:
+
+```bash
+cmake -S . -B build -BUILD_PY_BINDINGS=ON
+cmake --build build --config Release
+cmake --install build --config Release --prefix dist
+```
+
 ## Setup
 
 Copy the contents of `/dist` to your project and link against the library.

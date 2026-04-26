@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15...4.1)
 
 project(ztalib 
-    VERSION 0.7.0
+    VERSION 0.8.0
     LANGUAGES CXX
 )
 
@@ -13,10 +13,18 @@ add_library(ztalib SHARED
     src/parsers/PalF.cpp
 )
 
+# ------------- Export config (version) -------------
+
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib/version.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ztalib/version.h
+)
+
 #------------ Include and def public vs private headers ------------
 
 target_include_directories(ztalib 
     PUBLIC 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
         $<INSTALL_INTERFACE:include>
     PRIVATE 
@@ -37,34 +45,39 @@ include(GNUInstallDirs)
 
 # ------------- Installation -------------
 
-install(TARGETS ztalib
-    EXPORT ztalibTargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
- 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-install (EXPORT ztalibTargets
-    FILE ztalibTargets.cmake
-    NAMESPACE ztalib::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
-)
-
 # ------------- Options -------------
 
 option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
+option(BUILD_CPP_LIB "Build C++ library, headers, and CMake targets" ON)
 
-if(BUILD_PY_BINDINGS)
-    add_subdirectory(bindings)
+if(BUILD_PY_BINDINGS) # python bindings only
     find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    add_subdirectory(bindings)
     install(TARGETS pyzta
-        DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${Python3_SITELIB}
+        LIBRARY DESTINATION ${Python3_SITELIB}
     )
     install(TARGETS ztalib
-        DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${Python3_SITELIB}
+        LIBRARY DESTINATION ${Python3_SITELIB}
+    )
+endif() 
+
+if(BUILD_CPP_LIB) # c++ library only
+    install(TARGETS ztalib
+        EXPORT ztalibTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+    
+    install(DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+
+    install (EXPORT ztalibTargets
+        FILE ztalibTargets.cmake
+        NAMESPACE ztalib::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
     )
 endif()

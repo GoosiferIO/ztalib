@@ -9,11 +9,13 @@
 #include "ztalib/data/ZtaFrameBuffer.h"
 #include "ztalib/data/ZtaFrameBufferObject.h"
 #include "ztalib/PalF.h"
+#include "ztalib/version.h"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(pyzta, m) {
     m.doc() = "ZT1 animation graphics parser for Python";
+    m.attr("__version__") = ZTA_VERSION;
 
     py::class_<ZtaInfo>(m, "ZtaInfo")
         .def_readwrite("speed", &ZtaInfo::speed)

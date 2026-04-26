@@ -159,6 +159,16 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     return m_data;
 }
 
+void ZtaF::save()
+{
+    if (m_ztaPath.empty())
+    {
+        std::cerr << "ERROR: No file path specified for saving." << std::endl;
+        return;
+    }
+    save(m_ztaPath);
+}
+
 void ZtaF::save(std::string fileName)
 {
     std::ofstream file;

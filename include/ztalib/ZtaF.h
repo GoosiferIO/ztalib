@@ -49,6 +49,7 @@ public:
 
     std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
     void save(std::string fileName);
+    void save();
     std::shared_ptr<ZtaData> data();
     std::vector<ZtaFrameBufferObject> getFrameBuffer();
 
@@ -56,6 +57,7 @@ private:
     std::vector<ZtaFrameBufferObject> m_frameBuffer;
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
+    std::string m_ztaPath;
     int hasMagic(std::ifstream &);
     std::filesystem::path resolvePalPath(
         const std::filesystem::path& ztaPath, 

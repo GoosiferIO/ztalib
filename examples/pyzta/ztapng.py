@@ -6,7 +6,7 @@ if __name__ == "__main__":
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load("SE", 0, "stgeend.zta")
+        zta.load("SE", 0, "stgeend.pal")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)

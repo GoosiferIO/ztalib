@@ -178,8 +178,30 @@ void ZtaF::save(std::string fileName)
     }
     file.write((char *)&frameCount, 4); // number of frames
 
-    // -------------------------------- write palette
+    // -------------------------------- write frames
+    for (int i = 0; i < (int)frameCount; i++)
+    {
+        ZtaFrame &frame = m_data->frames[i];
+        file.write((char *)&frame.frameSize, 4);
+        file.write((char *)&frame.height, 2);
+        file.write((char *)&frame.width, 2);
+        file.write((char *)&frame.y, 2);
+        file.write((char *)&frame.x, 2);
+        file.write((char *)&frame.unk1, 1); // unknown byte 1
+        file.write((char *)&frame.unk2, 1); // unknown byte 2
 
+        // write pixel sets
+        for (const ZtaPixelSet &pixelSet : frame.pixelSets)
+        {
+            file.write((char *)&pixelSet.blockCount, 1); // how many pixel blocks
+            for (const ZtaPixelBlock &block : pixelSet.blocks)
+            { // write each block
+                file.write((char *)&block.offset, 1);                      // offset
+                file.write((char *)&block.colorCount, 1);                  // color count
+                file.write((char *)block.colors.data(), block.colorCount); // colors
+            }
+        }
+    }
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()

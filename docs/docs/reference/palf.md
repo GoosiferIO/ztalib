@@ -45,14 +45,21 @@ class PalF
 
 ### Example
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-}
-```
+    int main()
+    {
+        PalF pal;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    ```
 
 ### `struct` `PalF::Color`
 

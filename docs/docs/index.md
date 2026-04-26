@@ -28,7 +28,7 @@ This will install the library in a `/dist` folder. Copy the contents of `/dist` 
 
 ### Python Bindings
 
-First, make sure you have a virtual environment activated if you do not want to install the ztalib bindings system-wide:
+For Python projects that want to use ztalib, bindings are also supported. First, make sure you have a virtual environment activated if you do not want to install the ztalib bindings system-wide:
 
 ```bash
 python -m venv venv

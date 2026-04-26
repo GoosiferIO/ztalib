@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15...4.1)
 
 project(ztalib 
-    VERSION 0.8.1
+    VERSION 0.9.0
     LANGUAGES CXX
 )
 

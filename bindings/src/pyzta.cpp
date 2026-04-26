@@ -64,6 +64,8 @@ PYBIND11_MODULE(pyzta, m) {
         .def("location_size", py::overload_cast<>(&PalF::locationSize))
         .def("color_model", py::overload_cast<int>(&PalF::colorModel))
         .def("color_model", py::overload_cast<>(&PalF::colorModel))
+        .def("colors", py::overload_cast<const std::vector<PalF::Color>&>(&PalF::colors))
+        .def("colors", static_cast<std::vector<PalF::Color>(PalF::*)() const>(&PalF::colors))
         .def("get_color", &PalF::getColor)
         .def("load", &PalF::load);
 

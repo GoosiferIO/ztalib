@@ -4,17 +4,25 @@ This is an image parsing library for Zoo Tycoon 1 animation graphics.
 
 For complete documentation: https://ztalib.goosifer.io
 
-## Compiling
+# Install
 
-### C++ Library
-
-Easiest way to start using the library is compile it as a C++ library. You can use CMake:
+The easiest way to start using ztalib is to use the Python bindings, which are available on PyPI as `pyzta`:
 
 ```bash
-cmake -S . -B build
-cmake --build build --config Release
-cmake --install build --config Release --prefix dist
+pip install pyzta
 ```
 
-This will install the library in a `dist` folder. Copy the contents of `dist` to your project and link against the library.
+Then, in your Python code, you can import the library as so:
 
+```python
+from pyzta import ZtaF
+zta = ZtaF()
+animation = zta.load("path/to/animation")
+buffer = zta.getFrameBuffer()
+```
+
+See [the example project](./example/pngexporter.md) to see it in action, or check out the [API reference](./reference/ztaf.md) for more details on how to use the library.
+
+## Compile from source
+
+If you want to use the library in a C++ project, or if you want to contribute to the development of ztalib, you can compile it from source. First, make sure you have CMake installed on your system. For further instructions, see the [compile guide](./compile.md).

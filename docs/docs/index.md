@@ -12,101 +12,25 @@ https://github.com/GoosiferIO/ztalib
 - Supports most animated graphics in the game
 - CMake build system for easy integration into C++ projects
 
-## Compile
+# Install
 
-### C++ Library
-
-Easiest way to start using ztalib is to install it as a C++ library. In the root of the repository, run:
-
-=== "Windows/MSVC"
-    ```bash
-    cmake -S . -B build
-    cmake --build build --config Release
-    cmake --install build --config Release --prefix dist
-    ```
-=== "Windows/MinGW"
-    ```bash
-    cmake -G "MinGW Makefiles" -S . -B build
-    cmake --build build --config Release
-    cmake --install build --config Release --prefix dist
-    ```
-=== "Linux/macOS"
-    ```bash
-    cmake -S . -B build
-    cmake --build build --config Release
-    cmake --install build --config Release --prefix dist
-    ```
-
-This will install the library in a `/dist` folder. Copy the contents of `/dist` to your project and link against the library.
-
-### Python Bindings
-
-For Python projects that want to use ztalib, bindings are also supported. First, make sure you have a virtual environment activated if you do not want to install the ztalib bindings system-wide:
+The easiest way to start using ztalib is to use the Python bindings, which are available on PyPI as `pyzta`:
 
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+pip install pyzta
 ```
 
-Then, in the root of the repository, run:
-
-=== "Windows/MSVC"
-    ```bash
-    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
-    cmake --build build --config Release
-    cmake --install build --config Release
-    ```
-=== "Windows/MinGW"
-    ```bash
-    cmake -G "MinGW Makefiles" -S . -B build -DBUILD_PY_BINDINGS=ON
-    cmake --build build --config Release
-    cmake --install build --config Release
-    ```
-=== "Linux/macOS"
-    ```bash
-    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
-    cmake --build build --config Release
-    cmake --install build --config Release
-    ```
-
-This will install the Python bindings to the currently-active Python environment. You can then import the `pyzta` module in your Python code:
+Then, in your Python code, you can import the library as so:
 
 ```python
-import pyzta
+from pyzta import ZtaF
+zta = ZtaF()
+animation = zta.load("path/to/animation")
+buffer = zta.getFrameBuffer()
 ```
 
-## Setup
+See [the example project](./example/pngexporter.md) to see it in action, or check out the [API reference](./reference/ztaf.md) for more details on how to use the library.
 
-Copy the contents of `/dist` to your project and link against the library.
+## Compile from source
 
-For example, a possible project structure could be:
-
-```
-MyProject/
-├── include/
-│   └── ztalib/
-│       ├── PalF.h
-│       └── AniF.h
-├── lib/
-│   └── libzta.lib
-├── bin/
-│   └── libzta.dll
-├── src/
-│   └── main.cpp
-```
-
-Then, in your C++ code, you can include the headers and link against the library:
-
-```c++
-#include "ztalib/ZtaF.h"
-
-int main()
-{
-    ZtaF zta;
-
-    auto animation = zta.load("path/to/animation");
-    auto buffer = zta.getFrameBuffer();
-
-    std::cout << "Animation loaded with " << buffer.size() << " frames!" << std::endl;
-}
-```
+If you want to use the library in a C++ project, or if you want to contribute to the development of ztalib, you can compile it from source. First, make sure you have CMake installed on your system. For further instructions, see the [compile guide](./compile.md).

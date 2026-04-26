@@ -41,9 +41,9 @@ std::vector<ZtaFrameBufferObject> ZtaF::getFrameBuffer()
 
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
-std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std::string ioPal)
+std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 {
-    this->m_colorModel = m_colorModel;
+    this->m_colorModel = colorModel;
     std::ifstream file;
     file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     if (!file.is_open())

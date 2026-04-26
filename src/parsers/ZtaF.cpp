@@ -200,7 +200,7 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     file.write((char *)&frameCount, 4); // number of frames
 
     // -------------------------------- write frames
-    for (int i = 0; i < (int)frameCount; i++)
+    for (int i = 0; i < (int)m_data->info.frameCount; i++)
     {
         ZtaFrame &frame = m_data->frames[i];
         file.write((char *)&frame.frameSize, 4);

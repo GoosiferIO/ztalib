@@ -53,14 +53,12 @@ PYBIND11_MODULE(pyzta, m) {
 
     py::class_<PalF, std::shared_ptr<PalF>>(m, "PalF")
         .def(py::init<>())
-        .def("location", &PalF::location)
-        .def("set_location", &PalF::location)
-        .def("location_size", &PalF::locationSize)
-        .def("set_location_size", &PalF::locationSize)
-        .def("color_model", &PalF::colorModel)
-        .def("set_color_model", &PalF::colorModel)
-        .def("num_colors", &PalF::numColors)
-        .def("set_num_colors", &PalF::numColors)
+        .def("location", py::overload_cast<std::string>(&PalF::location))
+        .def("location", py::overload_cast<>(&PalF::location))
+        .def("location_size", py::overload_cast<uint32_t>(&PalF::locationSize))
+        .def("location_size", py::overload_cast<>(&PalF::locationSize
+        .def("color_model", py::overload_cast<int>(&PalF::colorModel))
+        .def("color_model", py::overload_cast<>(&PalF::colorModel))
         .def("get_color", &PalF::getColor)
         .def("load", &PalF::load);
 

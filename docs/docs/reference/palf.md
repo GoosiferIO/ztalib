@@ -36,8 +36,8 @@ class PalF
     int colorModel();
     void colorModel(int model);
 
-    int numColors();
-    void numColors(int count);
+    std::vector<Color> colors() const;
+    void colors(const std::vector<Color>& newColors);
 
     Color getColor(int index);
 };
@@ -163,14 +163,14 @@ int main()
 }
 ```
 
-### `meth` `numColors`
+### `meth` `colors`
 
 ```c++
-int numColors();
-void numColors(int count);
+std::vector<Color> colors() const;
+void colors(const std::vector<Color>& newColors);
 ```
 
-Get or set the number of colors in the palette. This is used when parsing the palette file to determine how many colors to read.
+Get or set the colors in the palette as a vector of `Color` structs.
 
 **Example**
 
@@ -180,10 +180,21 @@ Get or set the number of colors in the palette. This is used when parsing the pa
 int main()
 {
     PalF pal;
-    pal.numColors(256); // Set to 256 colors
-    int count = pal.numColors();
+    std::vector<PalF::Color> newColors = {
+        {255, 0, 0, 255},   // Red
+        {0, 255, 0, 255},   // Green
+        {0, 0, 255, 255}    // Blue
+    };
+    pal.colors(newColors);
 
-    std::cout << "Number of colors: " << count << std::endl;
+    std::vector<PalF::Color> colors = pal.colors();
+    for (size_t i = 0; i < colors.size(); ++i) {
+        const auto& color = colors[i];
+        std::cout << "Color " << i << " - R: " << (int)color.r 
+                  << " G: " << (int)color.g 
+                  << " B: " << (int)color.b 
+                  << " A: " << (int)color.a << std::endl;
+    }
 }
 ```
 

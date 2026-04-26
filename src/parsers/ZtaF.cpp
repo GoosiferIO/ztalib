@@ -71,7 +71,6 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     std::string paletteName(paletteNameSize, '\0');
     file.read(paletteName.data(), m_data->palette->locationSize()); // read palette name
     m_data->palette->location(paletteName);
-    std::cout << "Palette location from ZTA file (at load): " << m_data->palette->location() << std::endl;
 
     file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
     m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
@@ -175,12 +174,6 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     std::filesystem::path palPath = std::filesystem::weakly_canonical(palettePath);
     std::filesystem::path relPalettePath = std::filesystem::relative(palPath, projRootPath);
 
-    std::cout << "Saving ZTA file to: " << fileName << std::endl;
-    std::cout << "Project root: " << projRootPath << std::endl;
-    std::cout << "Palette path: " << palPath << std::endl;
-    std::cout << "Relative palette path: " << relPalettePath << std::endl;
-    std::cout << "Relative palette path after generic string: " << relPalettePath.generic_string() << std::endl;
-
     m_ztaPath = fileName; // store path for future saves
 
     // -------------------------------- write header
@@ -248,15 +241,12 @@ int ZtaF::hasMagic(std::ifstream &_file)
     char magic[5] = {0};
     _file.read(magic, 4);
 
-    std::cout << "Magic read from file: " << magic << std::endl;
-
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
     if (_file.gcount() < 4)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
-        std::cerr << "ERROR: No magic bytes found" << std::endl;
         return 0;
     }
 
@@ -265,7 +255,6 @@ int ZtaF::hasMagic(std::ifstream &_file)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
-        std::cerr << "ERROR: Invalid magic bytes" << std::endl;
         return 0;
     }
 

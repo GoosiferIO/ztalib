@@ -5,11 +5,15 @@ project(ztalib
     LANGUAGES CXX
 )
 
+# ------------- Sources -------------
+
 add_library(ztalib SHARED 
     src/data/ZtaFrameBuffer.cpp
     src/parsers/ZtaF.cpp
     src/parsers/PalF.cpp
 )
+
+#------------ Include and def public vs private headers ------------
 
 target_include_directories(ztalib 
     PUBLIC 
@@ -21,11 +25,17 @@ target_include_directories(ztalib
 
 target_compile_features(ztalib PUBLIC cxx_std_17)
 
+# ------------- Do not mangle --------------
+
 set_target_properties(ztalib PROPERTIES 
     WINDOWS_EXPORT_ALL_SYMBOLS ON
 )
 
+# ------------- Packaging -------------
+
 include(GNUInstallDirs)
+
+# ------------- Installation -------------
 
 install(TARGETS ztalib
     EXPORT ztalibTargets
@@ -43,3 +53,18 @@ install (EXPORT ztalibTargets
     NAMESPACE ztalib::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
 )
+
+# ------------- Options -------------
+
+option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
+
+if(BUILD_PY_BINDINGS)
+    add_subdirectory(bindings)
+    find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    install(TARGETS pyzta
+        DESTINATION ${Python3_SITELIB}
+    )
+    install(TARGETS ztalib
+        DESTINATION ${Python3_SITELIB}
+    )
+endif()

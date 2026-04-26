@@ -36,8 +36,8 @@ class PalF
     int colorModel();
     void colorModel(int model);
 
-    int numColors();
-    void numColors(int count);
+    std::vector<Color> colors() const;
+    void colors(const std::vector<Color>& newColors);
 
     Color getColor(int index);
 };
@@ -45,14 +45,21 @@ class PalF
 
 ### Example
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-}
-```
+    int main()
+    {
+        PalF pal;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    ```
 
 ### `struct` `PalF::Color`
 
@@ -78,18 +85,28 @@ Load a PalF file from disk. Returns 0 on success, non-zero on failure.
 
 **Example**
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-    int result = pal.load("path/to/file");
-    if (result != 0) {
-        // Handle error
+    int main()
+    {
+        PalF pal;
+        int result = pal.load("path/to/palette");
+        if (result != 0) {
+            // Handle error
+        }
     }
-}
-```
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    result = pal.load("path/to/palette")
+    if result != 0:
+        # Handle error
+    ```
 
 ### `meth` `location`
 
@@ -102,18 +119,29 @@ Get or set the location of the palette file. This is the file path used when loa
 
 **Example**
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-    pal.location("path/to/palette");
-    std::string loc = pal.location();
+    int main()
+    {
+        PalF pal;
+        pal.location("path/to/palette");
+        std::string loc = pal.location();
 
-    std::cout << "Palette location: " << loc << std::endl;
-}
-```
+        std::cout << "Palette location: " << loc << std::endl;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    pal.location("path/to/palette")
+    loc = pal.location()
+
+    print(f"Palette location: {loc}")
+    ```
 
 ### `meth` `locationSize`
 
@@ -126,18 +154,29 @@ Get or set the size of the palette file. This is the number of bytes in the file
 
 **Example**
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-    pal.locationSize(1024);
-    uint32_t size = pal.locationSize();
+    int main()
+    {
+        PalF pal;
+        pal.locationSize(1024);
+        uint32_t size = pal.locationSize();
 
-    std::cout << "Palette size: " << size << std::endl;
-}
-```
+        std::cout << "Palette size: " << size << std::endl;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    pal.locationSize(1024)
+    size = pal.locationSize()
+
+    print(f"Palette size: {size}")
+    ```
 
 ### `meth` `colorModel`
 
@@ -150,42 +189,81 @@ Get or set the color model used when parsing the palette file. 0 == RGBA, 1 == B
 
 **Example**
 
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
+
+    int main()
+    {
+        PalF pal;
+        pal.colorModel(0); // Set to RGBA
+        int model = pal.colorModel();
+
+        std::cout << "Color model: " << (model == 0 ? "RGBA" : "BGRA") << std::endl;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    pal.colorModel(0) # Set to RGBA
+    model = pal.colorModel()
+
+    print(f"Color model: {'RGBA' if model == 0 else 'BGRA'}")
+    ```
+
+### `meth` `colors`
+
 ```c++
-#include "ztalib/PalF.h"
-
-int main()
-{
-    PalF pal;
-    pal.colorModel(0); // Set to RGBA
-    int model = pal.colorModel();
-
-    std::cout << "Color model: " << (model == 0 ? "RGBA" : "BGRA") << std::endl;
-}
+std::vector<Color> colors() const;
+void colors(const std::vector<Color>& newColors);
 ```
 
-### `meth` `numColors`
-
-```c++
-int numColors();
-void numColors(int count);
-```
-
-Get or set the number of colors in the palette. This is used when parsing the palette file to determine how many colors to read.
+Get or set the colors in the palette as a vector of `Color` structs.
 
 **Example**
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-    pal.numColors(256); // Set to 256 colors
-    int count = pal.numColors();
+    int main()
+    {
+        PalF pal;
+        std::vector<PalF::Color> newColors = {
+            {255, 0, 0, 255},   // Red
+            {0, 255, 0, 255},   // Green
+            {0, 0, 255, 255}    // Blue
+        };
+        pal.colors(newColors);
 
-    std::cout << "Number of colors: " << count << std::endl;
-}
-```
+        std::vector<PalF::Color> colors = pal.colors();
+        for (size_t i = 0; i < colors.size(); ++i) {
+            const auto& color = colors[i];
+            std::cout << "Color " << i << " - R: " << (int)color.r 
+                      << " G: " << (int)color.g 
+                      << " B: " << (int)color.b 
+                      << " A: " << (int)color.a << std::endl;
+        }
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    new_colors = [
+        PalF.Color(255, 0, 0, 255),   # Red
+        PalF.Color(0, 255, 0, 255),   # Green
+        PalF.Color(0, 0, 255, 255)    # Blue
+    ]
+    pal.colors(new_colors)
+
+    colors = pal.colors()
+    for i, color in enumerate(colors):
+        print(f"Color {i} - R: {color.r} G: {color.g} B: {color.b} A: {color.a}")
+    ```
 
 ### `meth` `getColor`
 
@@ -197,18 +275,29 @@ Get the color at the specified index in the palette. Returns a `Color` struct co
 
 **Example**
 
-```c++
-#include "ztalib/PalF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
 
-int main()
-{
-    PalF pal;
-    // Assume palette is loaded and has colors
-    Color color = pal.getColor(0); // Get the first color
+    int main()
+    {
+        PalF pal;
+        // Assume palette is loaded and has colors
+        PalF::Color color = pal.getColor(0); // Get the first color
 
-    std::cout << "Color 0 - R: " << (int)color.r 
-              << " G: " << (int)color.g 
-              << " B: " << (int)color.b 
-              << " A: " << (int)color.a << std::endl;
-}
-```
+        std::cout << "Color 0 - R: " << (int)color.r 
+                  << " G: " << (int)color.g 
+                  << " B: " << (int)color.b 
+                  << " A: " << (int)color.a << std::endl;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+
+    pal = PalF()
+    # Assume palette is loaded and has colors
+    color = pal.getColor(0) # Get the first color
+
+    print(f"Color 0 - R: {color.r} G: {color.g} B: {color.b} A: {color.a}")
+    ```

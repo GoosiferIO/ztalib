@@ -26,6 +26,29 @@ cmake --install build --config Release --prefix dist
 
 This will install the library in a `/dist` folder. Copy the contents of `/dist` to your project and link against the library.
 
+### Python Bindings
+
+For Python projects that want to use ztalib, bindings are also supported. First, make sure you have a virtual environment activated if you do not want to install the ztalib bindings system-wide:
+
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
+```
+
+Then, in the root of the repository, run:
+
+```bash
+cmake -S . -B build -DBUILD_PY_BINDINGS=ON
+cmake --build build --config Release
+cmake --install build --config Release --prefix dist
+```
+
+This will install the Python bindings to the currently-active Python environment. You can then import the `pyzta` module in your Python code:
+
+```python
+import pyzta
+```
+
 ## Setup
 
 Copy the contents of `/dist` to your project and link against the library.

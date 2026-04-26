@@ -8,9 +8,14 @@ Source code in `include/ztalib/ZtaF.h` and `src/ZtaF.cpp`.
 
 Import the `ZtaF` class as so:
 
-```c++
-#include "ztalib/ZtaF.h"
-```
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
+    ```
+=== "Python"
+    ```python
+    from pyzta import ZtaF
+    ```
 
 ## `class` `ZtaF`
 
@@ -30,14 +35,21 @@ class ZtaF
 
 ### Example
 
-```c++
-#include "ztalib/ZtaF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
 
-int main()
-{
-    ZtaF zta;
-}
-```
+    int main()
+    {
+        ZtaF zta;
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import ZtaF
+
+    zta = ZtaF()
+    ```
 
 ### `meth` `load`
 
@@ -53,21 +65,35 @@ Load a ZtaF file from disk. Returns a `std::shared_ptr` to a `ZtaData` object co
 
 **Example**
 
-```c++
-#include "ztalib/ZtaF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
 
-int main()
-{
-    ZtaF zta;
-    auto data = zta.load("path/to/file");
-}
-```
+    int main()
+    {
+        ZtaF zta;
+        auto data = zta.load("path/to/file");
+    }
+    ```
 
-| Parameter | Description |
-|--- | --- |
-| `fileName` | The path to the ZtaF file to load. |
-| `colorProfile` | (Optional) The color profile to use when parsing the file. 0 == RGBA, 1 == BGRA |
-| `ioPal` | (Optional) The path to a PalF file to use for color information. If not provided, the parser will attempt to extract the correct palette from the ZtaF file. |
+    | Parameter | Description |
+    |--- | --- |
+    | `fileName` | The path to the ZtaF file to load. |
+    | `colorProfile` | (Optional) The color profile to use when parsing the file. 0 == RGBA, 1 == BGRA |
+    | `ioPal` | (Optional) The path to a PalF file to use for color information. If not provided, the parser will attempt to extract the correct palette from the ZtaF file. |
+=== "Python"
+    ```python
+    from pyzta import ZtaF
+
+    zta = ZtaF()
+    data = zta.load("path/to/file")
+    ```
+
+    | Parameter | Description |
+    |--- | --- |
+    | `file_name` | The path to the ZtaF file to load. |
+    | `color_profile` | (Optional) The color profile to use when parsing the file. 0 == RGBA, 1 == BGRA |
+    | `io_pal` | (Optional) The path to a PalF file to use for color information. If not provided, the parser will attempt to extract the correct palette from the ZtaF file. |
 
 ### `meth` `data`
 
@@ -79,16 +105,25 @@ Returns a `std::shared_ptr` to the `ZtaData` object containing the parsed data. 
 
 **Example**
 
-```c++
-#include "ztalib/ZtaF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
 
-int main()
-{
-    ZtaF zta;
-    zta.load("path/to/file");
-    auto data = zta.data();
-}
-```
+    int main()
+    {
+        ZtaF zta;
+        zta.load("path/to/file");
+        auto data = zta.data();
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import ZtaF
+
+    zta = ZtaF()
+    zta.load("path/to/file")
+    data = zta.data()
+    ```
 
 ### `meth` `getFrameBuffer`
 
@@ -100,19 +135,22 @@ Returns a `std::vector` of `ZtaFrameBufferObject`s containing the frame buffer d
 
 **Example**
 
-```c++
-#include "ztalib/ZtaF.h"
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
 
-int main()
-{
-    ZtaF zta;
-    zta.load("path/to/file");
-    auto frameBuffer = zta.getFrameBuffer();
+    int main()
+    {
+        ZtaF zta;
+        zta.load("path/to/file");
+        auto frameBuffer = zta.getFrameBuffer();
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import ZtaF
 
-    std::cout << "Number of frames: " << frameBuffer.size() << std::endl;
-    std::cout << "First frame width: " << frameBuffer[0].width << std::endl;
-    std::cout << "First frame height: " << frameBuffer[0].height << std::endl;
-    std::cout << "Number of pixels in first frame: " 
-        << frameBuffer[0].pixels.size() << std::endl;
-}
-```
+    zta = ZtaF()
+    zta.load("path/to/file")
+    frame_buffer = zta.getFrameBuffer()
+    ```

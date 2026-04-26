@@ -45,7 +45,7 @@ int ZtaFrameBuffer::createBuffer()
         return 0;
     }
 
-    if (m_data.palette == nullptr || m_data.palette->numColors() == 0)
+    if (m_data.palette == nullptr || m_data.palette->colors().size() == 0)
     {
         std::cerr << "ERROR: No palette data available!" << std::endl;
         return -1;
@@ -112,7 +112,7 @@ int ZtaFrameBuffer::createBuffer()
                     }
 
                     // Validate color index
-                    if (colorIndex >= m_data.palette->numColors())
+                    if (colorIndex >= m_data.palette->colors().size())
                     {
                         std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
                         break;

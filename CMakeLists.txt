@@ -37,34 +37,39 @@ include(GNUInstallDirs)
 
 # ------------- Installation -------------
 
-install(TARGETS ztalib
-    EXPORT ztalibTargets
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
- 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-)
-
-install (EXPORT ztalibTargets
-    FILE ztalibTargets.cmake
-    NAMESPACE ztalib::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
-)
-
 # ------------- Options -------------
 
 option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
+option(BUILD_CPP_LIB "Build C++ library, headers, and CMake targets" ON)
 
-if(BUILD_PY_BINDINGS)
-    add_subdirectory(bindings)
+if(BUILD_PY_BINDINGS) # python bindings only
     find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    add_subdirectory(bindings)
     install(TARGETS pyzta
-        DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${Python3_SITELIB}
+        LIBRARY DESTINATION ${Python3_SITELIB}
     )
     install(TARGETS ztalib
-        DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${Python3_SITELIB}
+        LIBRARY DESTINATION ${Python3_SITELIB}
+    )
+endif() 
+
+if(BUILD_CPP_LIB) # c++ library only
+    install(TARGETS ztalib
+        EXPORT ztalibTargets
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+    
+    install(DIRECTORY include/
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+    )
+
+    install (EXPORT ztalibTargets
+        FILE ztalibTargets.cmake
+        NAMESPACE ztalib::
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
     )
 endif()

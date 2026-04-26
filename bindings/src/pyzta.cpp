@@ -33,7 +33,18 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readwrite("width", &ZtaFrame::width)
         .def_readwrite("y_offset", &ZtaFrame::y)
         .def_readwrite("x_offset", &ZtaFrame::x)
+        .def_readwrite("unk1", &ZtaFrame::unk1)
+        .def_readwrite("unk2", &ZtaFrame::unk2)
         .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
+
+    py::class_<ZtaPixelSet>(m, "ZtaPixelSet")
+        .def_readwrite("block_count", &ZtaPixelSet::blockCount)
+        .def_readonly("blocks", &ZtaPixelSet::blocks);
+
+    py::class_<ZtaPixelBlock>(m, "ZtaPixelBlock")
+        .def_readwrite("offset", &ZtaPixelBlock::offset)
+        .def_readwrite("color_count", &ZtaPixelBlock::colorCount)
+        .def_readonly("colors", &ZtaPixelBlock::colors);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
         .def_property_readonly("pixels", [](const ZtaFrameBufferObject& obj) {

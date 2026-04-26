@@ -61,7 +61,10 @@ if __name__ == "__main__":
         exit(1)
 
     # print some info about the animation
+    print("################## ZTA INFO ##################")
     print_graphic_info(zta)
+    print_buffer_info(zta, frame_range=range(0, 3)) # print info for first 3 frames
+    print_frame_info(zta, frame_range=range(0, 3)) # print
 
     # --------- create pngs ---------
 
@@ -70,7 +73,7 @@ if __name__ == "__main__":
     # -------- save back to zta ---------
     os.makedirs("out/zta", exist_ok=True)
     try:
-        zta.save(f"{TEST_PATH}/NE/SE_copy.zta", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/NE/stgeend.pal")
+        zta.save(f"{TEST_PATH}/IDLE/SE", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/IDLE/SE.pal")
     except Exception as e:
         print(f"Error saving ZTA file: {e}")
         exit(1)
@@ -85,6 +88,7 @@ if __name__ == "__main__":
         exit(1)
     
     # --------- assert that the original and loaded data are the same ---------
+    print("################## ZTA COPY INFO ##################")
     print_graphic_info(zta_copy)
     print_buffer_info(zta_copy, frame_range=range(0, 3)) # print info for first 3 frames
     print_frame_info(zta_copy, frame_range=range(0, 3)) # print info for first 3 frames

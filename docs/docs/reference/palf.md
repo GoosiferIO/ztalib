@@ -27,6 +27,7 @@ class PalF
     PalF();
     
     int load(std::string fileName);
+    void save(std::string fileName);
     std::string location();
     void location(std::string loc);
 
@@ -106,6 +107,34 @@ Load a PalF file from disk. Returns 0 on success, non-zero on failure.
     result = pal.load("path/to/palette")
     if result != 0:
         # Handle error
+    ```
+
+### `meth` `save`
+
+```c++
+void save(std::string fileName);
+```
+
+Save the current palette data to a PalF file on disk.
+
+**Example**
+=== "C++"
+    ```c++
+    #include "ztalib/PalF.h"
+
+    int main()
+    {
+        PalF pal;
+        // Assume palette is loaded and modified
+        pal.save("path/to/new_palette");
+    }
+    ```
+=== "Python"
+    ```python
+    from pyzta import PalF
+    pal = PalF()
+    # Assume palette is loaded and modified
+    pal.save("path/to/new_palette")
     ```
 
 ### `meth` `location`

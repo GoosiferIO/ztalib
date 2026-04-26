@@ -174,12 +174,6 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     std::filesystem::path palPath = std::filesystem::weakly_canonical(palettePath);
     std::filesystem::path relPalettePath = std::filesystem::relative(palPath, projRootPath);
 
-    std::cout << "Saving ZTA file to: " << fileName << std::endl;
-    std::cout << "Project root: " << projRootPath << std::endl;
-    std::cout << "Palette path: " << palPath << std::endl;
-    std::cout << "Relative palette path: " << relPalettePath << std::endl;
-    std::cout << "Relative palette path after generic string: " << relPalettePath.generic_string() << std::endl;
-
     m_ztaPath = fileName; // store path for future saves
 
     // -------------------------------- write header

@@ -160,23 +160,27 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     return m_data;
 }
 
-void ZtaF::save()
-{
-    if (m_ztaPath.empty())
-    {
-        std::cerr << "ERROR: No file path specified for saving." << std::endl;
-        return;
-    }
-    save(m_ztaPath);
-}
-
-void ZtaF::save(std::string fileName)
+void ZtaF::save(std::string fileName, std::string projectRoot, std::string palettePath)
 {
     std::ofstream file;
     file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
     if (!file.is_open())
     {
         return;
+    }
+
+    // ensure that project root is absolute path (or convert to absolute path)
+    std::filesystem::path projRootPath(projectRoot);
+    if (projRootPath.is_relative()) {
+        projRootPath = std::filesystem::current_path() / projRootPath;
+    }
+    std::filesystem::path palPath(palettePath);
+    std::filesystem::path relPalettePath;
+    // if palette path is not relative, convert to rel path from project root
+    if (!palPath.is_relative()) {
+        relPalettePath = std::filesystem::relative(palPath, projRootPath);
+    } else {
+        relPalettePath = palPath;   
     }
 
     m_ztaPath = fileName; // store path for future saves
@@ -192,9 +196,9 @@ void ZtaF::save(std::string fileName)
 
     file.write((char *)&m_data->info.speed, 4); // animation speed in ms
 
-    uint32_t paletteNameSize = m_data->palette->locationSize();
+    uint32_t paletteNameSize = static_cast<uint32_t>(relPalettePath.string().size());
     file.write((char *)&paletteNameSize, 4); // size of palette name
-    file.write(m_data->palette->location().data(), m_data->palette->locationSize()); // palette name
+    file.write(relPalettePath.string().c_str(), paletteNameSize); // palette name
 
     uint32_t frameCount = m_data->info.frameCount;
     if (m_data->hasBackground)
@@ -229,17 +233,7 @@ void ZtaF::save(std::string fileName)
     }
 
     // -------------------------------- write palette
-    // path to zta file
-    std::filesystem::path ztaPath(fileName);
-    // path to palette file
-    std::filesystem::path palettePath(m_data->palette->location());
-    // resolve palette path relative to zta file
-    std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
-    if (resolvedPalettePath.empty()) {
-        std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
-        return;
-    }
-    m_data->palette->save(resolvedPalettePath.string());
+    m_data->palette->save(palPath.string());
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()

@@ -48,8 +48,7 @@ public:
     virtual ~ZtaF();
 
     std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
-    void save(std::string fileName);
-    void save();
+    void save(std::string fileName, std::string projectRoot, std::string palettePath);
     std::shared_ptr<ZtaData> data();
     std::vector<ZtaFrameBufferObject> getFrameBuffer();
 

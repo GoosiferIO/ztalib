@@ -48,19 +48,25 @@ include(GNUInstallDirs)
 # ------------- Options -------------
 
 option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
-option(BUILD_PY_CMAKE "Build Python bindings manually with CMake" ON)
 option(BUILD_CPP_LIB "Build C++ library, headers, and CMake targets" ON)
 
 if(BUILD_PY_BINDINGS) # python bindings only
     find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
     add_subdirectory(bindings)
+
+    if(DEFINED SKBUILD_PLATLIB_DIR)
+        set(PY_INSTALL_DIR ${SKBUILD_PLATLIB_DIR})
+    else()
+        set(PY_INSTALL_DIR ${Python3_SITELIB})
+    endif()
+
     install(TARGETS pyzta
-        RUNTIME DESTINATION ${Python3_SITELIB}
-        LIBRARY DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${PY_INSTALL_DIR}
+        LIBRARY DESTINATION ${PY_INSTALL_DIR}
     )
     install(TARGETS ztalib
-        RUNTIME DESTINATION ${Python3_SITELIB}
-        LIBRARY DESTINATION ${Python3_SITELIB}
+        RUNTIME DESTINATION ${PY_INSTALL_DIR}
+        LIBRARY DESTINATION ${PY_INSTALL_DIR}
     )
 endif() 
 

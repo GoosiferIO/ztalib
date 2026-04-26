@@ -98,3 +98,8 @@ if(BUILD_CPP_LIB) # c++ library only
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/ztalib
     )
 endif()
+
+if(MINGW)
+    target_link_options(ztalib PRIVATE -static-libgcc -static-libstdc++)
+    target_link_options(pyzta PRIVATE -static-libgcc -static-libstdc++ -Wl,-Bstatic -lstdc++ -lpthread -Wl,-Bdynamic)
+endif()

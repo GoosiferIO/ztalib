@@ -91,15 +91,19 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     }
 
     // ------------------------------- read palette
-    // load palette from location specified in zta file
-    std::filesystem::path ztaPath(fileName);
-    std::filesystem::path palettePath(m_data->palette->location());
-    std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
-    if (resolvedPalettePath.empty()) {
-        std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
-        return nullptr;
+    // load palette from location specified in zta file if ioPal not given
+    if (ioPal.empty()) {
+        std::filesystem::path ztaPath(fileName);
+        std::filesystem::path palettePath(m_data->palette->location());
+        std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
+        if (resolvedPalettePath.empty()) {
+            std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
+            return nullptr;
+        }
+        m_data->palette->load(resolvedPalettePath.string());
+    } else {
+        m_data->palette->location(ioPal);
     }
-    m_data->palette->load(resolvedPalettePath.string());
 
     // ------------------------------- read frames
     for (int i = 0; i < (int)m_data->info.frameCount; i++)

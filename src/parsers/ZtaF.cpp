@@ -71,7 +71,6 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     std::string paletteName(paletteNameSize, '\0');
     file.read(paletteName.data(), m_data->palette->locationSize()); // read palette name
     m_data->palette->location(paletteName);
-    std::cout << "Palette location from ZTA file (at load): " << m_data->palette->location() << std::endl;
 
     file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
     m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
@@ -248,15 +247,12 @@ int ZtaF::hasMagic(std::ifstream &_file)
     char magic[5] = {0};
     _file.read(magic, 4);
 
-    std::cout << "Magic read from file: " << magic << std::endl;
-
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
     if (_file.gcount() < 4)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
-        std::cerr << "ERROR: No magic bytes found" << std::endl;
         return 0;
     }
 
@@ -265,7 +261,6 @@ int ZtaF::hasMagic(std::ifstream &_file)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
-        std::cerr << "ERROR: Invalid magic bytes" << std::endl;
         return 0;
     }
 

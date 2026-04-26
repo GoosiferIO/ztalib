@@ -49,19 +49,19 @@ Then, in the root of the repository, run:
 
 === "Windows/MSVC"
     ```bash
-    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
+    cmake -S . -B build -DBUILD_PY_BINDINGS=ON -DBUILD_CPP_LIB=OFF
     cmake --build build --config Release
     cmake --install build --config Release
     ```
 === "Windows/MinGW"
     ```bash
-    cmake -G "MinGW Makefiles" -S . -B build -DBUILD_PY_BINDINGS=ON
-    cmake --build build --config Release
-    cmake --install build --config Release
+    cmake -G "MinGW Makefiles" -S . -B build -DBUILD_PY_BINDINGS=ON -DBUILD_CPP_LIB=OFF
+    cmake --build build
+    cmake --install build    
     ```
 === "Linux/macOS"
     ```bash
-    cmake -S . -B build -DBUILD_PY_BINDINGS=ON
+    cmake -S . -B build -DBUILD_PY_BINDINGS=ON -DBUILD_CPP_LIB=OFF
     cmake --build build --config Release
     cmake --install build --config Release
     ```

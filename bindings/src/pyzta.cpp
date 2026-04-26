@@ -33,7 +33,18 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readwrite("width", &ZtaFrame::width)
         .def_readwrite("y_offset", &ZtaFrame::y)
         .def_readwrite("x_offset", &ZtaFrame::x)
+        .def_readwrite("unk1", &ZtaFrame::unk1)
+        .def_readwrite("unk2", &ZtaFrame::unk2)
         .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
+
+    py::class_<ZtaPixelSet>(m, "ZtaPixelSet")
+        .def_readwrite("block_count", &ZtaPixelSet::blockCount)
+        .def_readonly("blocks", &ZtaPixelSet::blocks);
+
+    py::class_<ZtaPixelBlock>(m, "ZtaPixelBlock")
+        .def_readwrite("offset", &ZtaPixelBlock::offset)
+        .def_readwrite("color_count", &ZtaPixelBlock::colorCount)
+        .def_readonly("colors", &ZtaPixelBlock::colors);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
         .def_property_readonly("pixels", [](const ZtaFrameBufferObject& obj) {
@@ -69,7 +80,8 @@ PYBIND11_MODULE(pyzta, m) {
         .def("colors", py::overload_cast<const std::vector<PalF::Color>&>(&PalF::colors))
         .def("colors", static_cast<std::vector<PalF::Color>(PalF::*)() const>(&PalF::colors))
         .def("get_color", &PalF::getColor)
-        .def("load", &PalF::load);
+        .def("load", &PalF::load)
+        .def("save", &PalF::save);
 
     py::class_<ZtaF>(m, "ZtaF")
         .def(py::init<>())
@@ -77,6 +89,10 @@ PYBIND11_MODULE(pyzta, m) {
             py::arg("file_name"), 
             py::arg("color_profile") = 0, 
             py::arg("io_pal") = "")
+        .def("save", &ZtaF::save, 
+            py::arg("file_name"), 
+            py::arg("project_root"), 
+            py::arg("palette_path"))
         .def("data", &ZtaF::data)
         .def("get_frame_buffer", &ZtaF::getFrameBuffer);
 } 

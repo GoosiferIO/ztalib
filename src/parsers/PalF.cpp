@@ -91,6 +91,29 @@ int PalF::load(std::string fileName)
     return 1;
 }
 
+void PalF::save(std::string fileName)
+{
+    std::ofstream file(fileName, std::ios::binary);
+    if (!file.is_open())
+    {
+        std::cerr << "ERROR: Could not open palette file for writing: " << fileName << std::endl;
+        return;
+    }
+
+    // Write color count (4 bytes, little-endian)
+    uint16_t colorCount = static_cast<uint16_t>(m_colors.size());
+    file.write(reinterpret_cast<const char *>(&colorCount), 2);
+    file.write(reinterpret_cast<const char *>(&m_colorModel), 2);
+
+    // Write each color (ABGR format, 4 bytes per color)
+    for (const PalF::Color &color : m_colors)
+    {
+        file.write(reinterpret_cast<const char *>(&color), 4);
+    }
+
+    file.close();
+}
+
 std::string PalF::location()
 {
     return m_location;

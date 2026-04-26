@@ -28,6 +28,7 @@ class ZtaF
         int colorProfile = 0, 
         std::string ioPal = ""
     );
+    void save(std::string fileName);
     std::shared_ptr<ZtaData> data();
     std::vector<ZtaFrameBufferObject> getFrameBuffer();
 };
@@ -94,6 +95,50 @@ Load a ZtaF file from disk. Returns a `std::shared_ptr` to a `ZtaData` object co
     | `file_name` | The path to the ZtaF file to load. |
     | `color_profile` | (Optional) The color profile to use when parsing the file. 0 == RGBA, 1 == BGRA |
     | `io_pal` | (Optional) The path to a PalF file to use for color information. If not provided, the parser will attempt to extract the correct palette from the ZtaF file. |
+
+### `meth` `save`
+
+```c++
+    void save(std::string fileName,
+        std::string projectRoot,
+        std::string palettePath
+    );
+```
+
+Save the current data to a ZtaF file on disk.
+
+**Example**
+
+=== "C++"
+    ```c++
+    #include "ztalib/ZtaF.h"
+
+    int main()
+    {
+        ZtaF zta;
+        // Assume data is loaded and modified
+        zta.save("path/to/new_file", "path/to/project", "path/to/palette");
+    }
+    ```
+
+    | Parameter | Description |
+    |--- | --- |
+    | `fileName` | The path to the ZtaF file to save. |
+    | `projectRoot` | The root directory of the project. |
+    | `palettePath` | The path to the palette file to reference in the ZtaF file. This should be a relative path from the project root. |
+=== "Python"
+    ```python
+    from pyzta import ZtaF
+    zta = ZtaF()
+    # Assume data is loaded and modified
+    zta.save("path/to/new_file", "path/to/project", "path/to/palette")
+    ```
+
+    | Parameter | Description |
+    |--- | --- |
+    | `file_name` | The path to the ZtaF file to save. |
+    | `project_root` | The root directory of the project. |
+    | `palette_path` | The path to the palette file to reference in the ZtaF file. This should be a relative path from the project root. |
 
 ### `meth` `data`
 

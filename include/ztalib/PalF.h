@@ -50,6 +50,7 @@ public:
 
     Color getColor(int index);
     int load(std::string fileName);
+    void save(std::string fileName);
 
     std::vector<Color> colors() const;
     void colors(const std::vector<Color>& newColors);

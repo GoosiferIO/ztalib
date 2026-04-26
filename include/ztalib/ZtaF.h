@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <filesystem>
 
 #include "data/ZtaData.h"
 #include "data/ZtaFrameBuffer.h"
@@ -47,6 +48,7 @@ public:
     virtual ~ZtaF();
 
     std::shared_ptr<ZtaData> load(std::string fileName, int colorProfile = 0, std::string ioPal = "");
+    void save(std::string fileName, std::string projectRoot, std::string palettePath);
     std::shared_ptr<ZtaData> data();
     std::vector<ZtaFrameBufferObject> getFrameBuffer();
 
@@ -54,7 +56,11 @@ private:
     std::vector<ZtaFrameBufferObject> m_frameBuffer;
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
+    std::string m_ztaPath;
     int hasMagic(std::ifstream &);
+    std::filesystem::path resolvePalPath(
+        const std::filesystem::path& ztaPath, 
+        const std::filesystem::path& palettePath);
 };
 
 #endif // ZTAF_H

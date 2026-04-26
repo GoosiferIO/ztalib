@@ -41,9 +41,9 @@ std::vector<ZtaFrameBufferObject> ZtaF::getFrameBuffer()
 
 // ZtaColor model 0 = RGBA
 // ZtaColor model 1 = BGRA
-std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std::string ioPal)
+std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::string ioPal)
 {
-    this->m_colorModel = m_colorModel;
+    this->m_colorModel = colorModel;
     std::ifstream file;
     file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::in));
     if (!file.is_open())
@@ -71,6 +71,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     std::string paletteName(paletteNameSize, '\0');
     file.read(paletteName.data(), m_data->palette->locationSize()); // read palette name
     m_data->palette->location(paletteName);
+    std::cout << "Palette location from ZTA file (at load): " << m_data->palette->location() << std::endl;
 
     file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
     m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
@@ -91,7 +92,20 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     }
 
     // ------------------------------- read palette
-    m_data->palette->load(m_data->palette->location());
+    // load palette from location specified in zta file if ioPal not given
+    if (ioPal.empty()) {
+        std::filesystem::path ztaPath(fileName);
+        std::filesystem::path palettePath(m_data->palette->location());
+        std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
+        m_data->palette->load(resolvedPalettePath.string());
+    } else {
+        std::filesystem::path palettePath(ioPal);
+        // if relative path, add current working directory        
+        if (palettePath.is_relative()) {
+            palettePath = std::filesystem::current_path() / palettePath;
+        }
+        m_data->palette->load(palettePath.string());
+    }
 
     // ------------------------------- read frames
     for (int i = 0; i < (int)m_data->info.frameCount; i++)
@@ -147,6 +161,83 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     return m_data;
 }
 
+void ZtaF::save(std::string fileName, std::string projectRoot, std::string palettePath)
+{
+    std::ofstream file;
+    file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
+    if (!file.is_open())
+    {
+        return;
+    }
+
+    // ensure that project root is absolute path (or convert to absolute path)
+    std::filesystem::path projRootPath = std::filesystem::weakly_canonical(projectRoot);
+    std::filesystem::path palPath = std::filesystem::weakly_canonical(palettePath);
+    std::filesystem::path relPalettePath = std::filesystem::relative(palPath, projRootPath);
+
+    std::cout << "Saving ZTA file to: " << fileName << std::endl;
+    std::cout << "Project root: " << projRootPath << std::endl;
+    std::cout << "Palette path: " << palPath << std::endl;
+    std::cout << "Relative palette path: " << relPalettePath << std::endl;
+    std::cout << "Relative palette path after generic string: " << relPalettePath.generic_string() << std::endl;
+
+    m_ztaPath = fileName; // store path for future saves
+
+    // -------------------------------- write header
+    // if hasBackground is true, write FATZ magic and background frame flag
+    if (m_data->hasBackground) // m_data->info.frameCount > 1)
+    {
+        file.write("ZTAF", 4); // magic
+        file.write("\0\0\0\0", 4); // reserved
+        file.write((char *)&m_data->hasBackground, 1); // background frame flag
+    }
+    // } else {
+    file.write((char *)&m_data->info.speed, 4); // animation speed in ms
+
+    std::string paletteLocation = relPalettePath.generic_string();
+    uint32_t paletteNameSize = static_cast<uint32_t>(paletteLocation.size() + 1); // +1 for null terminator
+    file.write((char *)&paletteNameSize, 4); // size of palette name
+    file.write(paletteLocation.c_str(), paletteNameSize); // palette name
+
+    uint32_t frameCount = m_data->info.frameCount;
+    if (m_data->hasBackground)
+    {
+        frameCount -= 1; // if background frame exists, not counted in frameCount
+    }
+    file.write((char *)&frameCount, 4); // number of frames
+
+    // -------------------------------- write frames
+    for (int i = 0; i < (int)frameCount; i++)
+    {
+        ZtaFrame &frame = m_data->frames[i];
+        file.write((char *)&frame.frameSize, 4);
+        file.write((char *)&frame.height, 2);
+        file.write((char *)&frame.width, 2);
+        file.write((char *)&frame.y, 2);
+        file.write((char *)&frame.x, 2);
+
+        frame.unk1 = 0; // set unknown byte 1 to 00
+        frame.unk2 = 1; // set unknown byte 2 to 01
+        file.write((char *)&frame.unk1, 1); // unknown byte 1
+        file.write((char *)&frame.unk2, 1); // unknown byte 2
+
+        // write pixel sets
+        for (const ZtaPixelSet &pixelSet : frame.pixelSets)
+        {
+            file.write((char *)&pixelSet.blockCount, 1); // how many pixel blocks
+            for (const ZtaPixelBlock &block : pixelSet.blocks)
+            { // write each block
+                file.write((char *)&block.offset, 1);                      // offset
+                file.write((char *)&block.colorCount, 1);                  // color count
+                file.write((char *)block.colors.data(), block.colorCount); // colors
+            }
+        }
+    }
+
+    // -------------------------------- write palette
+    m_data->palette->save(palPath.string());
+}
+
 std::shared_ptr<ZtaData> ZtaF::data()
 {
     return m_data;
@@ -157,12 +248,15 @@ int ZtaF::hasMagic(std::ifstream &_file)
     char magic[5] = {0};
     _file.read(magic, 4);
 
+    std::cout << "Magic read from file: " << magic << std::endl;
+
     // read at least 4 bytes
     // if less than 4 bytes, not FATZ
     if (_file.gcount() < 4)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
+        std::cerr << "ERROR: No magic bytes found" << std::endl;
         return 0;
     }
 
@@ -171,6 +265,7 @@ int ZtaF::hasMagic(std::ifstream &_file)
     {
         _file.clear();
         _file.seekg(0, std::ios::beg);
+        std::cerr << "ERROR: Invalid magic bytes" << std::endl;
         return 0;
     }
 
@@ -178,6 +273,31 @@ int ZtaF::hasMagic(std::ifstream &_file)
     _file.clear();
     _file.seekg(0, std::ios::beg);
     return 1;
+}
+
+std::filesystem::path ZtaF::resolvePalPath(
+    const std::filesystem::path& ztaPath, 
+    const std::filesystem::path& palettePath)
+{
+    auto dir = ztaPath.parent_path();
+
+    while (!dir.empty())
+    {
+        auto candidate = dir / palettePath;
+        if (std::filesystem::exists(candidate))
+        {
+            // note: canonical makes it so that if the candidate is a symlink, 
+            // it resolves to the actual file path
+            return std::filesystem::canonical(candidate);
+        }
+        auto parentDir = dir.parent_path();
+        if (parentDir == dir) {
+            break; // reached root directory
+        }
+        dir = dir.parent_path();
+    }
+
+    return std::filesystem::path(); 
 }
 
 /*

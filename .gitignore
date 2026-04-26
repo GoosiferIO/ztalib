@@ -24,6 +24,11 @@
 *.pal
 *.zip
 *.zta
+*.ani
+*.ucb
+*.uca
+*.ucs
+*.scn
 
 # Files
 CMakeCache.txt

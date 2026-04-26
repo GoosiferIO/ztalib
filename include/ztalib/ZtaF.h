@@ -27,6 +27,7 @@
 #include <cstdint>
 #include <cstring>
 #include <memory>
+#include <filesystem>
 
 #include "data/ZtaData.h"
 #include "data/ZtaFrameBuffer.h"

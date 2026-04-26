@@ -202,6 +202,16 @@ void ZtaF::save(std::string fileName)
             }
         }
     }
+
+    // -------------------------------- write palette
+    // get current dir and add palette location to it
+    std::filesystem::path currentDir = std::filesystem::current_path();
+    std::filesystem::path palettePath(m_data->palette->location());
+    if (palettePath.is_relative()) {
+        palettePath = currentDir / palettePath;
+    }
+    std::filesystem::create_directories(palettePath.parent_path());
+    m_data->palette->save(palettePath.string());
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()

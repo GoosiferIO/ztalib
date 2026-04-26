@@ -2,11 +2,22 @@ import os
 from pyzta import ZtaF
 from PIL import Image
 
+def output_frames_as_pngs(zta, dir_name="out"):
+    buffer = zta.get_frame_buffer()
+
+    # create out dir
+    os.makedirs(dir_name, exist_ok=True)
+
+    # output frames as pngs
+    for i, frame in enumerate(buffer):
+        img = Image.frombytes("RGBA", (frame.width, frame.height), frame.pixels)
+        img.save(f"{dir_name}/frame_{i}.png")
+
 if __name__ == "__main__":
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load("SE", 0, "stgeend.pal")
+        zta.load("example/objects/gsatlftn/IDLE/SE")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)
@@ -20,15 +31,7 @@ if __name__ == "__main__":
 
     # --------- create pngs ---------
 
-    buffer = zta.get_frame_buffer()
-
-    # create out dir
-    os.makedirs("out", exist_ok=True)
-
-    # output frames as pngs
-    for i, frame in enumerate(buffer):
-        img = Image.frombytes("RGBA", (frame.width, frame.height), frame.pixels)
-        img.save(f"out/frame_{i}.png")
+    output_frames_as_pngs(zta)
     
     # -------- save back to zta ---------
     os.makedirs("out/zta", exist_ok=True)
@@ -65,3 +68,6 @@ if __name__ == "__main__":
     print(f"------ Loaded palette color count: {len(zta_copy.data().palette.colors())}")
 
     print("All assertions passed! The original and loaded ZTA data are the same.")
+
+    # ---------- output frames from the loaded copy to verify they are the same as the original pngs ---------
+    output_frames_as_pngs(zta_copy, dir_name="out_copy")

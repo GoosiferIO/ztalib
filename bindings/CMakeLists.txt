@@ -9,7 +9,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pybind11)
 
 pybind11_add_module(pyzta 
-    src/bindings/pyzta.cpp
+    src/pyzta.cpp
 )
 
 target_link_libraries(pyzta PRIVATE ztalib)

@@ -63,8 +63,6 @@ if __name__ == "__main__":
     # print some info about the animation
     print("################## ZTA INFO ##################")
     print_graphic_info(zta)
-    print_buffer_info(zta, frame_range=range(0, 3)) # print info for first 3 frames
-    print_frame_info(zta, frame_range=range(0, 3)) # print
 
     # --------- create pngs ---------
 
@@ -90,8 +88,5 @@ if __name__ == "__main__":
     # --------- assert that the original and loaded data are the same ---------
     print("################## ZTA COPY INFO ##################")
     print_graphic_info(zta_copy)
-    print_buffer_info(zta_copy, frame_range=range(0, 3)) # print info for first 3 frames
-    print_frame_info(zta_copy, frame_range=range(0, 3)) # print info for first 3 frames
-
     # ---------- output frames from the loaded copy to verify they are the same as the original pngs ---------
     output_frames_as_pngs(zta_copy, dir_name="out_copy")

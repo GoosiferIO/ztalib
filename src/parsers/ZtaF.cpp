@@ -179,6 +179,7 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     std::cout << "Project root: " << projRootPath << std::endl;
     std::cout << "Palette path: " << palPath << std::endl;
     std::cout << "Relative palette path: " << relPalettePath << std::endl;
+    std::cout << "Relative palette path after generic string: " << relPalettePath.generic_string() << std::endl;
 
     m_ztaPath = fileName; // store path for future saves
 
@@ -187,16 +188,16 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     // if (false) // m_data->info.frameCount > 1)
     // {
     //     file.write("ZTAF", 4); // magic
-    // } else {
-    file.write("\0\0\0\0", 4); // no magic, just write 4 null bytes
+    //     file.write("\0\0\0\0", 4); // reserved
+    // file.write((char *)&m_data->hasBackground, 1); // background frame flag
 
-    file.write("\0\0\0\0", 4); // reserved
-    file.write((char *)&m_data->hasBackground, 1); // background frame flag
+    // } else {
     file.write((char *)&m_data->info.speed, 4); // animation speed in ms
 
-    uint32_t paletteNameSize = static_cast<uint32_t>(relPalettePath.string().size());
+    std::string paletteLocation = relPalettePath.generic_string();
+    uint32_t paletteNameSize = static_cast<uint32_t>(paletteLocation.size());
     file.write((char *)&paletteNameSize, 4); // size of palette name
-    file.write(relPalettePath.generic_string().c_str(), paletteNameSize); // palette name
+    file.write(paletteLocation.c_str(), paletteNameSize); // palette name
 
     uint32_t frameCount = m_data->info.frameCount;
     if (m_data->hasBackground)

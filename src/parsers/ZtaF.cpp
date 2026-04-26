@@ -180,7 +180,7 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     // if hasBackground is true, write FATZ magic and background frame flag
     if (m_data->hasBackground) // m_data->info.frameCount > 1)
     {
-        file.write("ZTAF", 4); // magic
+        file.write("FATZ", 4); // magic
         file.write("\0\0\0\0", 4); // reserved
         file.write((char *)&m_data->hasBackground, 1); // background frame flag
     }

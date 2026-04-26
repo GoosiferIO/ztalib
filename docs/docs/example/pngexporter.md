@@ -2,8 +2,8 @@
 
 ztalib is only designed to parse Zoo Tycoon 1 animation graphics and palette files in-memory. However, you can use the parsed data to export the frames as PNG images. By taking advantage of the buffer data extracted from the ZTA files, you can use popular libraries like `stb_image_write` (C++) or `pillow` (Python) to save the frames as PNG files. Below is a working example of how to achieve this.
 
-Download `stb_image_write.h` from https://github.com/nothings/stb
-See the code in the repository: [examples](https://github.com/GoosiferIO/ztalib/tree/main/examples)
+- Download `stb_image_write.h` from https://github.com/nothings/stb  
+- See the code in the repository: [examples](https://github.com/GoosiferIO/ztalib/tree/main/examples)
 
 === "C++"
     ```c++
@@ -86,7 +86,7 @@ See the code in the repository: [examples](https://github.com/GoosiferIO/ztalib/
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load("SE", 0, "stgeend.zta")
+        zta.load("SE", 0, "stgeend.pal")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)

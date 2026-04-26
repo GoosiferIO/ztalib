@@ -64,4 +64,7 @@ if(BUILD_PY_BINDINGS)
     install(TARGETS pyzta
         DESTINATION ${Python3_SITELIB}
     )
+    install(TARGETS ztalib
+        DESTINATION ${Python3_SITELIB}
+    )
 endif()

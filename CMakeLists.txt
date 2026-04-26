@@ -74,10 +74,6 @@ if(BUILD_PY_BINDINGS) # python bindings only
         RUNTIME DESTINATION ${PY_INSTALL_DIR}
         LIBRARY DESTINATION ${PY_INSTALL_DIR}
     )
-    install(TARGETS ztalib
-        RUNTIME DESTINATION ${PY_INSTALL_DIR}
-        LIBRARY DESTINATION ${PY_INSTALL_DIR}
-    )
 endif() 
 
 if(BUILD_CPP_LIB) # c++ library only

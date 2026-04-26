@@ -32,7 +32,7 @@
 #include "data/ZtaFrameBuffer.h"
 #include "data/ZtaFrameBufferObject.h"
 
-#define ZTA_VERSION "0.7.0"
+#define ZTA_VERSION "0.8.0"
 
 // if FATZ is first 4 bytes, additional 5 bytes ahead
 // The ninth byte is a boolean value that specifies if there is an

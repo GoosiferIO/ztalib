@@ -23,6 +23,7 @@
 *.gif
 *.pal
 *.zip
+*.zta
 
 # Files
 CMakeCache.txt

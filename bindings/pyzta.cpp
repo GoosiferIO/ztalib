@@ -19,7 +19,19 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readonly("info", &ZtaData::info)
         .def_readonly("frames", &ZtaData::frames)
         .def_readonly("palette", &ZtaData::palette)
-        .def_readonly("has_background", &ZtaData::hasBackground);
+        .def("has_background", &ZtaData::hasBackground);
+
+    py::class_<ZtaFrame>(m, "ZtaFrame")
+        .def("frame_size", &ZtaFrame::frameSize)
+        .def("height", &ZtaFrame::height)
+        .def("width", &ZtaFrame::width)
+        .def("y_offset", &ZtaFrame::y)
+        .def("x_offset", &ZtaFrame::x)
+        .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
+
+    py::class_<ZtaInfo>(m, "ZtaInfo")
+        .def("speed", &ZtaInfo::speed)
+        .def("frame_count", &ZtaInfo::frameCount);
 
     py::class_<ZtaF>(m, "ZtaF")
         .def(py::init<>())

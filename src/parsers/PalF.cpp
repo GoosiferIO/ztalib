@@ -121,6 +121,16 @@ void PalF::colorModel(int model)
     m_colorModel = model;
 }
 
+std::vector<PalF::Color> PalF::colors() const 
+{ 
+    return m_colors; 
+}
+
+void PalF::colors(const std::vector<PalF::Color>& newColors) 
+{ 
+    m_colors = newColors; 
+}
+
 PalF::Color PalF::getColor(int index)
 {
     if (index < 0 || index >= static_cast<int>(m_colors.size()))

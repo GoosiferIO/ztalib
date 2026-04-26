@@ -50,6 +50,9 @@ public:
     Color getColor(int index);
     int load(std::string fileName);
 
+    std::vector<Color> colors() const;
+    void colors(const std::vector<Color>& newColors);
+
 private:
     std::vector<Color> m_colors;
     std::string m_location;

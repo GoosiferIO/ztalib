@@ -45,7 +45,7 @@ int ZtaFrameBuffer::createBuffer()
         return 0;
     }
 
-    if (m_data.palette == nullptr || m_data.palette->numColors() == 0)
+    if (m_data.palette == nullptr || m_data.palette-> == 0)
     {
         std::cerr << "ERROR: No palette data available!" << std::endl;
         return -1;

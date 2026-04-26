@@ -57,6 +57,9 @@ private:
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
     int hasMagic(std::ifstream &);
+    std::filesystem::path resolvePalPath(
+        const std::filesystem::path& ztaPath, 
+        const std::filesystem::path& palettePath);
 };
 
 #endif // ZTAF_H

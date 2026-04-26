@@ -91,7 +91,15 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     }
 
     // ------------------------------- read palette
-    m_data->palette->load(m_data->palette->location());
+    // load palette from location specified in zta file
+    std::filesystem::path ztaPath(fileName);
+    std::filesystem::path palettePath(m_data->palette->location());
+    std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
+    if (resolvedPalettePath.empty()) {
+        std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
+        return nullptr;
+    }
+    m_data->palette->load(resolvedPalettePath.string());
 
     // ------------------------------- read frames
     for (int i = 0; i < (int)m_data->info.frameCount; i++)
@@ -204,14 +212,17 @@ void ZtaF::save(std::string fileName)
     }
 
     // -------------------------------- write palette
-    // get current dir and add palette location to it
-    std::filesystem::path currentDir = std::filesystem::current_path();
+    // path to zta file
+    std::filesystem::path ztaPath(fileName);
+    // path to palette file
     std::filesystem::path palettePath(m_data->palette->location());
-    if (palettePath.is_relative()) {
-        palettePath = currentDir / palettePath;
+    // resolve palette path relative to zta file
+    std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
+    if (resolvedPalettePath.empty()) {
+        std::cerr << "ERROR: Could not find palette file: " << palettePath << std::endl;
+        return;
     }
-    std::filesystem::create_directories(palettePath.parent_path());
-    m_data->palette->save(palettePath.string());
+    m_data->palette->save(resolvedPalettePath.string());
 }
 
 std::shared_ptr<ZtaData> ZtaF::data()
@@ -245,6 +256,31 @@ int ZtaF::hasMagic(std::ifstream &_file)
     _file.clear();
     _file.seekg(0, std::ios::beg);
     return 1;
+}
+
+std::filesystem::path ZtaF::resolvePalPath(
+    const std::filesystem::path& ztaPath, 
+    const std::filesystem::path& palettePath)
+{
+    auto dir = ztaPath.parent_path();
+
+    while (!dir.empty())
+    {
+        auto candidate = dir / palettePath;
+        if (std::filesystem::exists(candidate))
+        {
+            // note: canonical makes it so that if the candidate is a symlink, 
+            // it resolves to the actual file path
+            return std::filesystem::canonical(candidate);
+        }
+        auto parentDir = dir.parent_path();
+        if (parentDir == dir) {
+            break; // reached root directory
+        }
+        dir = dir.parent_path();
+    }
+
+    return std::filesystem::path(); 
 }
 
 /*

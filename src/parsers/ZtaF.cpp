@@ -147,6 +147,31 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int m_colorModel, std:
     return m_data;
 }
 
+void ZtaF::save(std::string fileName)
+{
+    std::ofstream file;
+    file.open(fileName, static_cast<std::ios_base::openmode>(std::ios::binary | std::ios::out));
+    if (!file.is_open())
+    {
+        return;
+    }
+
+    // -------------------------------- write header
+    // if more than one frame, write FATZ magic and header
+    if (m_data->info.frameCount > 1)
+    {
+        file.write("FATZ", 4); // magic
+        file.write("\0\0\0\0", 4); // reserved
+        file.write((char *)&m_data->hasBackground, 1); // background frame flag
+    }
+
+    file.write((char *)&m_data->info.speed, 4); // animation speed in ms
+
+    uint32_t paletteNameSize = m_data->palette->locationSize();
+    file.write((char *)&paletteNameSize, 4); // size of palette name
+    file.write(m_data->palette->location().data(), m_data->palette->locationSize()); // palette name
+}
+
 std::shared_ptr<ZtaData> ZtaF::data()
 {
     return m_data;

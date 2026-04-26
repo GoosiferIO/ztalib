@@ -51,7 +51,7 @@ option(BUILD_PY_BINDINGS "Build Python bindings" OFF)
 option(BUILD_CPP_LIB "Build C++ library, headers, and CMake targets" ON)
 
 if(BUILD_PY_BINDINGS) # python bindings only
-    find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+    find_package(Python3 COMPONENTS Interpreter Development.Module REQUIRED)
     add_subdirectory(bindings)
     install(TARGETS pyzta
         RUNTIME DESTINATION ${Python3_SITELIB}

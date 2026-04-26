@@ -34,3 +34,8 @@ See [the example project](./example/pngexporter.md) to see it in action, or chec
 ## Compile from source
 
 If you want to use the library in a C++ project, or if you want to contribute to the development of ztalib, you can compile it from source. First, make sure you have CMake installed on your system. For further instructions, see the [compile guide](./compile.md).
+
+# Acknowledgements
+
+Thank you to Jeff Bostoen for his documentation on the ZT1 file formats:
+https://github.com/jbostoen/ZTStudio/wiki/ZT1-Graphics-Explained

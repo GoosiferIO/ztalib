@@ -71,6 +71,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     std::string paletteName(paletteNameSize, '\0');
     file.read(paletteName.data(), m_data->palette->locationSize()); // read palette name
     m_data->palette->location(paletteName);
+    std::cout << "Palette location from ZTA file (at load): " << m_data->palette->location() << std::endl;
 
     file.read((char *)&m_data->info.frameCount, 4);                    // number of frames
     m_data->frames.resize(m_data->info.frameCount);                      // resize frames to frame count
@@ -170,20 +171,14 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     }
 
     // ensure that project root is absolute path (or convert to absolute path)
-    std::filesystem::path projRootPath(projectRoot);
-    if (projRootPath.is_relative()) {
-        projRootPath = std::filesystem::current_path() / projRootPath;
-    }
-    std::filesystem::path palPath(palettePath);
-    std::filesystem::path relPalettePath;
-    // if palette path is not relative, convert to rel path from project root
-    if (!palPath.is_relative()) {
-        relPalettePath = std::filesystem::relative(palPath, projRootPath);
-    } else {
-        relPalettePath = palPath;   
-        // combine projRootPath with palette path to get absolute path
-        palPath = std::filesystem::absolute(projRootPath / palPath);
-    }
+    std::filesystem::path projRootPath = std::filesystem::weakly_canonical(projectRoot);
+    std::filesystem::path palPath = std::filesystem::weakly_canonical(palettePath);
+    std::filesystem::path relPalettePath = std::filesystem::relative(palPath, projRootPath);
+
+    std::cout << "Saving ZTA file to: " << fileName << std::endl;
+    std::cout << "Project root: " << projRootPath << std::endl;
+    std::cout << "Palette path: " << palPath << std::endl;
+    std::cout << "Relative palette path: " << relPalettePath << std::endl;
 
     m_ztaPath = fileName; // store path for future saves
 
@@ -200,7 +195,7 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
 
     uint32_t paletteNameSize = static_cast<uint32_t>(relPalettePath.string().size());
     file.write((char *)&paletteNameSize, 4); // size of palette name
-    file.write(relPalettePath.string().c_str(), paletteNameSize); // palette name
+    file.write(relPalettePath.generic_string().c_str(), paletteNameSize); // palette name
 
     uint32_t frameCount = m_data->info.frameCount;
     if (m_data->hasBackground)

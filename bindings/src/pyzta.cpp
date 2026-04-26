@@ -9,7 +9,7 @@
 #include "ztalib/data/ZtaFrameBuffer.h"
 #include "ztalib/data/ZtaFrameBufferObject.h"
 #include "ztalib/PalF.h"
-#include "ztalib/version.h"
+#include "ztalib/data/ZtaVersion.h"
 
 namespace py = pybind11;
 

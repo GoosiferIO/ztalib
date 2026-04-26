@@ -16,8 +16,8 @@ add_library(ztalib SHARED
 # ------------- Export config (version) -------------
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib/version.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/include/ztalib/version.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/ztalib/data/ZtaVersion.h.in
+    ${CMAKE_CURRENT_BINARY_DIR}/include/ztalib/data/ZtaVersion.h
 )
 
 #------------ Include and def public vs private headers ------------

@@ -42,6 +42,10 @@ target_include_directories(ztalib
 )
 
 target_compile_features(ztalib PUBLIC cxx_std_17)
+target_compile_options(ztalib PRIVATE 
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>>:-Wall>
+    $<$<CXX_COMPILER_ID:MSVC>:/W4>
+)
 
 # ------------- Do not mangle --------------
 

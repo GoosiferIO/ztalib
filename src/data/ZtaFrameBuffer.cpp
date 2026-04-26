@@ -55,7 +55,6 @@ int ZtaFrameBuffer::createBuffer()
 
     for (const ZtaFrame &frame : m_data.frames)
     {
-        int index = &frame - &m_data.frames[0];
         ZtaFrameBufferObject bufferObject;
 
         // Set dimensions and format

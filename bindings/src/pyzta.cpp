@@ -16,30 +16,30 @@ PYBIND11_MODULE(pyzta, m) {
     m.doc() = "ZT1 animation graphics parser for Python";
 
     py::class_<ZtaInfo>(m, "ZtaInfo")
-        .def("speed", &ZtaInfo::speed)
-        .def("frame_count", &ZtaInfo::frameCount);
+        .def_readwrite("speed", &ZtaInfo::speed)
+        .def_readwrite("frame_count", &ZtaInfo::frameCount);
 
     py::class_<ZtaData, std::shared_ptr<ZtaData>>(m, "ZtaData")
         .def_readonly("info", &ZtaData::info)
         .def_readonly("frames", &ZtaData::frames)
         .def_readonly("palette", &ZtaData::palette)
-        .def("has_background", &ZtaData::hasBackground);
+        .def_readwrite("has_background", &ZtaData::hasBackground);
 
     py::class_<ZtaFrame>(m, "ZtaFrame")
-        .def("frame_size", &ZtaFrame::frameSize)
-        .def("height", &ZtaFrame::height)
-        .def("width", &ZtaFrame::width)
-        .def("y_offset", &ZtaFrame::y)
-        .def("x_offset", &ZtaFrame::x)
+        .def_readwrite("frame_size", &ZtaFrame::frameSize)
+        .def_readwrite("height", &ZtaFrame::height)
+        .def_readwrite("width", &ZtaFrame::width)
+        .def_readwrite("y_offset", &ZtaFrame::y)
+        .def_readwrite("x_offset", &ZtaFrame::x)
         .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
         .def_readonly("pixels", &ZtaFrameBufferObject::pixels)
-        .def("width", &ZtaFrameBufferObject::width)
-        .def("height", &ZtaFrameBufferObject::height)
-        .def("offset_x", &ZtaFrameBufferObject::offsetX)
-        .def("offset_y", &ZtaFrameBufferObject::offsetY)
-        .def("channels", &ZtaFrameBufferObject::channels);
+        .def_readonly("width", &ZtaFrameBufferObject::width)
+        .def_readonly("height", &ZtaFrameBufferObject::height)
+        .def_readonly("offset_x", &ZtaFrameBufferObject::offsetX)
+        .def_readonly("offset_y", &ZtaFrameBufferObject::offsetY)
+        .def_readonly("channels", &ZtaFrameBufferObject::channels);
 
     py::class_<ZtaFrameBuffer>(m, "ZtaFrameBuffer")
         .def(py::init<const ZtaData&>())

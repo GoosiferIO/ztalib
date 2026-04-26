@@ -34,7 +34,12 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readonly("pixel_sets", &ZtaFrame::pixelSets);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
-        .def_readonly("pixels", &ZtaFrameBufferObject::pixels)
+        .def_property_readonly("pixels", [](const ZtaFrameBufferObject& obj) {
+            return py::bytes(
+                reinterpret_cast<const char*>(obj.pixels.data()), 
+                obj.pixels.size()
+            );
+        })
         .def_readonly("width", &ZtaFrameBufferObject::width)
         .def_readonly("height", &ZtaFrameBufferObject::height)
         .def_readonly("offset_x", &ZtaFrameBufferObject::offsetX)

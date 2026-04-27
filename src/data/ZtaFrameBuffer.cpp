@@ -58,6 +58,7 @@ int ZtaFrameBuffer::createBuffer()
         // Set dimensions and format
         bufferObject.width = static_cast<int>(frame.width);
         bufferObject.height = static_cast<int>(frame.height);
+        bool isShadow = frame.isShadow;
         bufferObject.offsetX = static_cast<int>(frame.x);
         bufferObject.offsetY = static_cast<int>(frame.y);
         bufferObject.channels = 4; // RGBA/BGRA
@@ -69,10 +70,7 @@ int ZtaFrameBuffer::createBuffer()
         bufferObject.pixels = std::vector<uint8_t>(bufferSize);
         for (size_t i = 0; i < bufferSize; i += 4)
         {
-            bufferObject.pixels[i] = 0;     // R
-            bufferObject.pixels[i + 1] = 0; // G
-            bufferObject.pixels[i + 2] = 0; // B
-            bufferObject.pixels[i + 3] = 0; // A (Fully transparent)
+            setRGBA(bufferObject.pixels, i, 0, 0, 0, 0); // Fully transparent
         }
 
         // Process each row
@@ -99,62 +97,85 @@ int ZtaFrameBuffer::createBuffer()
                     continue;
                 }
 
-                // Process each color in the block
-                for (uint8_t colorIndex : block.colors)
-                {
-                    // Bounds checking
-                    if (xPos >= bufferObject.width)
+                if (isShadow) {
+                    for (int i = 0; i < block.colorCount; i++) {
+                        if (xPos >= bufferObject.width) {
+                            break; // Stop if we've exceeded the width
+                        }
+                        size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
+                        if (pixelIndex + 3 >= bufferSize) {
+                            std::cerr << "ERROR: Buffer overflow prevented at position "
+                                      << pixelIndex << std::endl;
+                            break;
+                        }
+                        setRGBA(bufferObject.pixels, pixelIndex, 0, 0, 0, 255); // Fully opaque black for shadow
+                        xPos++;
+                    }
+                }
+                else {
+                    // Process each color in the block
+                    for (uint8_t colorIndex : block.colors)
                     {
-                        break; // Stop if we've exceeded the width
-                    }
+                        // Bounds checking
+                        if (xPos >= bufferObject.width)
+                        {
+                            break; // Stop if we've exceeded the width
+                        }
 
-                    // Validate color index
-                    if (colorIndex >= m_data.palette->colors().size())
-                    {
-                        std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
-                        break;
-                    }
+                        // Validate color index
+                        if (colorIndex >= m_data.palette->colors().size())
+                        {
+                            std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
+                            break;
+                        }
 
-                    // Calculate pixel position in m_buffer
-                    size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
+                        // Calculate pixel position in m_buffer
+                        size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
 
-                    // Ensure we don't write outside the m_buffer
-                    if (pixelIndex + 3 >= bufferSize)
-                    {
-                        std::cerr << "ERROR: Buffer overflow prevented at position "
-                                  << pixelIndex << std::endl;
-                        break;
-                    }
+                        // Ensure we don't write outside the m_buffer
+                        if (pixelIndex + 3 >= bufferSize)
+                        {
+                            std::cerr << "ERROR: Buffer overflow prevented at position "
+                                    << pixelIndex << std::endl;
+                            break;
+                        }
 
-                    // Get color from palette
-                    PalF::Color color;
+                        // Get color from palette
+                        PalF::Color color;
 
-                    try {
-                        color = m_data.palette->getColor(colorIndex);
-                    }
-                    catch (const std::out_of_range &e)
-                    {
-                        std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
-                        break;
-                    }
+                        try {
+                            color = m_data.palette->getColor(colorIndex);
+                        }
+                        catch (const std::out_of_range &e)
+                        {
+                            std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
+                            break;
+                        }
 
-                    // Write pixel data according to color model
-                    if (m_colorModel == 1)
-                    { // BGRA mode
-                        bufferObject.pixels[pixelIndex] = color.b;
-                        bufferObject.pixels[pixelIndex + 1] = color.g;
-                        bufferObject.pixels[pixelIndex + 2] = color.r;
-                        bufferObject.pixels[pixelIndex + 3] = color.a;
-                    }
-                    else
-                    { // RGBA mode
-                        bufferObject.pixels[pixelIndex] = color.r;
-                        bufferObject.pixels[pixelIndex + 1] = color.g;
-                        bufferObject.pixels[pixelIndex + 2] = color.b;
-                        bufferObject.pixels[pixelIndex + 3] = color.a;
-                    }
+                        // Write pixel data according to color model
+                        if (!isShadow) {
+                            if (m_colorModel == 1)
+                            { // BGRA mode
+                                setRGBA(bufferObject.pixels, 
+                                    pixelIndex, 
+                                    color.b, 
+                                    color.g, 
+                                    color.r, 
+                                    color.a);
+                            }
+                            else
+                            { // RGBA mode
+                                setRGBA(bufferObject.pixels, 
+                                    pixelIndex, 
+                                    color.r, 
+                                    color.g, 
+                                    color.b, 
+                                    color.a);
+                            }
+                        }
 
-                    xPos++; // Move to next horizontal position
+                        xPos++; // Move to next horizontal position
+                    }
                 }
             }
         }
@@ -164,6 +185,14 @@ int ZtaFrameBuffer::createBuffer()
     }
 
     return 1;
+}
+
+void ZtaFrameBuffer::setRGBA(std::vector<uint8_t>& pixels, size_t i, int r, int g, int b, int a)
+{
+    pixels[i] = static_cast<uint8_t>(r);     // R
+    pixels[i + 1] = static_cast<uint8_t>(g); // G
+    pixels[i + 2] = static_cast<uint8_t>(b); // B
+    pixels[i + 3] = static_cast<uint8_t>(a); // A
 }
 
 /*

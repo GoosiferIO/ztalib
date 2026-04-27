@@ -28,6 +28,7 @@ struct ZtaFrame
 {
     uint32_t frameSize; // in bytes
     uint16_t height;
+    uint8_t isShadow;
     uint16_t width;
     int16_t y; // y offset
     int16_t x; // x offset

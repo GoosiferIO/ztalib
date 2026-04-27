@@ -62,6 +62,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         file.read((char *)&m_data->hasBackground, 1);
     } // else, not fatz (ztaf)
 
+
     file.read((char *)&m_data->info.speed, 4);                         // animation speed in ms
 
     uint32_t paletteNameSize = 0;
@@ -111,7 +112,20 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
     {
         ZtaFrame frame = ZtaFrame();
         file.read((char *)&frame.frameSize, 4);
-        file.read((char *)&frame.height, 2);
+
+        // shadows
+        uint16_t heightByte;
+        file.read((char *)&heightByte, 2); // read height as byte to check for shadow flag
+        
+        // see if higher bight is == 80 (128 in decimal), which indicates shadow frame
+        bool hasShadow = (heightByte & 0x8000) != 0;
+        frame.isShadow = hasShadow ? 1 : 0; // set shadow flag in frame
+        m_isShadow = m_isShadow || hasShadow; // set global shadow flag for buffer
+        if (m_isShadow) {
+            heightByte &= 0x00FF; // clear shadow flag from height byte
+        }
+        frame.height = heightByte; // set height
+
         file.read((char *)&frame.width, 2);
         file.read((char *)&frame.y, 2);
         file.read((char *)&frame.x, 2);
@@ -129,8 +143,11 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
                 ZtaPixelBlock block = ZtaPixelBlock();
                 file.read((char *)&block.offset, 1);                      // offset
                 file.read((char *)&block.colorCount, 1);                  // color count
-                block.colors.resize(block.colorCount);                     // resize to color count
-                file.read((char *)block.colors.data(), block.colorCount); // colors
+
+                if (!frame.isShadow) {
+                    block.colors.resize(block.colorCount);                     // resize to color count
+                    file.read((char *)block.colors.data(), block.colorCount); // colors
+                }
                 pixelSet.blocks[k] = std::move(block);                     // store block
             }
 
@@ -204,7 +221,16 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     {
         ZtaFrame &frame = m_data->frames[i];
         file.write((char *)&frame.frameSize, 4);
-        file.write((char *)&frame.height, 2);
+
+        uint16_t heightByte = frame.height;
+        // shadows
+        if (frame.isShadow) {
+            uint8_t shadowFlag = 0x80; // 1000 0000 in binary, sets highest bit to indicate shadow frame
+            uint8_t height = static_cast<uint8_t>(heightByte); // ensure height is only 1 byte
+            // combine shadow flag and height into 2 bytes
+            heightByte = (shadowFlag << 8) | height; // shadow flag in higher
+        }
+        file.write((char *)&heightByte, 2);
         file.write((char *)&frame.width, 2);
         file.write((char *)&frame.y, 2);
         file.write((char *)&frame.x, 2);
@@ -222,7 +248,11 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
             { // write each block
                 file.write((char *)&block.offset, 1);                      // offset
                 file.write((char *)&block.colorCount, 1);                  // color count
-                file.write((char *)block.colors.data(), block.colorCount); // colors
+
+                // only write color data if not a shadow frame, since shadow frames don't have color data
+                if (!frame.isShadow) {
+                    file.write((char *)block.colors.data(), block.colorCount); // colors
+                }
             }
         }
     }

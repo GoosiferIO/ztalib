@@ -49,7 +49,7 @@ def print_frame_info(zta, frame_range):
         print(f"  unk2: {i.unk2}")
         print(f"  pixelSet count: {len(i.pixel_sets)}")
 
-ATL_PATH = "example/objects/pterhous"
+ATL_PATH = "example/animals/dolphin/m/"
 TEST_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example\\objects\\fdskajsd"
 TEST_ROOT_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example"
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load(f"{ATL_PATH}/IDLE/SE")
+        zta.load(f"{ATL_PATH}/ssurfswi/E")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)

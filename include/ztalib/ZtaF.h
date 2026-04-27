@@ -57,6 +57,7 @@ private:
     std::shared_ptr<ZtaData> m_data;
     int m_colorModel;
     std::string m_ztaPath;
+    bool m_isShadow = false;
     int hasMagic(std::ifstream &);
     std::filesystem::path resolvePalPath(
         const std::filesystem::path& ztaPath, 

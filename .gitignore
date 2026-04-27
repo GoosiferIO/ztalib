@@ -29,6 +29,8 @@
 *.uca
 *.ucs
 *.scn
+*.wav
+*.ai
 
 # Files
 CMakeCache.txt

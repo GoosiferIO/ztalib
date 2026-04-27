@@ -30,6 +30,7 @@ PYBIND11_MODULE(pyzta, m) {
     py::class_<ZtaFrame>(m, "ZtaFrame")
         .def_readwrite("frame_size", &ZtaFrame::frameSize)
         .def_readwrite("height", &ZtaFrame::height)
+        .def_readwrite("is_shadow", &ZtaFrame::isShadow)
         .def_readwrite("width", &ZtaFrame::width)
         .def_readwrite("y_offset", &ZtaFrame::y)
         .def_readwrite("x_offset", &ZtaFrame::x)

@@ -97,75 +97,85 @@ int ZtaFrameBuffer::createBuffer()
                     continue;
                 }
 
-                // Process each color in the block
-                for (uint8_t colorIndex : block.colors)
-                {
-                    // Bounds checking
-                    if (xPos >= bufferObject.width)
-                    {
-                        break; // Stop if we've exceeded the width
-                    }
-
-                    // Validate color index
-                    if (colorIndex >= m_data.palette->colors().size())
-                    {
-                        std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
-                        break;
-                    }
-
-                    // Calculate pixel position in m_buffer
-                    size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
-
-                    // Ensure we don't write outside the m_buffer
-                    if (pixelIndex + 3 >= bufferSize)
-                    {
-                        std::cerr << "ERROR: Buffer overflow prevented at position "
-                                  << pixelIndex << std::endl;
-                        break;
-                    }
-
-                    // Get color from palette
-                    PalF::Color color;
-
-                    try {
-                        color = m_data.palette->getColor(colorIndex);
-                    }
-                    catch (const std::out_of_range &e)
-                    {
-                        std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
-                        break;
-                    }
-
-                    // Write pixel data according to color model
-                    if (!isShadow) {
-                        if (m_colorModel == 1)
-                        { // BGRA mode
-                            setRGBA(bufferObject.pixels, 
-                                pixelIndex, 
-                                color.b, 
-                                color.g, 
-                                color.r, 
-                                color.a);
+                if (isShadow) {
+                    for (int i = 0; i < block.colorCount; i++) {
+                        if (xPos >= bufferObject.width) {
+                            break; // Stop if we've exceeded the width
                         }
-                        else
-                        { // RGBA mode
-                            setRGBA(bufferObject.pixels, 
-                                pixelIndex, 
-                                color.r, 
-                                color.g, 
-                                color.b, 
-                                color.a);
+                        size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
+                        if (pixelIndex + 3 >= bufferSize) {
+                            std::cerr << "ERROR: Buffer overflow prevented at position "
+                                      << pixelIndex << std::endl;
+                            break;
                         }
-                    } else {
-                        setRGBA(bufferObject.pixels, 
-                            pixelIndex, 
-                            0, 
-                            0, 
-                            0, 
-                            255); // Set shadow pixels to fully opaque black
+                        setRGBA(bufferObject.pixels, pixelIndex, 0, 0, 0, 255); // Fully opaque black for shadow
+                        xPos++;
                     }
+                }
+                else {
+                    // Process each color in the block
+                    for (uint8_t colorIndex : block.colors)
+                    {
+                        // Bounds checking
+                        if (xPos >= bufferObject.width)
+                        {
+                            break; // Stop if we've exceeded the width
+                        }
 
-                    xPos++; // Move to next horizontal position
+                        // Validate color index
+                        if (colorIndex >= m_data.palette->colors().size())
+                        {
+                            std::cerr << "ERROR: Out-of-bounds color index! (" << (int)colorIndex << ")" << std::endl;
+                            break;
+                        }
+
+                        // Calculate pixel position in m_buffer
+                        size_t pixelIndex = (row * bufferObject.width + xPos) * bufferObject.channels;
+
+                        // Ensure we don't write outside the m_buffer
+                        if (pixelIndex + 3 >= bufferSize)
+                        {
+                            std::cerr << "ERROR: Buffer overflow prevented at position "
+                                    << pixelIndex << std::endl;
+                            break;
+                        }
+
+                        // Get color from palette
+                        PalF::Color color;
+
+                        try {
+                            color = m_data.palette->getColor(colorIndex);
+                        }
+                        catch (const std::out_of_range &e)
+                        {
+                            std::cerr << "ERROR: " << e.what() << " Color index: " << (int)colorIndex << std::endl;
+                            break;
+                        }
+
+                        // Write pixel data according to color model
+                        if (!isShadow) {
+                            if (m_colorModel == 1)
+                            { // BGRA mode
+                                setRGBA(bufferObject.pixels, 
+                                    pixelIndex, 
+                                    color.b, 
+                                    color.g, 
+                                    color.r, 
+                                    color.a);
+                            }
+                            else
+                            { // RGBA mode
+                                setRGBA(bufferObject.pixels, 
+                                    pixelIndex, 
+                                    color.r, 
+                                    color.g, 
+                                    color.b, 
+                                    color.a);
+                            }
+                        }
+
+                        xPos++; // Move to next horizontal position
+                    }
                 }
             }
         }

@@ -38,6 +38,7 @@ private:
     const ZtaData& m_data;
     int m_colorModel = 0; // 0 = RGBA, 1 = BGRA
     std::vector<ZtaFrameBufferObject> m_buffer;
+    void setRGBA(std::vector<uint8_t>& pixels, size_t i, int r, int g, int b, int a);
 };
 
 #endif // ZTAFRAMEBUFFER_H

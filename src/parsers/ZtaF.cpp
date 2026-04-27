@@ -61,6 +61,9 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         // read 9th byte
         file.read((char *)&m_data->hasBackground, 1);
     } // else, not fatz (ztaf)
+    else {
+        std::cout << "No FATZ magic found, assuming ZTAF format." << std::endl;
+    }
 
     file.read((char *)&m_data->info.speed, 4);                         // animation speed in ms
 
@@ -97,6 +100,7 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         std::filesystem::path palettePath(m_data->palette->location());
         std::filesystem::path resolvedPalettePath = resolvePalPath(ztaPath, palettePath);
         m_data->palette->load(resolvedPalettePath.string());
+        std::cout << "Palette loaded from: " << resolvedPalettePath.string() << std::endl;
     } else {
         std::filesystem::path palettePath(ioPal);
         // if relative path, add current working directory        
@@ -106,13 +110,29 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
         m_data->palette->load(palettePath.string());
     }
 
+    std::cout << "\nNUMBER OF FRAMES: " << m_data->info.frameCount << "\n" << std::endl;
+
     // ------------------------------- read frames
     for (int i = 0; i < (int)m_data->info.frameCount; i++)
     {
         ZtaFrame frame = ZtaFrame();
         file.read((char *)&frame.frameSize, 4);
-        file.read((char *)&frame.height, 1);
-        file.read((char *)&frame.isShadow, 1);
+
+        // shadows
+        uint16_t heightByte;
+        file.read((char *)&heightByte, 2); // read height as byte to check for shadow flag
+        
+        // see if higher bight is == 80 (128 in decimal), which indicates shadow frame
+        bool hasShadow = (heightByte & 0x8000) != 0;
+        frame.isShadow = hasShadow ? 1 : 0; // set shadow flag in frame
+        m_isShadow = m_isShadow || hasShadow; // set global shadow flag for buffer
+        if (m_isShadow) {
+            heightByte &= 0x00FF; // clear shadow flag from height byte
+        }
+        frame.height = heightByte; // set height
+
+        std::cout << "Reading frame " << i << ": " << (frame.isShadow ? "Shadow frame detected. " : "") << "Height: " << frame.height << std::endl;
+        
         file.read((char *)&frame.width, 2);
         file.read((char *)&frame.y, 2);
         file.read((char *)&frame.x, 2);
@@ -130,8 +150,11 @@ std::shared_ptr<ZtaData> ZtaF::load(std::string fileName, int colorModel, std::s
                 ZtaPixelBlock block = ZtaPixelBlock();
                 file.read((char *)&block.offset, 1);                      // offset
                 file.read((char *)&block.colorCount, 1);                  // color count
-                block.colors.resize(block.colorCount);                     // resize to color count
-                file.read((char *)block.colors.data(), block.colorCount); // colors
+
+                if (!frame.isShadow) {
+                    block.colors.resize(block.colorCount);                     // resize to color count
+                    file.read((char *)block.colors.data(), block.colorCount); // colors
+                }
                 pixelSet.blocks[k] = std::move(block);                     // store block
             }
 

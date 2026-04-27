@@ -49,7 +49,7 @@ def print_frame_info(zta, frame_range):
         print(f"  unk2: {i.unk2}")
         print(f"  pixelSet count: {len(i.pixel_sets)}")
 
-ATL_PATH = "example/animals/dolphin/m"
+ATL_PATH = "example/animals/dolphin/m/"
 TEST_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example\\objects\\fdskajsd"
 TEST_ROOT_PATH = "F:\\Documents\\Github\\APE.Core\\examples\\pyzta\\example"
 
@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load(f"{ATL_PATH}/ssurfswi/N")
+        zta.load(f"{ATL_PATH}/ssurfswi/E")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     # -------- save back to zta ---------
     os.makedirs("out/zta", exist_ok=True)
     try:
-        zta.save(f"{TEST_PATH}/USED/SE", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/USED/SE.pal")
+        zta.save(f"{TEST_PATH}/IDLE/SE.zta", project_root=f"{TEST_ROOT_PATH}/", palette_path=f"{TEST_PATH}/IDLE/SE.pal")
     except Exception as e:
         print(f"Error saving ZTA file: {e}")
         exit(1)
@@ -86,7 +86,7 @@ if __name__ == "__main__":
     # check if the file was saved correctly by loading it again
     zta_copy = ZtaF()
     try:
-        zta_copy.load(f"{TEST_PATH}/USED/SE")
+        zta_copy.load(f"{TEST_PATH}/IDLE/SE.zta")
         print("ZTA file saved and loaded successfully!")
     except Exception as e:
         print(f"Error loading saved ZTA file: {e}")

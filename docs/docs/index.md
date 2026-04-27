@@ -9,7 +9,11 @@ https://github.com/GoosiferIO/ztalib
 ## Features
 
 - Read Zoo Tycoon 1 animation graphics and palette files in-memory
-- Supports most animated graphics in the game
+- Supports the following types of ZT1 graphics:
+  - Static graphics
+  - Simple animations (no background frames)
+  - Complex animations (with background frames)
+  - Shadow animations
 - CMake build system for easy integration into C++ projects
 
 # Install

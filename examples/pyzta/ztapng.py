@@ -62,7 +62,7 @@ if __name__ == "__main__":
     # --------- load ZTA file ---------
     zta = ZtaF()
     try:
-        zta.load(f"{ATL_PATH}/surfswim/E")
+        zta.load(f"{ATL_PATH}/ssurfswi/E")
     except Exception as e:
         print(f"Error loading ZTA file: {e}")
         exit(1)

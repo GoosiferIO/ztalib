@@ -228,7 +228,16 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
     {
         ZtaFrame &frame = m_data->frames[i];
         file.write((char *)&frame.frameSize, 4);
-        file.write((char *)&frame.height, 2);
+
+        uint16_t heightByte = frame.height;
+        // shadows
+        if (frame.isShadow) {
+            uint8_t shadowFlag = 0x80; // 1000 0000 in binary, sets highest bit to indicate shadow frame
+            uint8_t height = static_cast<uint8_t>(heightByte); // ensure height is only 1 byte
+            // combine shadow flag and height into 2 bytes
+            heightByte = (shadowFlag << 8) | height; // shadow flag in higher
+        }
+        file.write((char *)&heightByte, 2);
         file.write((char *)&frame.width, 2);
         file.write((char *)&frame.y, 2);
         file.write((char *)&frame.x, 2);
@@ -246,7 +255,11 @@ void ZtaF::save(std::string fileName, std::string projectRoot, std::string palet
             { // write each block
                 file.write((char *)&block.offset, 1);                      // offset
                 file.write((char *)&block.colorCount, 1);                  // color count
-                file.write((char *)block.colors.data(), block.colorCount); // colors
+
+                // only write color data if not a shadow frame, since shadow frames don't have color data
+                if (!frame.isShadow) {
+                    file.write((char *)block.colors.data(), block.colorCount); // colors
+                }
             }
         }
     }

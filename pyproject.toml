@@ -12,7 +12,7 @@ description = "Python bindings for ztalib"
 readme = "README.md"
 requires-python = ">=3.8"
 license = "MIT"
-license-files = ["LICENSE*"]
+license-files = ["LICENSE"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: C++",
@@ -30,3 +30,4 @@ Discord = "https://discord.gg/g5FvNrRQGC"
 cmake.build-type = "Release"
 cmake.args = ["-DBUILD_PY_BINDINGS=ON", "-DBUILD_CPP_LIB=OFF"]
 wheel.packages = []
+sdist.include = ["LICENSE"]

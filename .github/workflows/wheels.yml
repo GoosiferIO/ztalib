@@ -19,12 +19,21 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.19.0
         env:
-          CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-*"
+          CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-* cp314-*"
 
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ matrix.os }}
           path: ./wheelhouse/*.whl
+  build_sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx run build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
 
   upload_pypi:
     needs: [build_wheels]
@@ -33,6 +42,12 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           pattern: wheels-*
+          merge-multiple: true
+          path: dist/
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "{wheels-*,sdist}"
           merge-multiple: true
           path: dist/
 

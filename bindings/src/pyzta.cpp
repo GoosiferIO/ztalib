@@ -13,7 +13,8 @@
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(pyzta, m) {
+PYBIND11_MODULE(pyzta, m)
+{
     m.doc() = "ZT1 animation graphics parser for Python";
     m.attr("__version__") = ZTA_VERSION;
 
@@ -48,12 +49,10 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readonly("colors", &ZtaPixelBlock::colors);
 
     py::class_<ZtaFrameBufferObject>(m, "ZtaFrameBufferObject")
-        .def_property_readonly("pixels", [](const ZtaFrameBufferObject& obj) {
-            return py::bytes(
-                reinterpret_cast<const char*>(obj.pixels.data()), 
-                obj.pixels.size()
-            );
-        })
+        .def_property_readonly("pixels", [](const ZtaFrameBufferObject &obj)
+                               { return py::bytes(
+                                     reinterpret_cast<const char *>(obj.pixels.data()),
+                                     obj.pixels.size()); })
         .def_readonly("width", &ZtaFrameBufferObject::width)
         .def_readonly("height", &ZtaFrameBufferObject::height)
         .def_readonly("offset_x", &ZtaFrameBufferObject::offsetX)
@@ -61,7 +60,7 @@ PYBIND11_MODULE(pyzta, m) {
         .def_readonly("channels", &ZtaFrameBufferObject::channels);
 
     py::class_<ZtaFrameBuffer>(m, "ZtaFrameBuffer")
-        .def(py::init<const ZtaData&>())
+        .def(py::init<const ZtaData &>())
         .def("get_buffer", &ZtaFrameBuffer::getBuffer);
 
     py::class_<PalF::Color>(m, "PalFColor")
@@ -78,22 +77,22 @@ PYBIND11_MODULE(pyzta, m) {
         .def("location_size", py::overload_cast<>(&PalF::locationSize))
         .def("color_model", py::overload_cast<int>(&PalF::colorModel))
         .def("color_model", py::overload_cast<>(&PalF::colorModel))
-        .def("colors", py::overload_cast<const std::vector<PalF::Color>&>(&PalF::colors))
-        .def("colors", static_cast<std::vector<PalF::Color>(PalF::*)() const>(&PalF::colors))
+        .def("colors", py::overload_cast<const std::vector<PalF::Color> &>(&PalF::colors))
+        .def("colors", static_cast<std::vector<PalF::Color> (PalF::*)() const>(&PalF::colors))
         .def("get_color", &PalF::getColor)
         .def("load", &PalF::load)
         .def("save", &PalF::save);
 
     py::class_<ZtaF>(m, "ZtaF")
         .def(py::init<>())
-        .def("load", &ZtaF::load, 
-            py::arg("file_name"), 
-            py::arg("color_profile") = 0, 
-            py::arg("io_pal") = "")
-        .def("save", &ZtaF::save, 
-            py::arg("file_name"), 
-            py::arg("project_root"), 
-            py::arg("palette_path"))
+        .def("load", &ZtaF::load,
+             py::arg("file_name"),
+             py::arg("color_profile") = 0,
+             py::arg("io_pal") = "")
+        .def("save", &ZtaF::save,
+             py::arg("file_name"),
+             py::arg("project_root"),
+             py::arg("palette_path"))
         .def("data", &ZtaF::data)
         .def("get_frame_buffer", &ZtaF::getFrameBuffer);
-} 
+}
